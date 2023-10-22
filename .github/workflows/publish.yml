@@ -7,9 +7,6 @@ on:
       - "master"
     tags:
       - "v*"
-env:
-  DOCKERHUB_NAMESPACE: aegrumet
-  DOCKERHUB_REPO: ${{ github.repository }}
 
 jobs:
   push_to_registry:
@@ -29,7 +26,8 @@ jobs:
         id: meta
         uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
         with:
-          images: ${{ env.DOCKERHUB_NAMESPACE }}/${{ env.DOCKERHUB_REPO }}
+          # Assumes same namespace for GitHub and DockerHub
+          images: ${{ github.repository }}
           tags: |
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
