@@ -10,7 +10,7 @@ resource "google_cloud_run_service" "umbilical" {
   template {
     spec {
       containers {
-        image = "aegrumet/umbilical:0.0.2"
+        image = "aegrumet/umbilical:latest"
         env {
           name  = "PI_API_KEY"
           value = var.pi_api_key

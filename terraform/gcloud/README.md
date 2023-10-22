@@ -2,6 +2,41 @@
 
 Provisions a Google Cloud Run Service to run umbilical.
 
+## Example Usage
+
+main.tf:
+
+```hcl
+module "umbilical" {
+  source        = "git@github.com:aegrumet/umbilical.git//terraform/gcloud?ref=v0.0.5"
+  project       = var.project
+  region        = var.region
+  pi_api_key    = var.pi_api_key
+  pi_api_secret = var.pi_api_secret
+  providers = {
+    google = google
+  }
+}
+```
+
+umbilical.gcloud.tfvars:
+
+```
+project          = "my-project"
+region           = "us-central1"
+pi_api_key       = "Podcast Index API Key"
+pi_api_secret    = "Podcast Index API Secret"
+credentials_file = "/Path/To/Your/Credentials.json"
+```
+
+deploy:
+
+```bash
+terraform init
+terraform plan -var-file=umbilical.gcloud.tfvars
+terraform apply -var-file=umbilical.gcloud.tfvars
+```
+
 ## Inputs
 
 | Name                     | Description                                            | Type   | Required | Default |

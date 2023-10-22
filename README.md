@@ -6,7 +6,9 @@ Lifeline services for podcast PWAs.
 
 `GET /API/proxy?rss=<feed url>`
 
-Proxies the provided RSS feed. Returns an error if feed fails parsing.
+Proxies the provided RSS feed. Returns an error if feed fails parsing. Returns raw RSS xml if parsing passes.
+
+Philsophy: Only proxy RSS, to protect the service, but be otherwise unopinionated about parsing.
 
 ## search API
 
@@ -21,9 +23,17 @@ Requires the following environment variables to be set:
 
 You can sign up for free credentials at [api.podcastindex.org](https://api.podcastindex.org/).
 
+## deployment
+
+The latest image for this repo is posted to [Docker Hub](https://hub.docker.com/r/aegrumet/umbilical/tags).
+
+Run on Google Cloud Run: [terraform/gcloud](terraform/gcloud)
+
+Run on other clouds: submit pull request.
+
 ## warnings
 
-Operating an open proxy is risky. Until this appliance supports authentication, we recommend that you keep any deployment URLs secret.
+Operating an open proxy is risky. For now, we recommend keeping any deployment URLs secret.
 
 ## last word
 
