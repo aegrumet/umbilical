@@ -1,6 +1,6 @@
 # umbilical
 
-Lifeline for podcast PWAs.
+Lifeline services for podcast PWAs.
 
 ## proxy API
 
@@ -16,9 +16,15 @@ Relays a query to [PodcastIndex's](https://podcastindex.org/) [Search Podcasts A
 
 Requires the following environment variables to be set:
 
-* `PI_API_KEY`
-* `PI_API_SECRET`
+- `PI_API_KEY`
+- `PI_API_SECRET`
 
 You can sign up for free credentials at [api.podcastindex.org](https://api.podcastindex.org/).
+
+## warnings
+
+Operating an open proxy is risky. Until this appliance supports authentication, we recommend that you keep any deployment URLs secret.
+
+## last word
 
 Please consider supporting the index! For more info see **Help us out...** at [podcastindex.org](https://podcastindex.org).

@@ -5,10 +5,6 @@ import search from "./src/search.ts";
 
 const app = express();
 
-app.get("/", (_req: Request, res: Response) => {
-  res.send("Welcome to the Dinosaur API!");
-});
-
 app.get("/API/proxy", (req, res) => {
   return proxyRss(req, res);
 });
