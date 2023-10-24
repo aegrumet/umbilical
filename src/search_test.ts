@@ -9,7 +9,7 @@ import {
 } from "npm:node-mocks-http@1.13.0";
 import { TEST_PI_API_KEY, TEST_PI_API_SECRET } from "../mocks/piapi.ts";
 
-Deno.test("search test", () => {
+Deno.test("Fail on missing keys", () => {
   const request: MockRequest<Request> = createRequest({
     method: "GET",
     url: "/API/search?q=batmanuniversity",
@@ -21,7 +21,7 @@ Deno.test("search test", () => {
   assertEquals(response._getStatusCode(), 500);
 });
 
-Deno.test("search test 2", async () => {
+Deno.test("Performs a request when the correct keys are supplied", async () => {
   Deno.env.set("PI_API_KEY", TEST_PI_API_KEY);
   Deno.env.set("PI_API_SECRET", TEST_PI_API_SECRET);
 
