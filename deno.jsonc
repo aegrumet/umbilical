@@ -1,5 +1,6 @@
 {
   "tasks": {
-    "start": "deno run --allow-read --allow-net --allow-env main.ts"
+    "start": "deno run --allow-read --allow-net --allow-env main.ts",
+    "test": "deno test --allow-read --allow-env --allow-net --import-map=unit.test.importmap.json"
   }
 }

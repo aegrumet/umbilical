@@ -1,0 +1,5 @@
+{
+  "imports": {
+    "npm:podcast-index-api@1.1.10": "./mocks/piapi.ts"
+  }
+}

@@ -3,13 +3,13 @@ import { Request, Response, piapi } from "../deps.ts";
 // deno-lint-ignore no-explicit-any
 let pi: any = null;
 
-try {
-  pi = piapi(Deno.env.get("PI_API_KEY"), Deno.env.get("PI_API_SECRET"));
-} catch (e) {
-  console.error("Error configuring PI API", e);
-}
+const search = async (req: Request, res: Response) => {
+  try {
+    pi = piapi(Deno.env.get("PI_API_KEY"), Deno.env.get("PI_API_SECRET"));
+  } catch (e) {
+    console.error("Error configuring PI API", e);
+  }
 
-const search = (req: Request, res: Response) => {
   if (!pi) {
     res.status(500);
     res.send(
@@ -21,12 +21,12 @@ const search = (req: Request, res: Response) => {
   if ("q" in req.query) {
     query = req.query.q as string;
   }
+
   // deno-lint-ignore no-explicit-any
-  pi.searchByTerm(query).then((results: any) => {
-    res.set("Access-Control-Allow-Origin", "*");
-    res.set("Access-Control-Allow-Methods", "GET");
-    res.send(results);
-  });
+  const results: any = await pi.searchByTerm(query);
+  res.set("Access-Control-Allow-Origin", "*");
+  res.set("Access-Control-Allow-Methods", "GET");
+  res.send(results);
 };
 
 export default search;
