@@ -1,4 +1,4 @@
-import { assertEquals } from "https://deno.land/std@0.204.0/assert/mod.ts";
+import { assertEquals } from "../dev_deps.ts";
 import search from "./search.ts";
 import { Request, Response } from "../deps.ts";
 import {
@@ -6,7 +6,7 @@ import {
   createResponse,
   MockRequest,
   MockResponse,
-} from "npm:node-mocks-http@1.13.0";
+} from "../dev_deps.ts";
 import { TEST_PI_API_KEY, TEST_PI_API_SECRET } from "../mocks/piapi.ts";
 
 Deno.test("Fail on missing keys", () => {
