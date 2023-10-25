@@ -7,8 +7,10 @@ const proxyRss = async (req: Request, res: Response) => {
   if ("rss" in req.query) {
     feed = req.query.rss as string;
   }
+
   if (feed.length === 0) {
-    res.send("error");
+    res.status(500);
+    res.send("No rss provided.");
     return;
   }
 
@@ -17,25 +19,31 @@ const proxyRss = async (req: Request, res: Response) => {
     method: "GET",
   };
 
+  // deno-lint-ignore no-explicit-any
+  let response: any = null;
   try {
-    // deno-lint-ignore no-explicit-any
-    const response: any = await axios(options);
-
-    // Only forward RSS XML, which we check by parsing
-    // But we don't pass the parsed result, we pass the original.
-    parser
-      .parseString(response.data)
-      .then((_) => {
-        res.set("Access-Control-Allow-Origin", "*");
-        res.set("Access-Control-Allow-Methods", "GET");
-        res.send(response.data);
-      })
-      .catch(() => {
-        res.send("error");
-      });
+    response = await axios(options);
   } catch (_) {
-    res.send("error");
+    res.status(500);
+    res.send("Error fetching feed.");
+    return;
   }
+
+  // Only forward RSS XML, which we check by parsing
+  // But we don't pass the parsed result, we pass the original.
+  await parser
+    .parseString(response.data)
+    .then((_) => {
+      res.set("Access-Control-Allow-Origin", "*");
+      res.set("Access-Control-Allow-Methods", "GET");
+      res.send(response.data);
+      return;
+    })
+    .catch(() => {
+      res.status(500);
+      res.send("Error fetching feed.");
+      return;
+    });
 };
 
 export default proxyRss;

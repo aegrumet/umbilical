@@ -17,9 +17,16 @@ const search = async (req: Request, res: Response) => {
     );
     return;
   }
-  let query = "batmanuniversity";
+
+  let query = "";
   if ("q" in req.query) {
     query = req.query.q as string;
+  }
+
+  if (!query.length) {
+    res.status(500);
+    res.send("No query provided.");
+    return;
   }
 
   // deno-lint-ignore no-explicit-any
