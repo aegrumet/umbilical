@@ -12,3 +12,6 @@ export { Parser };
 
 import piapi from "npm:podcast-index-api@1.1.10";
 export { piapi };
+
+import { hmac } from "https://deno.land/x/hmac@v2.0.1/mod.ts";
+export { hmac };
