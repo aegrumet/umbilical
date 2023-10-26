@@ -19,6 +19,10 @@ resource "google_cloud_run_service" "umbilical" {
           name  = "PI_API_SECRET"
           value = var.pi_api_secret
         }
+        env {
+          name  = "UMBILICAL_KEYS"
+          value = var.umbilical_keys
+        }
         ports {
           container_port = 8000
         }

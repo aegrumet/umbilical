@@ -17,3 +17,7 @@ variable "pi_api_secret" {
 variable "credentials_file" {
   type = string
 }
+
+variable "umbilical_keys" {
+  type = string
+}
