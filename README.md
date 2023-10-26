@@ -13,7 +13,7 @@ To authenticate, clients should send a request header with the following format:
     X-Umbilical-Signature: t=<timestamp in milliseconds>,s=<hmac-sha256(`${timestamp}.${request url}`)>
 ```
 
-The request url includes everything after the domain name, for example if full
+The request url includes everything after the domain name and port, for example if full
 url is
 
 ```
