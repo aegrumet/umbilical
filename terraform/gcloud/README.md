@@ -8,7 +8,7 @@ main.tf:
 
 ```hcl
 module "umbilical" {
-  source        = "git@github.com:aegrumet/umbilical.git//terraform/gcloud?ref=v0.0.6"
+  source        = "git@github.com:aegrumet/umbilical.git//terraform/gcloud?ref=v0.0.9"
   project       = var.project
   region        = var.region
   pi_api_key    = var.pi_api_key
