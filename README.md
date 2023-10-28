@@ -57,9 +57,9 @@ You can sign up for free credentials at [api.podcastindex.org](https://api.podca
 
 The latest image for this repo is posted to [Docker Hub](https://hub.docker.com/r/aegrumet/umbilical/tags).
 
-Run on Google Cloud Run: [terraform/gcloud](terraform/gcloud)
-
-Run on other clouds: submit pull request.
+- Run on Deno Deploy: [deploy/deno](deploy/deno)
+- Run on Google Cloud Run: [deploy/gcloud/terraform](deploy/gcloud/terraform)
+- Run on other clouds: submit pull request.
 
 ## warnings
 
