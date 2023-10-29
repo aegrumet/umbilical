@@ -20,7 +20,8 @@ It's [free for personal use and non-commercial projects](https://deno.com/deploy
 - Click **Save (3 new)** to save changes. This will create a new deployment.
 - Navigate to **Overview** and find the list of deployments.
 - Click the 3 dots to the right of the latest deployment and select **Promote to production**.
-  - **NOTE:** The Deno Deploy UI is a little confusing, it's hard to tell which
-    deployment is the latest one. It appears to be forward chronological order,
-    with the newest deployment at the bottom of the list.
+  - **NOTE:** The Deno Deploy UI is a little confusing, it can be hard to tell
+    which deployment is the latest one when you're just changing environment
+    variables. Keep track of which deployment was previously live before
+    switching to the new one.
 - Your umbilical instance should now be live at the URL listed under **Production**.
