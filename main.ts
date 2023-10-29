@@ -1,10 +1,12 @@
-import { express, Request, Response } from "./deps.ts";
+import { cors, express, Request, Response } from "./deps.ts";
 
 import proxyRss from "./src/proxy-rss.ts";
 import search from "./src/search.ts";
 import verify from "./src/verify.ts";
 
 const app = express();
+
+app.use(cors());
 
 app.get("/API/proxy", async (req: Request, res: Response) => {
   if (!verify(req)) {
