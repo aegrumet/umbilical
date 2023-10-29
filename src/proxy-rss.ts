@@ -34,8 +34,6 @@ const proxyRss = async (req: Request, res: Response) => {
   await parser
     .parseString(response.data)
     .then((_) => {
-      res.set("Access-Control-Allow-Origin", "*");
-      res.set("Access-Control-Allow-Methods", "GET");
       res.send(response.data);
       return;
     })

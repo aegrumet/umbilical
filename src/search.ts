@@ -31,8 +31,6 @@ const search = async (req: Request, res: Response) => {
 
   // deno-lint-ignore no-explicit-any
   const results: any = await pi.searchByTerm(query);
-  res.set("Access-Control-Allow-Origin", "*");
-  res.set("Access-Control-Allow-Methods", "GET");
   res.send(results);
 };
 
