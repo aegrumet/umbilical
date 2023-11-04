@@ -1,9 +1,9 @@
 import { Request, Response, piapi } from "../deps.ts";
 
-// deno-lint-ignore no-explicit-any
-let pi: any = null;
-
 const search = async (req: Request, res: Response) => {
+  // deno-lint-ignore no-explicit-any
+  let pi: any = null;
+
   try {
     pi = piapi(Deno.env.get("PI_API_KEY"), Deno.env.get("PI_API_SECRET"));
   } catch (e) {

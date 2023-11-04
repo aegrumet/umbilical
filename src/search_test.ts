@@ -10,6 +10,8 @@ import {
 import { TEST_PI_API_KEY, TEST_PI_API_SECRET } from "../mocks/piapi.ts";
 
 Deno.test("Fail on missing keys", () => {
+  Deno.env.delete("PI_API_KEY");
+  Deno.env.delete("PI_API_SECRET");
   const request: MockRequest<Request> = createRequest({
     method: "GET",
     url: "/API/search?q=batmanuniversity",

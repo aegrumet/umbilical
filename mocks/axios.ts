@@ -17,11 +17,34 @@ const basefeed = `<?xml version="1.0" ?>
 </channel>
 </rss>`;
 
+const basechapters = {
+  version: "1.2.0",
+  chapters: [
+    {
+      startTime: 1,
+      title: "Chapter 1",
+      img: "https://example.com/chapter1.jpg",
+    },
+    {
+      startTime: 53,
+      title: "Chapter 2",
+      img: "https://example.com/chapter2.jpg",
+    },
+  ],
+};
+
 const badfeed = "This is not a valid RSS feed";
 
-const feeds: Map<string, string> = new Map<string, string>([
+const badchapters = {
+  bad: "these are not chapters",
+};
+
+// deno-lint-ignore no-explicit-any
+const feeds: Map<string, string> = new Map<string, any>([
   ["basefeed", basefeed],
   ["badfeed", badfeed],
+  ["basechapters", basechapters],
+  ["badchapters", badchapters],
 ]);
 
 const axios = (options: { url: string; method: string }) => {
