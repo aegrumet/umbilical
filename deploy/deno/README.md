@@ -19,9 +19,9 @@ It's [free for personal use and non-commercial projects](https://deno.com/deploy
 - Scroll to **Environment Variables** and add variables for `UMBILICAL_KEYS`, `PI_API_KEY`, and `PI_API_SECRET`
 - Click **Save (3 new)** to save changes. This will create a new deployment.
 - Navigate to **Overview** and find the list of deployments.
-- Click the 3 dots to the right of the latest deployment and select **Promote to production**.
+- If the newest configuration is not already deployed, click the 3 dots to the
+  right of the latest configuration and select **Promote to production**.
   - **NOTE:** The Deno Deploy UI is a little confusing, it can be hard to tell
-    which deployment is the latest one when you're just changing environment
-    variables. Keep track of which deployment was previously live before
-    switching to the new one.
+    which deployment is which. Keep track of which deployment id was previously
+    live before switching.
 - Your umbilical instance should now be live at the URL listed under **Production**.

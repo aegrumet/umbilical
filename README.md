@@ -36,9 +36,11 @@ See `src/verify.ts` for full details of signature verification.
 
 `GET /API/proxy?rss=<feed url>`
 
-Proxies the provided RSS feed. Returns an error if feed fails parsing. Returns raw RSS xml if parsing passes.
+`GET /API/proxy?chapters=<chapters url>`
 
-Philsophy: Only proxy RSS, to protect the service, but be otherwise unopinionated about parsing.
+Proxies the RSS or chapters url. Returns an error if the resource fails parsing. Returns raw unparsed resource if parsing passes.
+
+Philsophy: Only proxy known formats, to protect the service, but be otherwise unopinionated about parsing.
 
 ## search API
 
