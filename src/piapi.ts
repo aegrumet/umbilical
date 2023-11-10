@@ -1,10 +1,11 @@
 import { crypto, encodeHex } from "../deps.ts";
+import { UmbilicalContext } from "./umbilical-context.ts";
 
 const API = "https://api.podcastindex.org/api/1.0";
 
-export const checkEnv = () => {
-  const apiKey = Deno.env.get("PI_API_KEY");
-  const apiSecret = Deno.env.get("PI_API_SECRET");
+export const checkEnv = (c: UmbilicalContext) => {
+  const apiKey = c.env.PI_API_KEY;
+  const apiSecret = c.env.PI_API_SECRET;
 
   if (!apiKey || !apiSecret) {
     throw new Error("Invalid API key or secret");
@@ -13,8 +14,8 @@ export const checkEnv = () => {
   return { apiKey, apiSecret };
 };
 
-const searchByTerm = async (query: string) => {
-  const { apiKey, apiSecret } = checkEnv();
+const searchByTerm = async (query: string, c: UmbilicalContext) => {
+  const { apiKey, apiSecret } = checkEnv(c);
 
   const timestamp = Math.floor(Date.now() / 1000);
 

@@ -1,4 +1,4 @@
-import { parse, parseFeed, Context } from "../deps.ts";
+import { xml2js, parseFeed, Context } from "../deps.ts";
 
 const proxyRss = async (c: Context) => {
   const rss: string | undefined = c.req.query("rss");
@@ -22,7 +22,12 @@ const proxyRss = async (c: Context) => {
   // The feed parser bombs on invalid XML,
   // so first check for valid XML.
   try {
-    parse(xml);
+    const json = xml2js(xml, {
+      compact: true,
+    });
+    if (!json.rss) {
+      throw new Error("Invalid XML.");
+    }
   } catch (_) {
     c.status(500);
     return c.text("Error parsing feed.");

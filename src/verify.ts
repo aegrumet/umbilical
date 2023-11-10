@@ -1,4 +1,5 @@
 import { hmac } from "../deps.ts";
+import UmbilicalContext from "./umbilical-context.ts";
 
 /***
  * Verifies the incoming request.
@@ -31,14 +32,15 @@ import { hmac } from "../deps.ts";
  *
  * @returns {boolean} Whether the request is valid.
  */
-const verify = (url: string, header: string | undefined): boolean => {
-  const key: string | undefined = Deno.env.get("UMBILICAL_KEYS");
+const verify = (c: UmbilicalContext): boolean => {
+  const key: string | undefined = c.env.UMBILICAL_KEYS;
 
   if (key === undefined) return false;
 
   const keys: string[] = key.split(",");
   if (keys.includes("DANGEROUSLY_ALLOW_ALL")) return true;
 
+  const header: string | undefined = c.req.header("X-Umbilical-Signature");
   if (header === undefined) return false;
 
   const [t, s] = header.split(",");
@@ -55,7 +57,7 @@ const verify = (url: string, header: string | undefined): boolean => {
   if (timestampMilliseconds > Date.now()) return false;
   if (timestampMilliseconds + VERIFY_TIMEOUT * 1000 < Date.now()) return false;
 
-  const timestampedPayload = `${timestamp}.${url}`;
+  const timestampedPayload = `${timestamp}.${c.req.url}`;
   for (let i = 0; i < keys.length; i += 1) {
     const key = keys[i];
     const expectedSignature = hmac(

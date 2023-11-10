@@ -3,7 +3,7 @@ import searchByTerm, { checkEnv } from "./piapi.ts";
 
 const search = async (c: Context) => {
   try {
-    checkEnv();
+    checkEnv(c);
   } catch (_) {
     c.status(500);
     return c.text(
@@ -19,7 +19,7 @@ const search = async (c: Context) => {
   }
 
   // deno-lint-ignore no-explicit-any
-  const results: any = await searchByTerm(query);
+  const results: any = await searchByTerm(query, c);
   return c.json(results);
 };
 

@@ -4,13 +4,14 @@ import proxyRss from "./src/proxy-rss.ts";
 import proxyChapters from "./src/proxy-chapters.ts";
 import search from "./src/search.ts";
 import verify from "./src/verify.ts";
+import UmbilicalContext from "./src/umbilical-context.ts";
 
 const app = new Hono();
 
 app.use("/API/*", cors());
 
 app.get("/API/proxy", async (c: Context) => {
-  if (!verify(c.req.url, c.req.header("X-Umbilical-Signature"))) {
+  if (!verify(c as UmbilicalContext)) {
     c.status(401);
     return c.text("Unauthorized.");
   }
@@ -30,7 +31,7 @@ app.get("/API/proxy", async (c: Context) => {
 });
 
 app.get("/API/search", async (c: Context) => {
-  if (!verify(c.req.url, c.req.header("X-Umbilical-Signature"))) {
+  if (!verify(c as UmbilicalContext)) {
     c.status(401);
     return c.text("Unauthorized.");
   }

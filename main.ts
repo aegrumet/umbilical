@@ -1,3 +1,6 @@
 import app from "./app.ts";
+import denoEnv from "./src/deno-env.ts";
 
-Deno.serve(app.fetch);
+Deno.serve((r) => {
+  return app.fetch(r, denoEnv());
+});

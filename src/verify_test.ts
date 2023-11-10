@@ -1,6 +1,7 @@
 import { assertEquals } from "../dev_deps.ts";
 import verify from "./verify.ts";
 import { hmac } from "../deps.ts";
+import { UmbilicalContext } from "./umbilical-context.ts";
 
 function generateSignatureHeader(url: string, key: string): string {
   const timestamp = Date.now();
@@ -96,7 +97,7 @@ const tests: Array<any> = [
   {
     ...baseCasePassTestCase,
     label: "UMBILICAL_KEYS is not set",
-    UMBILICAL_KEYS: null,
+    UMBILICAL_KEYS: undefined,
     expected: false,
   },
   {
@@ -141,9 +142,18 @@ tests.forEach((test) => {
       Deno.env.set("UMBILICAL_KEYS", test["UMBILICAL_KEYS"]);
     }
 
-    assertEquals(
-      verify(test.request.url, test.request.headers["X-Umbilical-Signature"]),
-      test.expected
-    );
+    const c = {
+      req: {
+        url: test.request.url,
+        header: (key: string) => {
+          return test.request.headers[key];
+        },
+      },
+      env: {
+        UMBILICAL_KEYS: test["UMBILICAL_KEYS"],
+      },
+    } as UmbilicalContext;
+
+    assertEquals(verify(c), test.expected);
   });
 });
