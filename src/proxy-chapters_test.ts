@@ -1,6 +1,6 @@
 import { assertEquals, mf } from "../dev_deps.ts";
 import app from "../app.ts";
-import { feeds } from "../mocks/axios.ts";
+import { feeds } from "../mocks/feeds.ts";
 
 Deno.env.set("UMBILICAL_KEYS", "DANGEROUSLY_ALLOW_ALL");
 
