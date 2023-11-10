@@ -1,37 +1,26 @@
-import { Request, Response, piapi } from "../deps.ts";
+import { Context } from "../deps.ts";
+import searchByTerm, { checkEnv } from "./piapi.ts";
 
-const search = async (req: Request, res: Response) => {
-  // deno-lint-ignore no-explicit-any
-  let pi: any = null;
-
+const search = async (c: Context) => {
   try {
-    pi = piapi(Deno.env.get("PI_API_KEY"), Deno.env.get("PI_API_SECRET"));
-  } catch (e) {
-    console.error("Error configuring PI API", e);
-  }
-
-  if (!pi) {
-    res.status(500);
-    res.send(
+    checkEnv();
+  } catch (_) {
+    c.status(500);
+    return c.text(
       "Search not available for this instance. Either it's not enabled or something else went wrong."
     );
-    return;
   }
 
-  let query = "";
-  if ("q" in req.query) {
-    query = req.query.q as string;
-  }
+  const query: string | undefined = c.req.query("q");
 
-  if (!query.length) {
-    res.status(500);
-    res.send("No query provided.");
-    return;
+  if (!query) {
+    c.status(500);
+    return c.text("No query provided.");
   }
 
   // deno-lint-ignore no-explicit-any
-  const results: any = await pi.searchByTerm(query);
-  res.send(results);
+  const results: any = await searchByTerm(query);
+  return c.json(results);
 };
 
 export default search;

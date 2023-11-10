@@ -1,7 +1,6 @@
 import { assertEquals } from "../dev_deps.ts";
 import verify from "./verify.ts";
-import { Request, hmac } from "../deps.ts";
-import { createRequest, MockRequest } from "../dev_deps.ts";
+import { hmac } from "../deps.ts";
 
 function generateSignatureHeader(url: string, key: string): string {
   const timestamp = Date.now();
@@ -141,9 +140,10 @@ tests.forEach((test) => {
     } else {
       Deno.env.set("UMBILICAL_KEYS", test["UMBILICAL_KEYS"]);
     }
-    const request: MockRequest<Request> = createRequest({
-      ...test.request,
-    });
-    assertEquals(verify(request), test.expected);
+
+    assertEquals(
+      verify(test.request.url, test.request.headers["X-Umbilical-Signature"]),
+      test.expected
+    );
   });
 });

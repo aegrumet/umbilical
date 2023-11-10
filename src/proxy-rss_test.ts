@@ -1,69 +1,53 @@
-import { assertEquals } from "../dev_deps.ts";
-import proxyRss from "./proxy-rss.ts";
-import { Request, Response } from "../deps.ts";
-import {
-  createRequest,
-  createResponse,
-  MockRequest,
-  MockResponse,
-} from "../dev_deps.ts";
+import { assertEquals, mf } from "../dev_deps.ts";
+import app from "../app.ts";
+import { feeds } from "../mocks/axios.ts";
+
+Deno.env.set("UMBILICAL_KEYS", "DANGEROUSLY_ALLOW_ALL");
 
 Deno.test("Fails if no rss is supplied", async () => {
-  const request: MockRequest<Request> = createRequest({
-    method: "GET",
-    url: "/API/proxy",
-  });
-  const response: MockResponse<Response> = createResponse();
-
-  await proxyRss(request, response);
-
-  assertEquals(response._getStatusCode(), 500);
+  const res = await app.request("/API/proxy");
+  assertEquals(res.status, 500);
 });
 
 Deno.test("Fails if the rss argument is not a valid URL", async () => {
-  const request: MockRequest<Request> = createRequest({
-    method: "GET",
-    url: "/API/proxy?rss=foo",
-  });
-  const response: MockResponse<Response> = createResponse();
-
-  await proxyRss(request, response);
-
-  assertEquals(response._getStatusCode(), 500);
-});
-
-Deno.test("Passes when the URL returns a valid RSS feed", async () => {
-  const request: MockRequest<Request> = createRequest({
-    method: "GET",
-    url: "/API/proxy?rss=http://examples.com/basefeed",
-  });
-  const response: MockResponse<Response> = createResponse();
-
-  await proxyRss(request, response);
-
-  assertEquals(response._getStatusCode(), 200);
+  const res = await app.request("/API/proxy?rss=foo");
+  assertEquals(res.status, 500);
 });
 
 Deno.test("Fails when the URL returns an invalid RSS feed", async () => {
-  const request: MockRequest<Request> = createRequest({
-    method: "GET",
-    url: "/API/proxy?rss=http://example.com/badfeed",
+  mf.install();
+  mf.mock("GET@/badfeed", (_req, _) => {
+    return new Response(feeds.get("badfeed"), {
+      status: 200,
+    });
   });
-  const response: MockResponse<Response> = createResponse();
+  const res = await app.request("/API/proxy?rss=http://example.com/badfeed");
+  assertEquals(res.status, 500);
+  mf.uninstall();
+});
 
-  await proxyRss(request, response);
-
-  assertEquals(response._getStatusCode(), 500);
+Deno.test("Passes when the URL returns a valid RSS feed", async () => {
+  mf.install();
+  mf.mock("GET@/basefeed", (_req, _) => {
+    return new Response(feeds.get("basefeed"), {
+      status: 200,
+    });
+  });
+  const res = await app.request("/API/proxy?rss=http://example.com/basefeed");
+  assertEquals(res.status, 200);
+  mf.uninstall();
 });
 
 Deno.test("Fails when the URL isn't found", async () => {
-  const request: MockRequest<Request> = createRequest({
-    method: "GET",
-    url: "/API/proxy?rss=http://example.com/missingfeed",
+  mf.install();
+  mf.mock("GET@/missingfeed", (_req, _) => {
+    return new Response("notfound", {
+      status: 404,
+    });
   });
-  const response: MockResponse<Response> = createResponse();
-
-  await proxyRss(request, response);
-
-  assertEquals(response._getStatusCode(), 500);
+  const res = await app.request(
+    "/API/proxy?rss=http://example.com/missingfeed"
+  );
+  assertEquals(res.status, 500);
+  mf.uninstall();
 });

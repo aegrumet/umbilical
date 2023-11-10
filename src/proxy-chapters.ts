@@ -1,42 +1,32 @@
-import { Request, Response, axios } from "../deps.ts";
+import { Context } from "../deps.ts";
 
-const proxyChapters = async (req: Request, res: Response) => {
-  let chaptersUrl = "";
-  if ("chapters" in req.query) {
-    chaptersUrl = req.query.chapters as string;
+const proxyChapters = async (c: Context) => {
+  const chapters: string | undefined = c.req.query("chapters");
+
+  if (!chapters) {
+    c.status(500);
+    return c.text("No chapters link provided.");
   }
-
-  if (chaptersUrl.length === 0) {
-    res.status(500);
-    res.send("No rss provided.");
-    return;
-  }
-
-  const options = {
-    url: chaptersUrl,
-    method: "GET",
-  };
 
   // deno-lint-ignore no-explicit-any
   let response: any = null;
   try {
-    response = await axios(options);
-  } catch (e) {
-    console.log(chaptersUrl, e);
-    res.status(500);
-    res.send("Error fetching chapters.");
-    return;
+    response = await fetch(chapters);
+  } catch (_) {
+    c.status(500);
+    return c.text("Error fetching chapters.");
   }
 
   // Baseline validation.
-  if (!("chapters" in response.data)) {
-    res.status(500);
-    res.send("Error fetching chapters.");
-    return;
+  // deno-lint-ignore no-explicit-any
+  const json: any = await response.json();
+  if (!("chapters" in json)) {
+    c.status(500);
+    return c.text("Error fetching chapters.");
   }
 
-  res.set("Content-Type", "application/json+chapters");
-  res.send(response.data);
+  c.header("Content-Type", "application/json+chapters");
+  return c.body(response.data);
 };
 
 export default proxyChapters;

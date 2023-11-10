@@ -1,47 +1,42 @@
-import { Request, Response, axios, Parser } from "../deps.ts";
+import { parse, parseFeed, Context } from "../deps.ts";
 
-const parser = new Parser();
+const proxyRss = async (c: Context) => {
+  const rss: string | undefined = c.req.query("rss");
 
-const proxyRss = async (req: Request, res: Response) => {
-  let feed = "";
-  if ("rss" in req.query) {
-    feed = req.query.rss as string;
+  if (!rss) {
+    c.status(500);
+    return c.text("No rss provided.");
   }
-
-  if (feed.length === 0) {
-    res.status(500);
-    res.send("No rss provided.");
-    return;
-  }
-
-  const options = {
-    url: feed,
-    method: "GET",
-  };
 
   // deno-lint-ignore no-explicit-any
   let response: any = null;
   try {
-    response = await axios(options);
+    response = await fetch(rss);
   } catch (_) {
-    res.status(500);
-    res.send("Error fetching feed.");
-    return;
+    c.status(500);
+    return c.text("Error fetching feed.");
   }
 
-  // Only forward RSS XML, which we check by parsing
-  // But we don't pass the parsed result, we pass the original.
-  await parser
-    .parseString(response.data)
-    .then((_) => {
-      res.send(response.data);
-      return;
-    })
-    .catch(() => {
-      res.status(500);
-      res.send("Error fetching feed.");
-      return;
-    });
+  const xml: string = await response.text();
+
+  // The feed parser bombs on invalid XML,
+  // so first check for valid XML.
+  try {
+    parse(xml);
+  } catch (_) {
+    c.status(500);
+    return c.text("Error parsing feed.");
+  }
+
+  try {
+    await parseFeed(xml);
+  } catch (_) {
+    c.status(500);
+    return c.text("Error parsing feed.");
+  }
+
+  c.header("Content-Type", "application/rss+xml");
+  return c.body(xml);
 };
 
 export default proxyRss;

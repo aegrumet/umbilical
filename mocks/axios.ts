@@ -40,33 +40,11 @@ const badchapters = {
 };
 
 // deno-lint-ignore no-explicit-any
-const feeds: Map<string, string> = new Map<string, any>([
+export const feeds: Map<string, string> = new Map<string, any>([
   ["basefeed", basefeed],
   ["badfeed", badfeed],
   ["basechapters", basechapters],
   ["badchapters", badchapters],
 ]);
 
-const axios = (options: { url: string; method: string }) => {
-  let urlObj: URL;
-
-  try {
-    urlObj = new URL(options.url);
-  } catch (_) {
-    throw new Error("Invalid URL");
-  }
-
-  const feedKey: string = urlObj.pathname.split("/").pop() as string;
-
-  if (feeds.has(feedKey) === false) {
-    throw new Error("Invalid URL");
-  }
-
-  return new Promise((resolve, _) => {
-    resolve({
-      data: feeds.get(feedKey),
-    });
-  });
-};
-
-export default axios;
+export default feeds;
