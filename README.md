@@ -4,7 +4,7 @@ Lifeline services for podcast PWAs.
 
 ## authentication
 
-You must set the `UMBILICAL_KEYS` environment variable in order to serve
+You must set `UMBILICAL_KEYS` in the runtime environment in order to serve
 requests. It should be set to a comma-separated list of valid signing keys.
 
 To authenticate, clients should send a request header with the following format:
@@ -21,13 +21,13 @@ See `src/verify.ts` for full details of signature verification.
 
 ## proxy API
 
-`GET /API/proxy?rss=<feed url>`
+`GET /API/proxy?rss=<rss url>`
 
 `GET /API/proxy?chapters=<chapters url>`
 
-Proxies the RSS or chapters url. Returns an error if the resource fails parsing. Returns raw unparsed resource if parsing passes.
+Proxies the RSS or chapters url. Returns an error if the resource fails parsing. Returns the raw unparsed resource if parsing passes.
 
-Philsophy: Only proxy known formats, to protect the service, but be otherwise unopinionated about parsing.
+Philsophy: Proxy only known formats, to protect the service, but be otherwise unopinionated about parsing.
 
 ## search API
 
