@@ -54,8 +54,13 @@ const verify = (c: UmbilicalContext): boolean => {
   const timestampMilliseconds = parseInt(timestamp);
   if (isNaN(timestampMilliseconds)) return false;
 
-  if (timestampMilliseconds > Date.now()) return false;
-  if (timestampMilliseconds + VERIFY_TIMEOUT * 1000 < Date.now()) return false;
+  if (
+    timestampMilliseconds >
+    Date.now() + VERIFY_ACCEPTABLE_FUTURE_SECONDS * 1000
+  )
+    return false;
+  if (timestampMilliseconds + VERIFY_TIMEOUT_SECONDS * 1000 < Date.now())
+    return false;
 
   const timestampedPayload = `${timestamp}.${c.req.url}`;
   for (let i = 0; i < keys.length; i += 1) {
@@ -73,6 +78,9 @@ const verify = (c: UmbilicalContext): boolean => {
   return false;
 };
 
-export const VERIFY_TIMEOUT = 30;
+export const VERIFY_TIMEOUT_SECONDS = 30;
+
+// Clients may be ahead of servers by this much.
+export const VERIFY_ACCEPTABLE_FUTURE_SECONDS = 1;
 
 export default verify;

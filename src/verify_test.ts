@@ -89,7 +89,7 @@ const tests: Array<any> = [
     request: {
       ...baseCasePassTestCase.request,
       headers: {
-        "X-Umbilical-Signature": "t=${Date.now() + 1000},sabcdefghijk",
+        "X-Umbilical-Signature": "t=${Date.now() + 5000},sabcdefghijk",
       },
     },
     expected: false,
