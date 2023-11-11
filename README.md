@@ -10,20 +10,7 @@ requests. It should be set to a comma-separated list of valid signing keys.
 To authenticate, clients should send a request header with the following format:
 
 ```
-    X-Umbilical-Signature: t=<timestamp in milliseconds>,s=<hmac-sha256(`${timestamp}.${request url}`)>
-```
-
-The request url includes everything after the domain name and port, for example if full
-url is
-
-```
-http://localhost:8000/API/proxy?rss=http%3A%2F%2Fmp3s.nashownotes.com%2Fpc20rss.xml
-```
-
-then the signature should be generated from
-
-```
-/API/proxy?rss=http%3A%2F%2Fmp3s.nashownotes.com%2Fpc20rss.xml
+    X-Umbilical-Signature: t=<timestamp in milliseconds>,s=<hmac-sha256(`${timestamp}.${full request url}`)>
 ```
 
 The hmac should be generated using one of the signing keys in `UMBILICAL_KEYS`.
@@ -59,6 +46,7 @@ You can sign up for free credentials at [api.podcastindex.org](https://api.podca
 
 The latest image for this repo is posted to [Docker Hub](https://hub.docker.com/r/aegrumet/umbilical/tags).
 
+- Run on Cloudflare: [deploy/cloudflare](deploy/cloudflare)
 - Run on Deno Deploy: [deploy/deno](deploy/deno)
 - Run on Google Cloud Run: [deploy/gcloud/terraform](deploy/gcloud/terraform)
 - Run on other clouds: submit pull request.

@@ -1,9 +1,9 @@
-import { Hono, Context } from "https://deno.land/x/hono/mod.ts";
-import { cors } from "https://deno.land/x/hono/middleware/cors/index.ts";
+import { Hono, Context } from "https://deno.land/x/hono@v3.9.2/mod.ts";
+import { cors } from "https://deno.land/x/hono@v3.9.2/middleware/cors/index.ts";
 export { Hono, cors };
 export type { Context };
 
-import { parseFeed } from "https://deno.land/x/rss/mod.ts";
+import { parseFeed } from "https://deno.land/x/rss@1.0.0/mod.ts";
 export { parseFeed };
 
 import { hmac } from "https://deno.land/x/hmac@v2.0.1/mod.ts";

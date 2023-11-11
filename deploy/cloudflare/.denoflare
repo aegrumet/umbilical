@@ -1,0 +1,27 @@
+{
+  "$schema": "https://raw.githubusercontent.com/skymethod/denoflare/v0.5.12/common/config.schema.json",
+  "scripts": {
+    "umbilical": {
+      "path": "app.ts",
+      "localPort": 8000,
+      "workersDev": true,
+      "bindings": {
+        "UMBILICAL_KEYS": {
+          "value": "SIGNING_KEY_1,SIGNING_KEY_2"
+        },
+        "PI_API_KEY": {
+          "value": "Podcast Index API Key"
+        },
+        "PI_API_SECRET": {
+          "value": "Podcast Index API Secret"
+        }
+      }
+    }
+  },
+  "profiles": {
+    "account1": {
+      "accountId": "Cloudflare Account Id",
+      "apiToken": "Cloudflare API token"
+    }
+  }
+}

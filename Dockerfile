@@ -16,9 +16,12 @@ RUN deno cache --unstable ./deps.ts
 
 # 4. Copy the app and cache it. Also cache all *.test.ts files if such are found.
 COPY --chown=root:root . .
-RUN deno cache --unstable main.ts && \
-    deno cache --unstable src/proxy-rss.ts && \
-    find . -name '*.test.ts' | xargs --no-run-if-empty deno cache --unstable
+
+USER root
+RUN chown deno deno.lock
+USER deno
+
+RUN find . -name '*.ts' | xargs --no-run-if-empty deno cache --unstable
 
 CMD ["task", "start:debug"]
 
