@@ -1,6 +1,0 @@
-{
-  "imports": {
-    "npm:podcast-index-api@1.1.10": "./mocks/piapi.ts",
-    "npm:axios@1.5.1": "./mocks/axios.ts"
-  }
-}
