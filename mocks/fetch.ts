@@ -1,3 +1,5 @@
+import { mf } from "../dev_deps.ts";
+
 const basefeed = `<?xml version="1.0" ?>
 <rss version="2.0">
 <channel>
@@ -17,7 +19,7 @@ const basefeed = `<?xml version="1.0" ?>
 </channel>
 </rss>`;
 
-const basechapters = {
+const basechapters = JSON.stringify({
   version: "1.2.0",
   chapters: [
     {
@@ -31,7 +33,7 @@ const basechapters = {
       img: "https://example.com/chapter2.jpg",
     },
   ],
-};
+});
 
 const badfeed = "This is not a valid RSS feed";
 
@@ -47,4 +49,26 @@ export const feeds: Map<string, string> = new Map<string, any>([
   ["badchapters", badchapters],
 ]);
 
+// Assume mf.install() has already been called
+const installFeedsMock = () => {
+  mf.mock(`GET@/:name`, (_req, params) => {
+    const name = params?.name ?? "";
+    const feed = feeds.get(name);
+    if (feed === undefined) {
+      return new Response("", {
+        status: 404,
+      });
+    }
+
+    return new Response(feed, {
+      status: 200,
+    });
+  });
+};
+
+const uninstallFeedsMock = () => {
+  mf.remove(`GET@/:name`);
+};
+
+export { installFeedsMock, uninstallFeedsMock };
 export default feeds;

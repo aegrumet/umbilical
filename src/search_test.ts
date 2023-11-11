@@ -1,70 +1,66 @@
-import { assertEquals, mf } from "../dev_deps.ts";
+import {
+  describe,
+  it,
+  afterAll,
+  beforeAll,
+  assertEquals,
+  mf,
+} from "../dev_deps.ts";
 import app from "../app.ts";
-import { TEST_PI_API_KEY, TEST_PI_API_SECRET } from "../mocks/piapi.ts";
 import denoEnv from "./deno-env.ts";
+import { installPiApiMock, uninstallPiApiMock } from "../mocks/piapi.ts";
+
+const TEST_PI_API_KEY = "test pi api key";
+const TEST_PI_API_SECRET = "test pi api secret";
 
 Deno.env.set("UMBILICAL_KEYS", "DANGEROUSLY_ALLOW_ALL");
-const PIAPI_PATH = "/api/1.0/search/byterm";
 
-Deno.test("Fail on missing keys", async () => {
-  Deno.env.delete("PI_API_KEY");
-  Deno.env.delete("PI_API_SECRET");
-
-  const res = await app.request(
-    "/API/search?q=batmanuniversity",
-    undefined,
-    denoEnv()
-  );
-  assertEquals(res.status, 500);
-});
-
-Deno.test("Fail on incorrect keys", async () => {
-  Deno.env.set("PI_API_KEY", `NOT${TEST_PI_API_KEY}`);
-  Deno.env.set("PI_API_SECRET", `NOT${TEST_PI_API_SECRET}`);
-
-  mf.install();
-  mf.mock(`GET@${PIAPI_PATH}`, (_req, _) => {
-    if (
-      (Deno.env.get("PI_API_KEY") ?? "") !== TEST_PI_API_KEY ||
-      (Deno.env.get("PI_API_SECRET") ?? "") !== TEST_PI_API_SECRET
-    ) {
-      return new Response("[]", {
-        status: 500,
-      });
-    }
-    return new Response("[]");
+describe("Search", () => {
+  beforeAll(() => {
+    mf.install();
+    installPiApiMock();
   });
 
-  const res = await app.request(
-    "/API/search?q=batmanuniversity",
-    undefined,
-    denoEnv()
-  );
-  assertEquals(res.status, 500);
+  afterAll(() => {
+    uninstallPiApiMock();
+    mf.uninstall();
+  });
 
-  mf.uninstall();
-});
+  it("fails on missing keys", async () => {
+    Deno.env.delete("PI_API_KEY");
+    Deno.env.delete("PI_API_SECRET");
 
-Deno.test("Fails if no query is supplied", async () => {
-  Deno.env.set("PI_API_KEY", TEST_PI_API_KEY);
-  Deno.env.set("PI_API_SECRET", TEST_PI_API_SECRET);
+    const res = await app.request(
+      "/API/search?q=batmanuniversity",
+      undefined,
+      denoEnv()
+    );
+    assertEquals(res.status, 500);
+  });
 
-  const res = await app.request("/API/search", undefined, denoEnv());
-  assertEquals(res.status, 500);
-});
-
-Deno.test(
-  "Performs a request when the correct keys and a query are supplied",
-  async () => {
+  it("fails if no query is supplied", async () => {
     Deno.env.set("PI_API_KEY", TEST_PI_API_KEY);
     Deno.env.set("PI_API_SECRET", TEST_PI_API_SECRET);
 
-    mf.install();
-    mf.mock(`GET@${PIAPI_PATH}`, (_req, _) => {
-      return new Response("[]", {
-        status: 200,
-      });
-    });
+    const res = await app.request("/API/search", undefined, denoEnv());
+    assertEquals(res.status, 500);
+  });
+
+  it("fails on incorrect keys", async () => {
+    Deno.env.set("PI_API_KEY", `NOT${TEST_PI_API_KEY}`);
+    Deno.env.set("PI_API_SECRET", `NOT${TEST_PI_API_SECRET}`);
+
+    const res = await app.request(
+      "/API/search?q=batmanuniversity",
+      undefined,
+      denoEnv()
+    );
+    assertEquals(res.status, 500);
+  });
+
+  it("performs a request when the correct keys and a query are supplied", async () => {
+    Deno.env.set("PI_API_KEY", TEST_PI_API_KEY);
+    Deno.env.set("PI_API_SECRET", TEST_PI_API_SECRET);
 
     const res = await app.request(
       "/API/search?q=batmanuniversity",
@@ -72,6 +68,5 @@ Deno.test(
       denoEnv()
     );
     assertEquals(res.status, 200);
-    mf.uninstall();
-  }
-);
+  });
+});

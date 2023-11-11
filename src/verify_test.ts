@@ -1,4 +1,4 @@
-import { assertEquals } from "../dev_deps.ts";
+import { describe, it, assertEquals } from "../dev_deps.ts";
 import verify from "./verify.ts";
 import { hmac } from "../deps.ts";
 import { UmbilicalContext } from "./umbilical-context.ts";
@@ -134,26 +134,28 @@ const tests: Array<any> = [
   },
 ];
 
-tests.forEach((test) => {
-  Deno.test(test.label, () => {
-    if (test["UMBILICAL_KEYS"] === null) {
-      Deno.env.delete("UMBILICAL_KEYS");
-    } else {
-      Deno.env.set("UMBILICAL_KEYS", test["UMBILICAL_KEYS"]);
-    }
+describe("Verification", () => {
+  tests.forEach((test) => {
+    it(test.label, () => {
+      if (test["UMBILICAL_KEYS"] === null) {
+        Deno.env.delete("UMBILICAL_KEYS");
+      } else {
+        Deno.env.set("UMBILICAL_KEYS", test["UMBILICAL_KEYS"]);
+      }
 
-    const c = {
-      req: {
-        url: test.request.url,
-        header: (key: string) => {
-          return test.request.headers[key];
+      const c = {
+        req: {
+          url: test.request.url,
+          header: (key: string) => {
+            return test.request.headers[key];
+          },
         },
-      },
-      env: {
-        UMBILICAL_KEYS: test["UMBILICAL_KEYS"],
-      },
-    } as UmbilicalContext;
+        env: {
+          UMBILICAL_KEYS: test["UMBILICAL_KEYS"],
+        },
+      } as UmbilicalContext;
 
-    assertEquals(verify(c), test.expected);
+      assertEquals(verify(c), test.expected);
+    });
   });
 });

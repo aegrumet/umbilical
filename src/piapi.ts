@@ -1,5 +1,4 @@
 import { encodeHex } from "../deps.ts";
-
 import { UmbilicalContext } from "./umbilical-context.ts";
 
 const API = "https://api.podcastindex.org/api/1.0";
