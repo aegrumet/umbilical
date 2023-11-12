@@ -1,4 +1,5 @@
 import { encodeHex } from "../deps.ts";
+import umbilicalUserAgent from "./config.ts";
 import { UmbilicalContext } from "./umbilical-context.ts";
 
 const API = "https://api.podcastindex.org/api/1.0";
@@ -31,7 +32,7 @@ const searchByTerm = async (query: string, c: UmbilicalContext) => {
   const options = {
     method: "GET",
     headers: {
-      "User-Agent": "Umbilical/0.0",
+      "User-Agent": umbilicalUserAgent,
       "X-Auth-Date": "" + timestamp,
       "X-Auth-Key": apiKey,
       Authorization,

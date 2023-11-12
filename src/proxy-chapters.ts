@@ -1,4 +1,5 @@
 import { Context } from "../deps.ts";
+import umbilicalUserAgent from "./config.ts";
 
 const proxyChapters = async (c: Context) => {
   const chapters: string | undefined = c.req.query("chapters");
@@ -10,8 +11,14 @@ const proxyChapters = async (c: Context) => {
 
   // deno-lint-ignore no-explicit-any
   let response: any = null;
+  const options = {
+    method: "GET",
+    headers: {
+      "User-Agent": umbilicalUserAgent,
+    },
+  };
   try {
-    response = await fetch(chapters);
+    response = await fetch(chapters, options);
   } catch (_) {
     c.status(500);
     return c.text("Error fetching chapters.");
