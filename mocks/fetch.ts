@@ -41,12 +41,53 @@ const badchapters = {
   bad: "these are not chapters",
 };
 
+const baseopml = `<?xml version="1.0"?>
+<!-- example OPML file -->
+<!-- source https://gist.github.com/jamesstout/a4050fdfda4f1fad5d5637ff35293549 -->
+<opml version="1.0">
+    <head>
+        <title>Overcast Podcast Subscriptions</title>
+    </head>
+    <body>
+        <outline type="rss" text="Richard Herring's Leicester Square Theatre Podcast"
+            title="Richard Herring's Leicester Square Theatre Podcast"
+            xmlUrl="http://feeds.feedburner.com/RichardHerringLSTPodcast"
+            htmlUrl="https://www.comedy.co.uk/podcasts/richard_herring_lst_podcast/" />
+        <outline type="rss" text="5by5 at the Movies" title="5by5 at the Movies"
+            xmlUrl="http://feeds.5by5.tv/movies" htmlUrl="http://5by5.tv/movies" />
+        <outline type="rss" text="TV Talk Machine" title="TV Talk Machine"
+            xmlUrl="http://feeds.theincomparable.com/tvtm"
+            htmlUrl="https://www.theincomparable.com/tvtm/" />
+        <outline type="rss" text="A STORM OF SPOILERS - A Pop Culture Podcast"
+            title="A STORM OF SPOILERS - A Pop Culture Podcast"
+            xmlUrl="http://feeds.feedburner.com/AStormOfSpoilers"
+            htmlUrl="http://stormofspoilers.com/" />
+        <outline type="rss" text="Reconcilable Differences" title="Reconcilable Differences"
+            xmlUrl="https://www.relay.fm/rd/feed" htmlUrl="https://www.relay.fm/rd" />
+        <outline type="rss" text="Query" title="Query" xmlUrl="https://www.relay.fm/query/feed"
+            htmlUrl="https://www.relay.fm/query" />
+        <outline type="rss" text="Omnibus" title="Omnibus"
+            xmlUrl="https://feeds.megaphone.fm/omnibus" htmlUrl="https://www.omnibusproject.com/" />
+        <outline type="rss" text="Techmeme Ride Home" title="Techmeme Ride Home"
+            xmlUrl="http://feeds.feedburner.com/TechmemeRideHome"
+            htmlUrl="https://www.techmeme.com/" />
+        <outline type="rss" text="Stuff You Should Know" title="Stuff You Should Know"
+            xmlUrl="https://feeds.megaphone.fm/stuffyoushouldknow"
+            htmlUrl="https://www.howstuffworks.com/" />
+        <outline type="rss" text="Following The Leftovers (Ad-Free)"
+            title="Following The Leftovers (Ad-Free)"
+            xmlUrl="http://username:password@baldmove.com/feed/ad-free-the-leftovers/"
+            htmlUrl="http://baldmove.com/category/the-leftovers/" />
+    </body>
+</opml>`;
+
 // deno-lint-ignore no-explicit-any
 export const feeds: Map<string, string> = new Map<string, any>([
   ["basefeed", basefeed],
   ["badfeed", badfeed],
   ["basechapters", basechapters],
   ["badchapters", badchapters],
+  ["baseopml", baseopml],
 ]);
 
 // Assume mf.install() has already been called
