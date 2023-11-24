@@ -3,6 +3,7 @@ import StatefulPodpingRelay from "./stateful-podping-relay.ts";
 
 const relayPodping = (c: Context) => {
   const relay = new StatefulPodpingRelay();
+  relay.connect();
   const podpingEmitter = relay.getEmitter();
   let shouldUnsubscribe = false;
 

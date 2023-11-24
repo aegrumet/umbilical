@@ -14,3 +14,15 @@ import {
 } from "https://deno.land/std@0.206.0/testing/bdd.ts";
 
 export { afterEach, beforeEach, describe, it, afterAll, beforeAll };
+
+export { FakeTime } from "https://deno.land/std@0.207.0/testing/time.ts";
+
+import {
+  assertSpyCall,
+  assertSpyCalls,
+  returnsNext,
+  stub,
+} from "https://deno.land/std@0.207.0/testing/mock.ts";
+export { assertSpyCall, assertSpyCalls, returnsNext, stub };
+
+export { EventEmitter } from "https://deno.land/x/event@2.0.1/mod.ts";

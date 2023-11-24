@@ -7,7 +7,7 @@ import {
 
 const PODPING_ORIGIN = "wss://api.livewire.io/ws/podping";
 
-const CONNECT_ATTEMPTS = 7;
+export const MAX_CONNECT_ATTEMPTS = 7;
 const CONNECT_INITIAL_DELAY = 1000;
 
 export default class StatefulPodpingRelay {
@@ -21,37 +21,37 @@ export default class StatefulPodpingRelay {
   constructor() {
     this.patterns = Array<RegExp>();
     this.emitter = Evt.create<string>();
-
-    this.connect();
   }
 
   /***
    * Tries to connect or reconnect to a websocket server with exponential
    * backoff.
    */
-  private connect() {
+  public connect() {
     this.connectAttemptNumber += 1;
     console.log("Connecting to Podping...", this.connectAttemptNumber);
-    this.ws = new WebSocket(PODPING_ORIGIN);
-    this.ws.addEventListener("open", (event) => {
-      this.connectAttemptNumber = 0;
-      this.connectDelay = CONNECT_INITIAL_DELAY;
-    });
-    this.ws.addEventListener("message", (event) => this.messageListener(event));
-    this.ws.addEventListener("close", (event) => {
+    this.ws = this.newWebSocket(PODPING_ORIGIN);
+    this.ws.addEventListener("open", (event) => this.handleOpen(event));
+    this.ws.addEventListener("message", (event) => this.handleMessage(event));
+    this.ws.addEventListener("close", (_) => {
       this.handleCloseOrError("close");
     });
-    this.ws.addEventListener("error", (event) => {
+    this.ws.addEventListener("error", (_) => {
       this.handleCloseOrError("error");
     });
   }
 
-  private handleCloseOrError(reason: string) {
+  public handleOpen(_: Event) {
+    this.connectAttemptNumber = 0;
+    this.connectDelay = CONNECT_INITIAL_DELAY;
+  }
+
+  public handleCloseOrError(reason: string) {
     if (this.reconnectQueued) {
       return;
     }
     console.log(`Attempting reconnection for: ${reason}`);
-    if (this.connectAttemptNumber < CONNECT_ATTEMPTS) {
+    if (this.connectAttemptNumber < MAX_CONNECT_ATTEMPTS) {
       this.connectDelay *= 2;
       console.log(
         "Failed to connect to Podping Server. Retrying in " +
@@ -70,7 +70,7 @@ export default class StatefulPodpingRelay {
   }
 
   // deno-lint-ignore no-explicit-any
-  private messageListener(event: MessageEvent<any>) {
+  private handleMessage(event: MessageEvent<any>) {
     const msg: PodpingMessage = JSON.parse(event.data);
     if (msg.t === "podping") {
       for (const op of msg.p) {
@@ -130,5 +130,10 @@ export default class StatefulPodpingRelay {
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions
   private escapeRegExp(s: string) {
     return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
+  }
+
+  // Stubbable function to assist with testing.
+  public newWebSocket(url: string) {
+    return new WebSocket(url);
   }
 }
