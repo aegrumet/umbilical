@@ -3,10 +3,8 @@ import { EventEmitter } from "../dev_deps.ts";
 export type MockWebSocketOptions = {
   openAfterAttempts: number;
   openCurrentAttempt: number;
-  openMaxAttempts: number;
+  openGoSilentAfterAttempts: number;
 };
-
-export let mockWebsocketInstance: MockWebsocket | undefined;
 
 class MockWebsocket extends EventEmitter<any> {
   private opts: MockWebSocketOptions;
@@ -19,7 +17,7 @@ class MockWebsocket extends EventEmitter<any> {
       this.opts.openAfterAttempts === 0 ||
       this.opts.openCurrentAttempt < this.opts.openAfterAttempts
     ) {
-      if (this.opts.openCurrentAttempt <= this.opts.openMaxAttempts) {
+      if (this.opts.openCurrentAttempt <= this.opts.openGoSilentAfterAttempts) {
         setTimeout(() => {
           this.emit("error");
         }, 1);
@@ -37,6 +35,7 @@ class MockWebsocket extends EventEmitter<any> {
 }
 
 export class MockWebsocketStubBuilder {
+  mockWebsocketInstance: MockWebsocket | undefined;
   openCurrentAttempt: number;
   constructor() {
     this.openCurrentAttempt = 0;
@@ -44,11 +43,11 @@ export class MockWebsocketStubBuilder {
   build(_url: string, opts: MockWebSocketOptions): (url: string) => WebSocket {
     return (url: string) => {
       this.openCurrentAttempt += 1;
-      mockWebsocketInstance = new MockWebsocket(url, {
+      this.mockWebsocketInstance = new MockWebsocket(url, {
         ...opts,
         openCurrentAttempt: this.openCurrentAttempt,
       });
-      return mockWebsocketInstance as unknown as WebSocket;
+      return this.mockWebsocketInstance as unknown as WebSocket;
     };
   }
 }

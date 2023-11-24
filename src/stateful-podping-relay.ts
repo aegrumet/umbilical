@@ -13,14 +13,14 @@ const CONNECT_INITIAL_DELAY = 1000;
 export default class StatefulPodpingRelay {
   private ws: WebSocket | null = null;
   private patterns: Array<RegExp>;
-  private emitter: Evt<string>;
+  private emitter: Evt<PodpingMessage>;
   private connectAttemptNumber = 0;
   private connectDelay = CONNECT_INITIAL_DELAY;
   private reconnectQueued = false;
 
   constructor() {
     this.patterns = Array<RegExp>();
-    this.emitter = Evt.create<string>();
+    this.emitter = Evt.create<PodpingMessage>();
   }
 
   /***
@@ -50,7 +50,9 @@ export default class StatefulPodpingRelay {
     if (this.reconnectQueued) {
       return;
     }
-    console.log(`Attempting reconnection for: ${reason}`);
+    console.log(
+      `Attempting reconnection for: ${reason}, attempt #${this.connectAttemptNumber}, max attempts: ${MAX_CONNECT_ATTEMPTS}`
+    );
     if (this.connectAttemptNumber < MAX_CONNECT_ATTEMPTS) {
       this.connectDelay *= 2;
       console.log(
@@ -81,7 +83,7 @@ export default class StatefulPodpingRelay {
             // process feed url
             for (const pattern of this.patterns) {
               if (pattern.test(url)) {
-                this.emitter.post(url);
+                this.postUpdate(msg);
                 break;
               }
             }
@@ -93,7 +95,7 @@ export default class StatefulPodpingRelay {
             // process iri
             for (const pattern of this.patterns) {
               if (pattern.test(iri)) {
-                this.emitter.post(iri);
+                this.postUpdate(msg);
                 break;
               }
             }
@@ -132,7 +134,12 @@ export default class StatefulPodpingRelay {
     return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
   }
 
-  // Stubbable function to assist with testing.
+  // Stubbable function for testability.
+  public postUpdate(msg: PodpingMessage) {
+    this.emitter.post(msg);
+  }
+
+  // Stubbable function for testability.
   public newWebSocket(url: string) {
     return new WebSocket(url);
   }
