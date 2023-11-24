@@ -6,7 +6,7 @@ import {
   assertEquals,
   mf,
 } from "../dev_deps.ts";
-import app from "../app.ts";
+import rest from "../rest-routes.ts";
 import { installFeedsMock, uninstallFeedsMock } from "../mocks/fetch.ts";
 import denoEnv from "./deno-env.ts";
 
@@ -24,22 +24,18 @@ describe("OPML Proxy", () => {
   });
 
   it("fails if no opml is supplied", async () => {
-    const res = await app.request(
-      "/API/proxy?rss=notopml",
-      undefined,
-      denoEnv()
-    );
+    const res = await rest.request("/proxy?rss=notopml", undefined, denoEnv());
     assertEquals(res.status, 500);
   });
 
   it("fails if the opml argument is not a valid URL", async () => {
-    const res = await app.request("/API/proxy?opml=foo", undefined, denoEnv());
+    const res = await rest.request("/proxy?opml=foo", undefined, denoEnv());
     assertEquals(res.status, 500);
   });
 
   it("fails when the URL returns an invalid OPML feed", async () => {
-    const res = await app.request(
-      "/API/proxy?opml=http://example.com/badfeed",
+    const res = await rest.request(
+      "/proxy?opml=http://example.com/badfeed",
       undefined,
       denoEnv()
     );
@@ -47,8 +43,8 @@ describe("OPML Proxy", () => {
   });
 
   it("passes when the URL returns a valid OPML feed", async () => {
-    const res = await app.request(
-      "/API/proxy?opml=http://example.com/baseopml",
+    const res = await rest.request(
+      "/proxy?opml=http://example.com/baseopml",
       undefined,
       denoEnv()
     );
@@ -56,8 +52,8 @@ describe("OPML Proxy", () => {
   });
 
   it("fails when the URL isn't found", async () => {
-    const res = await app.request(
-      "/API/proxy?opml=http://example.com/missingfeed",
+    const res = await rest.request(
+      "/proxy?opml=http://example.com/missingfeed",
       undefined,
       denoEnv()
     );

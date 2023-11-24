@@ -6,7 +6,7 @@ import {
   assertEquals,
   mf,
 } from "../dev_deps.ts";
-import app from "../app.ts";
+import rest from "../rest-routes.ts";
 import denoEnv from "./deno-env.ts";
 import { installPiApiMock, uninstallPiApiMock } from "../mocks/piapi.ts";
 
@@ -30,8 +30,8 @@ describe("Search", () => {
     Deno.env.delete("PI_API_KEY");
     Deno.env.delete("PI_API_SECRET");
 
-    const res = await app.request(
-      "/API/search?q=batmanuniversity",
+    const res = await rest.request(
+      "/search?q=batmanuniversity",
       undefined,
       denoEnv()
     );
@@ -42,7 +42,7 @@ describe("Search", () => {
     Deno.env.set("PI_API_KEY", TEST_PI_API_KEY);
     Deno.env.set("PI_API_SECRET", TEST_PI_API_SECRET);
 
-    const res = await app.request("/API/search", undefined, denoEnv());
+    const res = await rest.request("/search", undefined, denoEnv());
     assertEquals(res.status, 500);
   });
 
@@ -50,8 +50,8 @@ describe("Search", () => {
     Deno.env.set("PI_API_KEY", `NOT${TEST_PI_API_KEY}`);
     Deno.env.set("PI_API_SECRET", `NOT${TEST_PI_API_SECRET}`);
 
-    const res = await app.request(
-      "/API/search?q=batmanuniversity",
+    const res = await rest.request(
+      "/search?q=batmanuniversity",
       undefined,
       denoEnv()
     );
@@ -62,8 +62,8 @@ describe("Search", () => {
     Deno.env.set("PI_API_KEY", TEST_PI_API_KEY);
     Deno.env.set("PI_API_SECRET", TEST_PI_API_SECRET);
 
-    const res = await app.request(
-      "/API/search?q=batmanuniversity",
+    const res = await rest.request(
+      "/search?q=batmanuniversity",
       undefined,
       denoEnv()
     );

@@ -2,7 +2,7 @@
   "$schema": "https://raw.githubusercontent.com/skymethod/denoflare/v0.5.12/common/config.schema.json",
   "scripts": {
     "umbilical": {
-      "path": "app.ts",
+      "path": "cloudflare-entrypoint.ts",
       "localPort": 8000,
       "workersDev": true,
       "bindings": {
