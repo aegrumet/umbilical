@@ -6,7 +6,9 @@ export type MockWebSocketOptions = {
   openGoSilentAfterAttempts: number;
 };
 
-class MockWebsocket extends EventEmitter<any> {
+class MockWebsocket extends EventEmitter<
+  Record<string, MessageEvent<string>[]>
+> {
   private opts: MockWebSocketOptions;
 
   constructor(_url: string, opts: MockWebSocketOptions) {
@@ -29,7 +31,10 @@ class MockWebsocket extends EventEmitter<any> {
     }, 1);
   }
 
-  public addEventListener(event: string, callback: (event: any) => void) {
+  public addEventListener(
+    event: string,
+    callback: (event: MessageEvent<string>) => void
+  ) {
     this.on(event, callback);
   }
 }

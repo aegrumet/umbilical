@@ -1,4 +1,3 @@
-import { Stub, spy } from "https://deno.land/std@0.207.0/testing/mock.ts";
 import {
   describe,
   it,
@@ -6,6 +5,8 @@ import {
   FakeTime,
   stub,
   assertSpyCalls,
+  spy,
+  Stub,
 } from "../dev_deps.ts";
 import MockWebsocketStubBuilder from "../mocks/websocket.ts";
 import StatefulPodpingRelay, {
@@ -110,7 +111,7 @@ describe("Stateful podping relay", () => {
       time.tick(10);
       builder.mockWebsocketInstance?.emit(
         "message",
-        new MessageEvent<any>("message", {
+        new MessageEvent<string>("message", {
           data: JSON.stringify(mockLivewireMessage()),
         })
       );
@@ -143,7 +144,7 @@ describe("Stateful podping relay", () => {
       time.tick(10);
       builder.mockWebsocketInstance?.emit(
         "message",
-        new MessageEvent<any>("message", {
+        new MessageEvent<string>("message", {
           data: JSON.stringify(msg),
         })
       );
@@ -176,7 +177,7 @@ describe("Stateful podping relay", () => {
       time.tick(10);
       builder.mockWebsocketInstance?.emit(
         "message",
-        new MessageEvent<any>("message", {
+        new MessageEvent<string>("message", {
           data: JSON.stringify(msg),
         })
       );

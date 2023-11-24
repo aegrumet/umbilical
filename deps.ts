@@ -12,6 +12,6 @@ export { hmac };
 import { xml2js } from "https://deno.land/x/xml2js@1.0.0/mod.ts";
 export { xml2js };
 
-export { encodeHex } from "https://deno.land/std@0.206.0/encoding/hex.ts";
+export { encodeHex } from "https://deno.land/std@0.207.0/encoding/hex.ts";
 
 export { Evt } from "https://deno.land/x/evt@v2.5.3/mod.ts";
