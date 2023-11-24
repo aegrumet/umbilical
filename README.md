@@ -25,7 +25,9 @@ See `src/verify.ts` for full details of signature verification.
 
 `GET /API/proxy?chapters=<chapters url>`
 
-Proxies the RSS or chapters url. Returns an error if the resource fails parsing. Returns the raw unparsed resource if parsing passes.
+`GET /API/proxy?opml=<opml url>`
+
+Proxies the RSS, chapters, or opml url. Returns an error if the resource fails parsing. Returns the raw unparsed resource if parsing passes.
 
 Philsophy: Proxy only known formats, to protect the service, but be otherwise unopinionated about parsing.
 
@@ -41,6 +43,23 @@ Requires the following environment variables to be set:
 - `PI_API_SECRET`
 
 You can sign up for free credentials at [api.podcastindex.org](https://api.podcastindex.org/).
+
+## podping proxy API
+
+Proxies podpings from [Livewire's podping websocket service](https://livewire.io/podping-via-websockets/).
+
+By default, all podpings are filtered out. Callers must subscribe to URLs or IRIs of interest.
+
+Messages are passed unmodified using Livewire's format (see the post linked above for details).
+
+Websocket Endpoint: `/ws-API/podping`
+
+API:
+
+- `subscribe(string)`: subscribe to podpings whose URL (v0.x) or IRI (v1.x) match the given string exactly
+- `unsubscribe(string)`: unsubscribe from podpings whose URL (v0.x) or IRI (v1.x) match the given string exactly
+- `subscribeRegExp(regexpString)`: subscribe to podpings whose URLs (v0.x) or IRIs (v1.x) match the given regexpString
+- `unsubscribeRegExp(regexpString)`: unsubscribe from podpings whose URLs (v0.x) or IRIs (v1.x) match the given regexpString
 
 ## deploy
 
