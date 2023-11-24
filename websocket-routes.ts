@@ -1,5 +1,5 @@
 import { Context, Hono } from "./deps.ts";
-import relayPodping from "./src/relay-podping.ts";
+import relayPodping from "./src/proxy-podping.ts";
 import UmbilicalContext from "./src/umbilical-context.ts";
 import verify from "./src/verify.ts";
 
