@@ -14,6 +14,10 @@ const relayPodping = (c: Context) => {
 
   socket.onopen = async () => {
     for await (const ping of podpingEmitter) {
+      if (typeof ping === typeof Error) {
+        console.log("throwing error", ping);
+        throw ping as Error;
+      }
       if (!shouldUnsubscribe) {
         socket.send(JSON.stringify(ping));
       } else {

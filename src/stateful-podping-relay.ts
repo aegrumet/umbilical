@@ -13,14 +13,14 @@ const CONNECT_INITIAL_DELAY = 1000;
 export default class StatefulPodpingRelay {
   private ws: WebSocket | null = null;
   private patterns: Array<RegExp>;
-  private emitter: Evt<PodpingMessage>;
+  private emitter: Evt<PodpingMessage | Error>;
   private connectAttemptNumber = 0;
   private connectDelay = CONNECT_INITIAL_DELAY;
   private reconnectQueued = false;
 
   constructor() {
     this.patterns = Array<RegExp>();
-    this.emitter = Evt.create<PodpingMessage>();
+    this.emitter = Evt.create<PodpingMessage | Error>();
   }
 
   /***
@@ -67,6 +67,7 @@ export default class StatefulPodpingRelay {
       }, this.connectDelay);
     } else {
       console.log("Failed to connect to Podping Server. Giving up.");
+      this.postError(new Error("Failed to connect to Podping Server."));
       return;
     }
   }
@@ -137,6 +138,10 @@ export default class StatefulPodpingRelay {
   // Stubbable function for testability.
   public postUpdate(msg: PodpingMessage) {
     this.emitter.post(msg);
+  }
+
+  public postError(err: Error) {
+    this.emitter.post(err);
   }
 
   // Stubbable function for testability.
