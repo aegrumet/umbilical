@@ -117,6 +117,7 @@ export default class StatefulPodpingRelay {
   }
 
   public subscribe(p: string | string[]) {
+    this.unsubscribe(p); // de-dupe
     if (Array.isArray(p)) {
       this.patterns.push(
         ...p.map((pattern) => new RegExp(this.escapeRegExp(pattern)))
@@ -127,6 +128,7 @@ export default class StatefulPodpingRelay {
   }
 
   public subscribeRegExp(p: string | string[]) {
+    this.unsubscribeRegExp(p); // de-dupe
     if (Array.isArray(p)) {
       this.patterns.push(...p.map((pattern) => new RegExp(pattern)));
     } else {
