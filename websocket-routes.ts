@@ -1,5 +1,5 @@
 import { Context, Hono } from "./deps.ts";
-import relayPodping from "./src/proxy-podping.ts";
+import proxyPodping from "./src/proxy-podping.ts";
 import UmbilicalContext from "./src/umbilical-context.ts";
 import verify from "./src/verify.ts";
 
@@ -10,7 +10,7 @@ websocket.get("/podping", (c: Context) => {
     c.status(401);
     return c.text("Unauthorized.");
   }
-  return relayPodping(c);
+  return proxyPodping(c);
 });
 
 export default websocket;

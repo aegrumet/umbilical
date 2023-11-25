@@ -1,7 +1,7 @@
 import { Context } from "../deps.ts";
 import StatefulPodpingRelay from "./stateful-podping-relay.ts";
 
-const relayPodping = (c: Context) => {
+const proxyPodping = (c: Context) => {
   const relay = new StatefulPodpingRelay();
   relay.connect();
   const podpingEmitter = relay.getEmitter();
@@ -21,10 +21,10 @@ const relayPodping = (c: Context) => {
       if (!shouldUnsubscribe) {
         socket.send(JSON.stringify(ping));
       } else {
-        relay.close();
         break;
       }
     }
+    relay.close();
   };
 
   socket.onmessage = (event) => {
@@ -54,4 +54,4 @@ const relayPodping = (c: Context) => {
   return response;
 };
 
-export default relayPodping;
+export default proxyPodping;
