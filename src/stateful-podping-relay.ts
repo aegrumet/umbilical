@@ -41,6 +41,12 @@ export default class StatefulPodpingRelay {
     });
   }
 
+  public close() {
+    if (this.ws) {
+      this.ws.close();
+    }
+  }
+
   public handleOpen(_: Event) {
     this.connectAttemptNumber = 0;
     this.connectDelay = CONNECT_INITIAL_DELAY;
