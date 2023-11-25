@@ -7,6 +7,7 @@ import {
   assertSpyCalls,
   spy,
   Stub,
+  assertEquals,
 } from "../dev_deps.ts";
 import MockWebsocketStubBuilder from "../mocks/websocket.ts";
 import StatefulPodpingRelay, {
@@ -119,6 +120,151 @@ describe("Stateful podping relay", () => {
       assertSpyCalls(postUpdateSpy, 0);
     } finally {
       postUpdateSpy.restore();
+      newWebSocketStub.restore();
+    }
+  });
+
+  it("Subscribes and unsubscribes strings", () => {
+    const builder: MockWebsocketStubBuilder = new MockWebsocketStubBuilder();
+
+    newWebSocketStub = stub(
+      relay,
+      "newWebSocket",
+      builder.build("ws://example.com", {
+        openAfterAttempts: 1,
+        openCurrentAttempt: 0,
+        openGoSilentAfterAttempts: 1,
+      })
+    );
+
+    const testPatterns = [
+      "https://example.com/feed1",
+      "https://example.com/feed2",
+    ];
+
+    try {
+      relay.connect();
+      time.tick(10);
+      relay.subscribe(testPatterns[0]);
+      assertEquals(relay.patterns.length, 1);
+      assertEquals(
+        relay.patterns[0],
+        new RegExp(relay.escapeRegExp(testPatterns[0]))
+      );
+      relay.subscribe(testPatterns[1]);
+      relay.unsubscribe(testPatterns[0]);
+      assertEquals(relay.patterns.length, 1);
+      assertEquals(
+        relay.patterns[0],
+        new RegExp(relay.escapeRegExp(testPatterns[1]))
+      );
+    } finally {
+      newWebSocketStub.restore();
+    }
+  });
+
+  it("Subscribes and unsubscribes string arrays", () => {
+    const builder: MockWebsocketStubBuilder = new MockWebsocketStubBuilder();
+
+    newWebSocketStub = stub(
+      relay,
+      "newWebSocket",
+      builder.build("ws://example.com", {
+        openAfterAttempts: 1,
+        openCurrentAttempt: 0,
+        openGoSilentAfterAttempts: 1,
+      })
+    );
+
+    const testPatterns = [
+      "https://example.com/feed1",
+      "https://example.com/feed2",
+    ];
+
+    try {
+      relay.connect();
+      time.tick(10);
+      relay.subscribe(testPatterns);
+      assertEquals(relay.patterns.length, testPatterns.length);
+      testPatterns.forEach((pattern, index) => {
+        assertEquals(
+          relay.patterns[index].source,
+          new RegExp(relay.escapeRegExp(pattern)).source
+        );
+      });
+      relay.unsubscribe([testPatterns[0]]);
+      assertEquals(relay.patterns.length, 1);
+      assertEquals(
+        relay.patterns[0].source,
+        new RegExp(relay.escapeRegExp(testPatterns[1])).source
+      );
+    } finally {
+      newWebSocketStub.restore();
+    }
+  });
+
+  it("Subscribes and unsubscribes regexp strings", () => {
+    const builder: MockWebsocketStubBuilder = new MockWebsocketStubBuilder();
+
+    newWebSocketStub = stub(
+      relay,
+      "newWebSocket",
+      builder.build("ws://example.com", {
+        openAfterAttempts: 1,
+        openCurrentAttempt: 0,
+        openGoSilentAfterAttempts: 1,
+      })
+    );
+
+    // prettier-ignore
+    const testPatterns = ["\.rss$", "\.xml$"];
+
+    try {
+      relay.connect();
+      time.tick(10);
+      relay.subscribeRegExp(testPatterns[0]);
+      assertEquals(relay.patterns.length, 1);
+      assertEquals(relay.patterns[0], new RegExp(testPatterns[0]));
+      relay.subscribeRegExp(testPatterns[1]);
+      relay.unsubscribeRegExp(testPatterns[0]);
+      assertEquals(relay.patterns.length, 1);
+      assertEquals(relay.patterns[0], new RegExp(testPatterns[1]));
+    } finally {
+      newWebSocketStub.restore();
+    }
+  });
+
+  it("Subscribes and unsubscribes regexp string arrays", () => {
+    const builder: MockWebsocketStubBuilder = new MockWebsocketStubBuilder();
+
+    newWebSocketStub = stub(
+      relay,
+      "newWebSocket",
+      builder.build("ws://example.com", {
+        openAfterAttempts: 1,
+        openCurrentAttempt: 0,
+        openGoSilentAfterAttempts: 1,
+      })
+    );
+
+    // prettier-ignore
+    const testPatterns = ["\.rss$", "\.xml$"];
+
+    try {
+      relay.connect();
+      time.tick(10);
+      relay.subscribeRegExp(testPatterns);
+      assertEquals(relay.patterns.length, testPatterns.length);
+      testPatterns.forEach((pattern, index) => {
+        assertEquals(relay.patterns[index].source, new RegExp(pattern).source);
+      });
+      relay.unsubscribeRegExp([testPatterns[0]]);
+      assertEquals(relay.patterns.length, 1);
+      assertEquals(
+        relay.patterns[0].source,
+        new RegExp(testPatterns[1]).source
+      );
+    } finally {
       newWebSocketStub.restore();
     }
   });
