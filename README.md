@@ -46,6 +46,9 @@ You can sign up for free credentials at [api.podcastindex.org](https://api.podca
 
 ## podping proxy API
 
+> **Note**
+> Not available for CloudFlare Workers.
+
 Proxies podpings from [Livewire's podping websocket service](https://livewire.io/podping-via-websockets/).
 
 By default, all podpings are filtered out. Callers must subscribe to URLs or IRIs of interest.
