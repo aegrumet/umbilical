@@ -61,8 +61,8 @@ API:
 
 - `subscribe(string, string[])`: subscribe to podpings whose URL (v0.x) or IRI (v1.x) match the given string(s) exactly
 - `unsubscribe(string, string[])`: unsubscribe from podpings whose URL (v0.x) or IRI (v1.x) match the given string(s) exactly
-- `subscribeRegExp(regexpString, regexpString[])`: subscribe to podpings whose URLs (v0.x) or IRIs (v1.x) match the given regexpString(s)
-- `unsubscribeRegExp(regexpString, regexpString[])`: unsubscribe from podpings whose URLs (v0.x) or IRIs (v1.x) match the given regexpString(s)
+- `subscribeRegExp(string, string[])`: subscribe to podpings whose URLs (v0.x) or IRIs (v1.x) match RegExps built from the given string(s)
+- `unsubscribeRegExp(string, string[])`: unsubscribe from podpings whose URLs (v0.x) or IRIs (v1.x) match RegExps built from the given string(s)
 
 ## deploy
 
