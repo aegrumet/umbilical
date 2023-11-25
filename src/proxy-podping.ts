@@ -13,6 +13,7 @@ const proxyPodping = (c: Context) => {
   };
 
   socket.onopen = async () => {
+    shouldUnsubscribe = false;
     for await (const ping of podpingEmitter) {
       if (typeof ping === typeof Error) {
         console.log("websocket error", ping);
@@ -25,6 +26,7 @@ const proxyPodping = (c: Context) => {
       }
     }
     relay.close();
+    socket.close();
   };
 
   socket.onmessage = (event) => {
