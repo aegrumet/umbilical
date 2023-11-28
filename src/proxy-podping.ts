@@ -1,25 +1,69 @@
-import { Context } from "../deps.ts";
+import { Context, Evt } from "../deps.ts";
 import StatefulPodpingRelay from "./stateful-podping-relay.ts";
+import { WebSocketProvider } from "./interfaces/websocket-provider.ts";
+import { PodpingMessage } from "./interfaces/livewire-podping-websocket.ts";
 
-const proxyPodping = (c: Context) => {
-  const relay = new StatefulPodpingRelay();
-  relay.connect();
-  const podpingEmitter = relay.getEmitter();
-  let shouldUnsubscribe = false;
+class ProxyPodpingHandler {
+  shouldUnsubscribe = false;
+  podpingEmitter: Evt<PodpingMessage | Error>;
+  relay: StatefulPodpingRelay;
 
-  const { response, socket } = Deno.upgradeWebSocket(c.req.raw);
-  socket.onclose = () => {
-    shouldUnsubscribe = true;
-  };
+  constructor() {
+    this.relay = new StatefulPodpingRelay();
+    this.relay.connect();
+    this.podpingEmitter = this.relay.getEmitter();
+  }
 
-  socket.onopen = async () => {
-    shouldUnsubscribe = false;
-    for await (const ping of podpingEmitter) {
+  proxy(c: Context, p: WebSocketProvider) {
+    this.shouldUnsubscribe = false;
+
+    const { response, socket } = p.upgradeWebSocket(c);
+
+    if (socket === null) {
+      return response;
+    }
+
+    socket.addEventListener("close", () => {
+      this.shouldUnsubscribe = true;
+    });
+
+    // deno-lint-ignore no-explicit-any
+    socket.addEventListener("message", (event: any) => {
+      if (event.data === "ping") {
+        socket.send("pong");
+        return;
+      }
+      try {
+        const json = JSON.parse(event.data);
+        if (json.subscribe) {
+          this.relay.subscribe(json.subscribe);
+        }
+        if (json.unsubscribe) {
+          this.relay.unsubscribe(json.unsubscribe);
+        }
+        if (json.subscribeRegExp) {
+          this.relay.subscribeRegExp(json.subscribeRegExp);
+        }
+        if (json.unsubscribeRegExp) {
+          this.relay.unsubscribeRegExp(json.unsubscribeRegExp);
+        }
+      } catch (_) {
+        // do nothing
+      }
+    });
+
+    this.listen(socket, this.relay);
+
+    return response;
+  }
+
+  listen = async (socket: WebSocket, relay: StatefulPodpingRelay) => {
+    for await (const ping of this.podpingEmitter) {
       if (typeof ping === typeof Error) {
         console.log("websocket error", ping);
         break;
       }
-      if (!shouldUnsubscribe) {
+      if (!this.shouldUnsubscribe) {
         socket.send(JSON.stringify(ping));
       } else {
         break;
@@ -28,32 +72,6 @@ const proxyPodping = (c: Context) => {
     relay.close();
     socket.close();
   };
+}
 
-  socket.onmessage = (event) => {
-    if (event.data === "ping") {
-      socket.send("pong");
-      return;
-    }
-    try {
-      const json = JSON.parse(event.data);
-      if (json.subscribe) {
-        relay.subscribe(json.subscribe);
-      }
-      if (json.unsubscribe) {
-        relay.unsubscribe(json.unsubscribe);
-      }
-      if (json.subscribeRegExp) {
-        relay.subscribeRegExp(json.subscribeRegExp);
-      }
-      if (json.unsubscribeRegExp) {
-        relay.unsubscribeRegExp(json.unsubscribeRegExp);
-      }
-    } catch (_) {
-      // do nothing
-    }
-  };
-
-  return response;
-};
-
-export default proxyPodping;
+export default ProxyPodpingHandler;
