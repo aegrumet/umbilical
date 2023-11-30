@@ -13,14 +13,14 @@ const CONNECT_INITIAL_DELAY = 1000;
 export default class StatefulPodpingRelay {
   public patterns: Array<RegExp>;
   private ws: WebSocket | null = null;
-  private emitter: Evt<PodpingMessage | Error>;
+  private emitter: Evt<PodpingV0 | PodpingV1 | Error>;
   private connectAttemptNumber = 0;
   private connectDelay = CONNECT_INITIAL_DELAY;
   private reconnectQueued = false;
 
   constructor() {
     this.patterns = Array<RegExp>();
-    this.emitter = Evt.create<PodpingMessage | Error>();
+    this.emitter = Evt.create<PodpingV0 | PodpingV1 | Error>();
   }
 
   /***
@@ -90,7 +90,7 @@ export default class StatefulPodpingRelay {
             // process feed url
             for (const pattern of this.patterns) {
               if (pattern.test(url)) {
-                this.postUpdate(msg);
+                this.postUpdate(p);
                 break;
               }
             }
@@ -102,7 +102,7 @@ export default class StatefulPodpingRelay {
             // process iri
             for (const pattern of this.patterns) {
               if (pattern.test(iri)) {
-                this.postUpdate(msg);
+                this.postUpdate(p);
                 break;
               }
             }
@@ -175,8 +175,8 @@ export default class StatefulPodpingRelay {
   }
 
   // Stubbable function for testability.
-  public postUpdate(msg: PodpingMessage) {
-    this.emitter.post(msg);
+  public postUpdate(p: PodpingV0 | PodpingV1) {
+    this.emitter.post(p);
   }
 
   public postError(err: Error) {

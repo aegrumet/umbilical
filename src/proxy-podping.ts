@@ -1,11 +1,14 @@
 import { Context, Evt } from "../deps.ts";
 import StatefulPodpingRelay from "./stateful-podping-relay.ts";
 import { WebSocketProvider } from "./interfaces/websocket-provider.ts";
-import { PodpingMessage } from "./interfaces/livewire-podping-websocket.ts";
+import {
+  PodpingV0,
+  PodpingV1,
+} from "./interfaces/livewire-podping-websocket.ts";
 
 class ProxyPodpingHandler {
   shouldUnsubscribe = false;
-  podpingEmitter: Evt<PodpingMessage | Error>;
+  podpingEmitter: Evt<PodpingV0 | PodpingV1 | Error>;
   relay: StatefulPodpingRelay;
 
   constructor() {

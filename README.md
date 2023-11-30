@@ -50,7 +50,8 @@ Proxies podpings from [Livewire's podping websocket service](https://livewire.io
 
 By default, all podpings are filtered out. Callers must subscribe to URLs or IRIs of interest.
 
-Messages are passed unmodified using Livewire's format (see the post linked above for details).
+Messages are passed unmodified using Livewire's format as either `PodpingV0` or
+`PodpingV1` (see the post linked above for details).
 
 Websocket Endpoint: `/ws-API/podping`
 
