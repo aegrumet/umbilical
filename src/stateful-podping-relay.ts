@@ -87,28 +87,46 @@ export default class StatefulPodpingRelay {
           // version 0.x payload
           const p: PodpingV0 = op.p as PodpingV0;
           for (const url of p.urls) {
-            // process feed url
-            for (const pattern of this.patterns) {
-              if (pattern.test(url)) {
-                this.postUpdate(p);
-                break;
-              }
+            if (this.testPattern(url)) {
+              this.postUpdate(p);
+              break;
             }
           }
         } else {
           // version 1.0 payload
           const p: PodpingV1 = op.p as PodpingV1;
           for (const iri of p.iris) {
-            // process iri
-            for (const pattern of this.patterns) {
-              if (pattern.test(iri)) {
-                this.postUpdate(p);
-                break;
-              }
+            if (this.testPattern(iri)) {
+              this.postUpdate(p);
+              break;
             }
           }
         }
       }
+    }
+  }
+
+  private testPattern(str: string) {
+    for (const pattern of this.patterns) {
+      if (pattern.test(str)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /***
+   * Inject a PodpingV1 message with the iris field set to an array containing
+   * the given url. For testing.
+   */
+  public inject(str: string) {
+    if (this.testPattern(str)) {
+      this.postUpdate({
+        version: "1.0",
+        medium: "podcast",
+        reason: "update",
+        iris: [str],
+      } as PodpingV1);
     }
   }
 
@@ -120,10 +138,12 @@ export default class StatefulPodpingRelay {
     this.unsubscribe(p); // de-dupe
     if (Array.isArray(p)) {
       this.patterns.push(
-        ...p.map((pattern) => new RegExp(this.escapeRegExp(pattern)))
+        ...p.map(
+          (pattern) => new RegExp("^" + this.escapeRegExp(pattern) + "$")
+        )
       );
     } else {
-      this.patterns.push(new RegExp(this.escapeRegExp(p)));
+      this.patterns.push(new RegExp("^" + this.escapeRegExp(p) + "$"));
     }
   }
 
@@ -144,14 +164,16 @@ export default class StatefulPodpingRelay {
   public unsubscribe(p: string | string[]) {
     if (Array.isArray(p)) {
       const exclusionList = p.map(
-        (pattern) => new RegExp(this.escapeRegExp(pattern)).source
+        (pattern) => new RegExp("^" + this.escapeRegExp(pattern) + "$").source
       );
       this.patterns = this.patterns.filter((pattern) => {
         return !exclusionList.includes(pattern.source);
       });
     } else {
       this.patterns = this.patterns.filter((pattern) => {
-        return pattern.source !== new RegExp(this.escapeRegExp(p)).source;
+        return (
+          pattern.source !== new RegExp("^" + this.escapeRegExp(p) + "$").source
+        );
       });
     }
   }

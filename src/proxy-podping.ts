@@ -50,6 +50,9 @@ class ProxyPodpingHandler {
         if (json.unsubscribeRegExp) {
           this.relay.unsubscribeRegExp(json.unsubscribeRegExp);
         }
+        if (json.inject) {
+          this.relay.inject(json.inject);
+        }
       } catch (_) {
         // do nothing
       }
