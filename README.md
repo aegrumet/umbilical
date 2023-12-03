@@ -50,6 +50,10 @@ Proxies podpings from [Livewire's podping websocket service](https://livewire.io
 
 By default, all podpings are filtered out. Callers must subscribe to URLs or IRIs of interest.
 
+Also, clients MUST respond to a ping message with a pong message. If a client
+fails to respond to a ping message, it will be disconnected. Pings and Pongs are
+simple JSON objects having top-level `ping` and `pong` properties, respectively.
+
 Messages are passed unmodified using Livewire's format as either `PodpingV0` or
 `PodpingV1` (see the post linked above for details).
 

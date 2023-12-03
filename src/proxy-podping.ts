@@ -6,15 +6,23 @@ import {
   PodpingV1,
 } from "./interfaces/livewire-podping-websocket.ts";
 
+const HEARTBEAT_INTERVAL = 1000 * 30;
+
 class ProxyPodpingHandler {
   shouldUnsubscribe = false;
   podpingEmitter: Evt<PodpingV0 | PodpingV1 | Error>;
   relay: StatefulPodpingRelay;
+  isAlive = false;
+  interval: number | undefined;
 
   constructor() {
     this.relay = new StatefulPodpingRelay();
     this.relay.connect();
     this.podpingEmitter = this.relay.getEmitter();
+  }
+
+  ping(ws: WebSocket) {
+    ws.send(JSON.stringify({ ping: 1 }));
   }
 
   proxy(c: Context, p: WebSocketProvider) {
@@ -26,18 +34,20 @@ class ProxyPodpingHandler {
       return response;
     }
 
+    this.isAlive = true;
+
     socket.addEventListener("close", () => {
       this.shouldUnsubscribe = true;
+      clearInterval(this.interval);
     });
 
     // deno-lint-ignore no-explicit-any
     socket.addEventListener("message", (event: any) => {
-      if (event.data === "ping") {
-        socket.send("pong");
-        return;
-      }
       try {
         const json = JSON.parse(event.data);
+        if (json.pong) {
+          this.isAlive = true;
+        }
         if (json.subscribe) {
           this.relay.subscribe(json.subscribe);
         }
@@ -59,6 +69,15 @@ class ProxyPodpingHandler {
     });
 
     this.listen(socket, this.relay);
+
+    this.interval = setInterval(() => {
+      if (!this.isAlive) {
+        socket.close();
+        return;
+      }
+      this.isAlive = false;
+      this.ping(socket);
+    }, HEARTBEAT_INTERVAL);
 
     return response;
   }
