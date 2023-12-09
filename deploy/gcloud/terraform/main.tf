@@ -23,6 +23,10 @@ resource "google_cloud_run_service" "umbilical" {
           name  = "UMBILICAL_KEYS"
           value = var.umbilical_keys
         }
+        env {
+          name  = "DEBUG"
+          value = var.debug
+        }
         ports {
           container_port = 8000
         }

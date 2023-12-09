@@ -21,3 +21,8 @@ variable "credentials_file" {
 variable "umbilical_keys" {
   type = string
 }
+
+variable "debug" {
+  type    = bool
+  default = false
+}

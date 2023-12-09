@@ -22,3 +22,8 @@ variable "disable_api_on_destroy" {
 variable "umbilical_keys" {
   type = string
 }
+
+variable "debug" {
+  type    = bool
+  default = false
+}
