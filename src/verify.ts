@@ -81,6 +81,6 @@ const verify = (c: UmbilicalContext): boolean => {
 export const VERIFY_TIMEOUT_SECONDS = 30;
 
 // Clients may be ahead of servers by this much.
-export const VERIFY_ACCEPTABLE_FUTURE_SECONDS = 1;
+export const VERIFY_ACCEPTABLE_FUTURE_SECONDS = 2;
 
 export default verify;
