@@ -63,18 +63,30 @@ const verify = (c: UmbilicalContext): boolean => {
     return false;
 
   const timestampedPayload = `${timestamp}.${c.req.url}`;
-  for (let i = 0; i < keys.length; i += 1) {
-    const key = keys[i];
-    const expectedSignature = hmac(
-      "sha256",
-      key,
-      timestampedPayload,
-      "utf8",
-      "hex"
-    );
-    if (signature === expectedSignature) return true;
+  if (verifySignature(signature, keys, timestampedPayload)) return true;
+
+  // Some hosting services terminate SSL at the load balancer and forward a http
+  // url to the server. If we get here and the url starts with http, check the
+  // https version of the url as well.
+  if (c.req.url.startsWith("http://")) {
+    const fixedUrl = c.req.url.replace(/^http/, "https");
+    const fixedTimestampedPayload = `${timestamp}.${fixedUrl}`;
+    if (verifySignature(signature, keys, fixedTimestampedPayload)) return true;
   }
 
+  return false;
+};
+
+const verifySignature = (
+  signature: string,
+  keys: string[],
+  payload: string
+): boolean => {
+  for (let i = 0; i < keys.length; i += 1) {
+    const key = keys[i];
+    const expectedSignature = hmac("sha256", key, payload, "utf8", "hex");
+    if (signature === expectedSignature) return true;
+  }
   return false;
 };
 
