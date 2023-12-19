@@ -2,7 +2,7 @@
 # Debug image
 # ------------------------------------------------------------------------------
 
-FROM denoland/deno:debian-1.37.2 as debug
+FROM denoland/deno:debian-1.39.0 as debug
 
 # 1. Source code will be copied to here.
 WORKDIR /app
@@ -32,7 +32,7 @@ EXPOSE 8000
 # Production image
 # ------------------------------------------------------------------------------
 
-FROM denoland/deno:distroless-1.37.2
+FROM denoland/deno:distroless-1.39.0
 
 WORKDIR /app
 
