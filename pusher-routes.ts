@@ -1,14 +1,14 @@
 import { Hono, Context, cors } from "./deps.ts";
 
-import SubscriptionManager from "./src/webpush/subscription-manager.ts";
+import SubscriptionManager from "./src/podping/webpush/subscription-manager.ts";
 import {
   isPushSubscription,
   isRegisterDeleteInput,
   isRegisterPutInput,
 } from "./src/lib/type-guards.ts";
 
-import PodpingRelayFiltered from "./src/webpush/podping-relay-filtered.ts";
-import { PodpingPusher } from "./src/webpush/podping-pusher.ts";
+import PodpingRelayFiltered from "./src/podping/webpush/podping-relay-filtered.ts";
+import { PodpingPusher } from "./src/podping/webpush/podping-pusher.ts";
 import { PodpingFilter } from "./src/interfaces/podping-filter.ts";
 
 const subscriptionManager: SubscriptionManager = new SubscriptionManager();

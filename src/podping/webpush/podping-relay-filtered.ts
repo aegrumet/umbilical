@@ -1,10 +1,10 @@
-import { Evt } from "../../deps.ts";
+import { Evt } from "../../../deps.ts";
 import {
   PodpingMessage,
   PodpingV0,
   PodpingV1,
-} from "../interfaces/livewire-podping-websocket.ts";
-import { PodpingFilter } from "../interfaces/podping-filter.ts";
+} from "../../interfaces/livewire-podping-websocket.ts";
+import { PodpingFilter } from "../../interfaces/podping-filter.ts";
 
 const PODPING_ORIGIN = "wss://api.livewire.io/ws/podping";
 
