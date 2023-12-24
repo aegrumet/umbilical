@@ -149,14 +149,14 @@ describe("Stateful podping relay", () => {
       assertEquals(relay.patterns.length, 1);
       assertEquals(
         relay.patterns[0],
-        new RegExp(relay.escapeRegExp(testPatterns[0]))
+        new RegExp("^" + relay.escapeRegExp(testPatterns[0]) + "$")
       );
       relay.subscribe(testPatterns[1]);
       relay.unsubscribe(testPatterns[0]);
       assertEquals(relay.patterns.length, 1);
       assertEquals(
         relay.patterns[0],
-        new RegExp(relay.escapeRegExp(testPatterns[1]))
+        new RegExp("^" + relay.escapeRegExp(testPatterns[1]) + "$")
       );
     } finally {
       newWebSocketStub.restore();
@@ -189,14 +189,14 @@ describe("Stateful podping relay", () => {
       testPatterns.forEach((pattern, index) => {
         assertEquals(
           relay.patterns[index].source,
-          new RegExp(relay.escapeRegExp(pattern)).source
+          new RegExp("^" + relay.escapeRegExp(pattern) + "$").source
         );
       });
       relay.unsubscribe([testPatterns[0]]);
       assertEquals(relay.patterns.length, 1);
       assertEquals(
         relay.patterns[0].source,
-        new RegExp(relay.escapeRegExp(testPatterns[1])).source
+        new RegExp("^" + relay.escapeRegExp(testPatterns[1]) + "$").source
       );
     } finally {
       newWebSocketStub.restore();
