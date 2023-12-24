@@ -28,3 +28,4 @@ import {
 export { assertSpyCall, assertSpyCalls, returnsNext, stub, spy, type Stub };
 
 export { EventEmitter } from "https://deno.land/x/event@2.0.1/mod.ts";
+export { expect } from "https://deno.land/x/expect@v0.4.0/mod.ts";
