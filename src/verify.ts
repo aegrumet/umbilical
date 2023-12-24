@@ -1,5 +1,5 @@
 import { hmac } from "../deps.ts";
-import UmbilicalContext from "./umbilical-context.ts";
+import UmbilicalContext from "./interfaces/umbilical-context.ts";
 
 /***
  * Verifies the incoming request.

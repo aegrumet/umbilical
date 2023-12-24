@@ -2,7 +2,7 @@ import denoEnv from "./src/deno-env.ts";
 import { Hono } from "./deps.ts";
 import websocket from "./websocket-routes.ts";
 import rest from "./rest-routes.ts";
-import { UmbilicalEnv } from "./src/umbilical-context.ts";
+import { UmbilicalEnv } from "./src/interfaces/umbilical-context.ts";
 import pusherRoutes from "./pusher-routes.ts";
 
 const app = new Hono();

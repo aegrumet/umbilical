@@ -5,7 +5,7 @@ import proxyOpml from "./src/proxy-opml.ts";
 
 import search from "./src/search.ts";
 import verify from "./src/verify.ts";
-import UmbilicalContext from "./src/umbilical-context.ts";
+import UmbilicalContext from "./src/interfaces/umbilical-context.ts";
 
 const rest = new Hono();
 

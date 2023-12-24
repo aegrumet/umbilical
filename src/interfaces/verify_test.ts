@@ -1,6 +1,6 @@
-import { describe, it, assertEquals } from "../dev_deps.ts";
-import verify from "./verify.ts";
-import { hmac } from "../deps.ts";
+import { describe, it, assertEquals } from "../../dev_deps.ts";
+import verify from "../verify.ts";
+import { hmac } from "../../deps.ts";
 import { UmbilicalContext } from "./umbilical-context.ts";
 
 function generateSignatureHeader(url: string, key: string): string {

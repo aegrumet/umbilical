@@ -1,4 +1,4 @@
-import { UmbilicalEnv } from "./umbilical-context.ts";
+import { UmbilicalEnv } from "./interfaces/umbilical-context.ts";
 
 const denoEnv = (): UmbilicalEnv => {
   return {

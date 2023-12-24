@@ -1,6 +1,6 @@
 import { encodeHex } from "../deps.ts";
 import umbilicalUserAgent from "./config.ts";
-import { UmbilicalContext } from "./umbilical-context.ts";
+import { UmbilicalContext } from "./interfaces/umbilical-context.ts";
 
 const API = "https://api.podcastindex.org/api/1.0";
 
