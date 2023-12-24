@@ -1,5 +1,5 @@
-import { xml2js, parseFeed, Context } from "../deps.ts";
-import umbilicalUserAgent from "./config.ts";
+import { xml2js, parseFeed, Context } from "../../deps.ts";
+import umbilicalUserAgent from "../config.ts";
 
 const proxyRss = async (c: Context) => {
   const rss: string | undefined = c.req.query("rss");

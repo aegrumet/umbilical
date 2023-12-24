@@ -1,5 +1,5 @@
-import { xml2js, Context } from "../deps.ts";
-import umbilicalUserAgent from "./config.ts";
+import { xml2js, Context } from "../../deps.ts";
+import umbilicalUserAgent from "../config.ts";
 
 const proxyOpml = async (c: Context) => {
   const opml: string | undefined = c.req.query("opml");

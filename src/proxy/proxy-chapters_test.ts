@@ -5,10 +5,10 @@ import {
   beforeAll,
   assertEquals,
   mf,
-} from "../dev_deps.ts";
-import rest from "../rest-routes.ts";
-import { installFeedsMock, uninstallFeedsMock } from "../mocks/fetch.ts";
-import denoEnv from "./deno-env.ts";
+} from "../../dev_deps.ts";
+import rest from "../../rest-routes.ts";
+import { installFeedsMock, uninstallFeedsMock } from "../../mocks/fetch.ts";
+import denoEnv from "../deno-env.ts";
 
 Deno.env.set("UMBILICAL_KEYS", "DANGEROUSLY_ALLOW_ALL");
 

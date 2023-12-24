@@ -1,5 +1,5 @@
-import { Context } from "../deps.ts";
-import umbilicalUserAgent from "./config.ts";
+import { Context } from "../../deps.ts";
+import umbilicalUserAgent from "../config.ts";
 
 const proxyChapters = async (c: Context) => {
   const chapters: string | undefined = c.req.query("chapters");

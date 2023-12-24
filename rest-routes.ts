@@ -1,7 +1,7 @@
 import { Hono, Context, cors } from "./deps.ts";
-import proxyRss from "./src/proxy-rss.ts";
-import proxyChapters from "./src/proxy-chapters.ts";
-import proxyOpml from "./src/proxy-opml.ts";
+import proxyRss from "./src/proxy/proxy-rss.ts";
+import proxyChapters from "./src/proxy/proxy-chapters.ts";
+import proxyOpml from "./src/proxy/proxy-opml.ts";
 
 import search from "./src/search.ts";
 import verify from "./src/verify.ts";
