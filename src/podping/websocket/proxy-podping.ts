@@ -1,10 +1,10 @@
-import { Context, Evt } from "../deps.ts";
-import StatefulPodpingRelay from "./stateful-podping-relay.ts";
-import { WebSocketProvider } from "./interfaces/websocket-provider.ts";
+import { Context, Evt } from "../../../deps.ts";
+import StatefulPodpingRelay from "../../podping/websocket/stateful-podping-relay.ts";
+import { WebSocketProvider } from "../../interfaces/websocket-provider.ts";
 import {
   PodpingV0,
   PodpingV1,
-} from "./interfaces/livewire-podping-websocket.ts";
+} from "../../interfaces/livewire-podping-websocket.ts";
 
 const HEARTBEAT_INTERVAL = 1000 * 30;
 

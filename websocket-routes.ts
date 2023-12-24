@@ -1,6 +1,6 @@
 import { Context, Hono } from "./deps.ts";
 import { WebSocketProvider } from "./src/interfaces/websocket-provider.ts";
-import ProxyPodpingHandler from "./src/proxy-podping.ts";
+import ProxyPodpingHandler from "./src/podping/websocket/proxy-podping.ts";
 
 class DenoWebSocketProvider implements WebSocketProvider {
   public upgradeWebSocket(c: Context) {

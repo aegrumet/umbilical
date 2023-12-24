@@ -8,12 +8,12 @@ import {
   spy,
   Stub,
   assertEquals,
-} from "../dev_deps.ts";
-import MockWebsocketStubBuilder from "../mocks/websocket.ts";
+} from "../../../dev_deps.ts";
+import MockWebsocketStubBuilder from "../../../mocks/websocket.ts";
 import StatefulPodpingRelay, {
   MAX_CONNECT_ATTEMPTS,
 } from "./stateful-podping-relay.ts";
-import { mockLivewireMessage } from "../mocks/livewire-podping.ts";
+import { mockLivewireMessage } from "../../../mocks/livewire-podping.ts";
 
 describe("Stateful podping relay", () => {
   let time: FakeTime;
