@@ -5,10 +5,10 @@ import {
   beforeAll,
   assertEquals,
   mf,
-} from "../dev_deps.ts";
-import rest from "../rest-routes.ts";
-import denoEnv from "./deno-env.ts";
-import { installPiApiMock, uninstallPiApiMock } from "../mocks/piapi.ts";
+} from "../../dev_deps.ts";
+import rest from "../../rest-routes.ts";
+import denoEnv from "../deno-env.ts";
+import { installPiApiMock, uninstallPiApiMock } from "../../mocks/piapi.ts";
 
 const TEST_PI_API_KEY = "test pi api key";
 const TEST_PI_API_SECRET = "test pi api secret";
