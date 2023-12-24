@@ -2,7 +2,7 @@ import { describe, it, expect } from "../../../dev_deps.ts";
 
 import { validPushSubscription } from "../../../mocks/push-subscription.ts";
 import SubscriptionManager from "./subscription-manager.ts";
-import { PushSubscription } from "../../../deps.ts";
+import { PushSubscription } from "../../../npm_deps.ts";
 
 describe("Subscription Manager", () => {
   it("should create", () => {

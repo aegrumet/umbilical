@@ -16,5 +16,4 @@ export { encodeHex } from "https://deno.land/std@0.207.0/encoding/hex.ts";
 
 export { Evt } from "https://deno.land/x/evt@v2.5.3/mod.ts";
 
-export type { PushSubscription } from "npm:@types/web-push@3.6.3";
 export { decodeBase64Url } from "https://deno.land/std@0.210.0/encoding/base64url.ts";

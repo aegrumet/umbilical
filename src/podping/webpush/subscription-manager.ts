@@ -1,4 +1,4 @@
-import { PushSubscription } from "../../../deps.ts";
+import { PushSubscription } from "../../../npm_deps.ts";
 
 class SubscriptionManager {
   private rssUrls: Record<string, string[]> = {};

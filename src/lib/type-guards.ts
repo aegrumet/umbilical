@@ -1,4 +1,4 @@
-import { PushSubscription } from "npm:@types/web-push@3.6.3";
+import { PushSubscription } from "../../npm_deps.ts";
 import {
   RegisterDeleteInput,
   RegisterPutInput,
