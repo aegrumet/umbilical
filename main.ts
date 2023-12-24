@@ -3,11 +3,13 @@ import { Hono } from "./deps.ts";
 import websocket from "./websocket-routes.ts";
 import rest from "./rest-routes.ts";
 import { UmbilicalEnv } from "./src/umbilical-context.ts";
+import pusherRoutes from "./pusher-routes.ts";
 
 const app = new Hono();
 
 app.route("/API", rest);
 app.route("/ws-API", websocket);
+app.route("/pusher-API", pusherRoutes);
 
 const env: UmbilicalEnv = denoEnv();
 
