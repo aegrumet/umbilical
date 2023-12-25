@@ -7,7 +7,7 @@ import {
   isRegisterPutInput,
 } from "../lib/type-guards.ts";
 
-import PodpingRelayFiltered from "../podping/webpush/podping-relay-filtered.ts";
+import PodpingRelayFiltered from "../podping/shared/podping-relay-filtered.ts";
 import { PodpingPusher } from "../podping/webpush/podping-pusher.ts";
 import { PodpingFilter } from "../interfaces/podping-filter.ts";
 import verify from "../verify.ts";

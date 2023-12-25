@@ -4,7 +4,7 @@ import {
   PodpingV0,
   PodpingV1,
 } from "../../interfaces/livewire-podping-websocket.ts";
-import PodpingRelayFiltered from "./podping-relay-filtered.ts";
+import PodpingRelayFiltered from "../shared/podping-relay-filtered.ts";
 import SubscriptionManager from "./subscription-manager.ts";
 import {
   sendWebPushMessage,
