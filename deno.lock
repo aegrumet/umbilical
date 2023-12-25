@@ -1141,6 +1141,7 @@
     "https://denopkg.com/chiefbiiko/sha512@v2.0.0/mod.ts": "33190babd4c0e748bb2568fd003444487c8798c8c3a618f6593098c12805fe15",
     "https://denopkg.com/chiefbiiko/std-encoding@v1.1.1/mod.ts": "e61017da4cef146863d614a961b4e61f1df14b72c906092bd02161f913e76522",
     "https://raw.githubusercontent.com/K0IN/Notify/v0.0.6/app/backend/webpush/hkdf.ts": "dccd8ba26c4290df2a7055d36ee29ee06f48ddddfaad0994876088485ab648cc",
+    "https://raw.githubusercontent.com/K0IN/Notify/v0.0.6/app/backend/webpush/jwk.ts": "78036dfcd7bc1ff8c7fdd36004496284ffd80c58be047ca3aeeaa387711f4983",
     "https://raw.githubusercontent.com/K0IN/Notify/v0.0.6/app/backend/webpush/message.ts": "23e0294a2e1b87c22bd5781c2cb0989b07239d2b56c9975f43fbbe745e98ca36",
     "https://raw.githubusercontent.com/K0IN/Notify/v0.0.6/app/backend/webpush/util.ts": "2acba53d45f3cbe18432b00b9e4d1d526051aaba37c2fca7e0e1f5a1685b90ad",
     "https://raw.githubusercontent.com/K0IN/Notify/v0.0.6/app/backend/webpush/vapid.ts": "9d53c795ee4c2ed1a3908c4caa11996107a1d43162a4c63ef366c30d55fcbc63",
