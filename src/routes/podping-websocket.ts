@@ -8,12 +8,11 @@ import { PodpingFilter } from "../interfaces/podping-filter.ts";
 function getWebsocketRoutes(websocketProvider: WebSocketProvider): Hono {
   const websocket = new Hono();
 
-  const subscriptionManager: SubscriptionManager = new SubscriptionManager();
-  const podpingRelayFiltered = new PodpingRelayFiltered(
-    subscriptionManager as PodpingFilter
-  );
-
   websocket.get("/podping", (c: Context) => {
+    const subscriptionManager: SubscriptionManager = new SubscriptionManager();
+    const podpingRelayFiltered = new PodpingRelayFiltered(
+      subscriptionManager as PodpingFilter
+    );
     return new ProxyPodpingHandler(
       subscriptionManager,
       podpingRelayFiltered
