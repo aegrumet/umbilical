@@ -1,6 +1,6 @@
-import { Context, Hono } from "./deps.ts";
+import { Context } from "./deps.ts";
 import { WebSocketProvider } from "./src/interfaces/websocket-provider.ts";
-import ProxyPodpingHandler from "./src/podping/websocket/proxy-podping.ts";
+import getWebsocketRoutes from "./src/routes/podping-websocket.ts";
 
 class DenoWebSocketProvider implements WebSocketProvider {
   public upgradeWebSocket(c: Context) {
@@ -12,10 +12,6 @@ class DenoWebSocketProvider implements WebSocketProvider {
   }
 }
 
-const websocket = new Hono();
-
-websocket.get("/podping", (c: Context) => {
-  return new ProxyPodpingHandler().proxy(c, new DenoWebSocketProvider());
-});
+const websocket = getWebsocketRoutes(new DenoWebSocketProvider());
 
 export default websocket;

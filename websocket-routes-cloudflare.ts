@@ -1,6 +1,7 @@
 import { Context, Hono } from "./deps.ts";
 import { WebSocketProvider } from "./src/interfaces/websocket-provider.ts";
 import ProxyPodpingHandler from "./src/podping/websocket/proxy-podping.ts";
+import getWebsocketRoutes from "./src/routes/podping-websocket.ts";
 
 // https://github.com/cloudflare/workers-types/issues/84
 declare global {
@@ -64,10 +65,6 @@ class CloudflareWebSocketProvider implements WebSocketProvider {
   }
 }
 
-const websocket = new Hono();
-
-websocket.get("/podping", (c: Context) => {
-  return new ProxyPodpingHandler().proxy(c, new CloudflareWebSocketProvider());
-});
+const websocket = getWebsocketRoutes(new CloudflareWebSocketProvider());
 
 export default websocket;

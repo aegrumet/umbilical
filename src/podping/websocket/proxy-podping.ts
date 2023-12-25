@@ -1,22 +1,28 @@
 import { Context, Evt } from "../../../deps.ts";
-import StatefulPodpingRelay from "../../podping/websocket/stateful-podping-relay.ts";
 import { WebSocketProvider } from "../../interfaces/websocket-provider.ts";
 import {
   PodpingV0,
   PodpingV1,
 } from "../../interfaces/livewire-podping-websocket.ts";
+import SubscriptionManager from "./subscription-manager.ts";
+import PodpingRelayFiltered from "../shared/podping-relay-filtered.ts";
 
 const HEARTBEAT_INTERVAL = 1000 * 30;
 
 class ProxyPodpingHandler {
   shouldUnsubscribe = false;
   podpingEmitter: Evt<PodpingV0 | PodpingV1 | Error>;
-  relay: StatefulPodpingRelay;
   isAlive = false;
   interval: number | undefined;
+  subscriptionManager: SubscriptionManager;
+  relay: PodpingRelayFiltered;
 
-  constructor() {
-    this.relay = new StatefulPodpingRelay();
+  constructor(
+    subscriptionManager: SubscriptionManager,
+    podpingRelayFiltered: PodpingRelayFiltered
+  ) {
+    this.subscriptionManager = subscriptionManager;
+    this.relay = podpingRelayFiltered;
     this.relay.connect();
     this.podpingEmitter = this.relay.getEmitter();
   }
@@ -49,16 +55,16 @@ class ProxyPodpingHandler {
           this.isAlive = true;
         }
         if (json.subscribe) {
-          this.relay.subscribe(json.subscribe);
+          this.subscriptionManager.subscribe(json.subscribe);
         }
         if (json.unsubscribe) {
-          this.relay.unsubscribe(json.unsubscribe);
+          this.subscriptionManager.unsubscribe(json.unsubscribe);
         }
         if (json.subscribeRegExp) {
-          this.relay.subscribeRegExp(json.subscribeRegExp);
+          this.subscriptionManager.subscribeRegExp(json.subscribeRegExp);
         }
         if (json.unsubscribeRegExp) {
-          this.relay.unsubscribeRegExp(json.unsubscribeRegExp);
+          this.subscriptionManager.unsubscribeRegExp(json.unsubscribeRegExp);
         }
         if (json.inject) {
           this.relay.inject(json.inject);
@@ -82,7 +88,7 @@ class ProxyPodpingHandler {
     return response;
   }
 
-  listen = async (socket: WebSocket, relay: StatefulPodpingRelay) => {
+  listen = async (socket: WebSocket, relay: PodpingRelayFiltered) => {
     for await (const ping of this.podpingEmitter) {
       if (typeof ping === typeof Error) {
         console.log("websocket error", ping);
