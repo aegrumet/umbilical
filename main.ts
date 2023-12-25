@@ -2,12 +2,14 @@ import denoEnv from "./src/deno-env.ts";
 import { Hono } from "./deps.ts";
 import websocket from "./websocket-routes.ts";
 import rest from "./rest-routes.ts";
+import restServer from "./rest-routes-server.ts";
 import { UmbilicalEnv } from "./src/interfaces/umbilical-context.ts";
 
 const app = new Hono();
 
-app.route("/API", rest);
-app.route("/ws-API", websocket);
+app.route("/API/worker", rest);
+app.route("/API/server", restServer);
+app.route("/API/websocket", websocket);
 
 const env: UmbilicalEnv = denoEnv();
 

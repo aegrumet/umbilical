@@ -4,7 +4,7 @@ import websocket from "./websocket-routes-cloudflare.ts";
 
 const app = new Hono();
 
-app.route("/API", rest);
-app.route("/ws-API", websocket);
+app.route("/API/worker", rest);
+app.route("/API/websocket", websocket);
 
 export default app;
