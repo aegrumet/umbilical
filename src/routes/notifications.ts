@@ -10,6 +10,8 @@ import {
 import PodpingRelayFiltered from "../podping/webpush/podping-relay-filtered.ts";
 import { PodpingPusher } from "../podping/webpush/podping-pusher.ts";
 import { PodpingFilter } from "../interfaces/podping-filter.ts";
+import verify from "../verify.ts";
+import UmbilicalContext from "../interfaces/umbilical-context.ts";
 
 const subscriptionManager: SubscriptionManager = new SubscriptionManager();
 const podpingRelayFiltered = new PodpingRelayFiltered(
@@ -33,6 +35,11 @@ routes.get("/pubkey", (c) => c.text(pusher.getPublicKey()));
  * }
  */
 routes.put("/register", async (c: Context) => {
+  if (!verify(c as UmbilicalContext)) {
+    c.status(401);
+    return c.text("Unauthorized.");
+  }
+
   const body = await c.req.json();
   if (!isRegisterPutInput(body)) {
     if (!isPushSubscription(body.pushSubscription)) {
@@ -56,6 +63,11 @@ routes.put("/register", async (c: Context) => {
  * }
  */
 routes.delete("/register", async (c: Context) => {
+  if (!verify(c as UmbilicalContext)) {
+    c.status(401);
+    return c.text("Unauthorized.");
+  }
+
   const body = await c.req.json();
   if (!isRegisterDeleteInput(body)) {
     throw new TypeError("Missing or invalid pushSubscription");

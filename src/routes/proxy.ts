@@ -1,4 +1,4 @@
-import { Hono, Context, cors } from "../../deps.ts";
+import { Hono, Context } from "../../deps.ts";
 import proxyRss from "../proxy/proxy-rss.ts";
 import proxyChapters from "../proxy/proxy-chapters.ts";
 import proxyOpml from "../proxy/proxy-opml.ts";
