@@ -1,6 +1,5 @@
-import { Context, Hono } from "./deps.ts";
+import { Context } from "./deps.ts";
 import { WebSocketProvider } from "./src/interfaces/websocket-provider.ts";
-import ProxyPodpingHandler from "./src/podping/websocket/proxy-podping.ts";
 import getWebsocketRoutes from "./src/routes/podping-websocket.ts";
 
 // https://github.com/cloudflare/workers-types/issues/84

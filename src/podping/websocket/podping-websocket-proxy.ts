@@ -9,7 +9,7 @@ import PodpingRelayFiltered from "../shared/podping-relay-filtered.ts";
 
 const HEARTBEAT_INTERVAL = 1000 * 30;
 
-class ProxyPodpingHandler {
+class PodpingWebsocketProxy {
   shouldUnsubscribe = false;
   podpingEmitter: Evt<PodpingV0 | PodpingV1 | Error>;
   isAlive = false;
@@ -105,4 +105,4 @@ class ProxyPodpingHandler {
   };
 }
 
-export default ProxyPodpingHandler;
+export default PodpingWebsocketProxy;
