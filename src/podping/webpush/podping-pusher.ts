@@ -23,27 +23,30 @@ export class PodpingPusher {
   isAlive = false;
   interval: number | undefined;
 
-  webpush_jwk = Deno.env.get("WEBPUSH_JWK") || "";
-  webpush_sub = Deno.env.get("WEBPUSH_SUB") || "mailto:test@test.com";
+  webpushJwkBase64: string;
+  webpushSub: string;
 
   vapidKeys: Readonly<JWK>;
   publicKey: string;
 
   constructor(
     subscriptionManager: SubscriptionManager,
-    podpingRelayFiltered: PodpingRelayFiltered
+    podpingRelayFiltered: PodpingRelayFiltered,
+    webpushJwkBase64: string,
+    webpushSub: string
   ) {
     this.subscriptionManager = subscriptionManager;
     this.relay = podpingRelayFiltered;
     this.relay.connect();
     this.podpingEmitter = this.relay.getEmitter();
 
-    const vapid = atob(this.webpush_jwk);
-    this.vapidKeys = JSON.parse(vapid);
+    this.webpushJwkBase64 = webpushJwkBase64;
+    const vapidKeysJson = atob(this.webpushJwkBase64);
+    this.vapidKeys = JSON.parse(vapidKeysJson);
     this.publicKey = b64ToUrlEncoded(exportPublicKeyPair(this.vapidKeys));
+    this.webpushSub = webpushSub;
 
     console.log(`Configured push with public key: ${this.publicKey}`);
-    this.broadcast("https://example.com", "test");
     this.listen();
   }
 
@@ -85,7 +88,7 @@ export class PodpingPusher {
     const webPushMessageInfo: WebPushMessage = {
       data: JSON.stringify(notification),
       urgency: "normal",
-      sub: this.webpush_sub,
+      sub: this.webpushSub,
       ttl: 60 * 24 * 7,
     };
 
@@ -138,7 +141,7 @@ export class PodpingPusher {
     const webPushMessageInfo: WebPushMessage = {
       data: JSON.stringify(notification),
       urgency: "normal",
-      sub: this.webpush_sub,
+      sub: this.webpushSub,
       ttl: 60 * 24 * 7,
     };
 

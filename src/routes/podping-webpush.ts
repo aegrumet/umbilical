@@ -13,71 +13,83 @@ import { PodpingFilter } from "../interfaces/podping-filter.ts";
 import verify from "../verify.ts";
 import UmbilicalContext from "../interfaces/umbilical-context.ts";
 
-const subscriptionManager: SubscriptionManager = new SubscriptionManager();
-const podpingRelayFiltered = new PodpingRelayFiltered(
-  subscriptionManager as PodpingFilter
-);
-const pusher = new PodpingPusher(subscriptionManager, podpingRelayFiltered);
-
 const routes = new Hono();
 
-routes.use("*", async (c: Context, next) => {
-  c.set("subscriptionManager", subscriptionManager);
-  await next();
-});
+// The PodpingPusher is always-on even when there is no connection context. For
+// this reason we can't pull environment variable values from c.env, so we
+// reference Deno directly. NB: This is incompatible work with Cloudflare
+// Workers.
+if ((Deno.env.get("ENABLED_FEATURES") ?? "").includes("PODPING_WEBPUSH")) {
+  const subscriptionManager: SubscriptionManager = new SubscriptionManager();
+  const podpingRelayFiltered = new PodpingRelayFiltered(
+    subscriptionManager as PodpingFilter
+  );
 
-routes.get("/pubkey", (c) => c.text(pusher.getPublicKey()));
+  const pusher = new PodpingPusher(
+    subscriptionManager,
+    podpingRelayFiltered,
+    Deno.env.get("WEBPUSH_JWK_BASE64") || "",
+    Deno.env.get("WEBPUSH_SUB") || "mailto:test@test.com"
+  );
 
-/* Register PUT takes
- * {
- *   "pushSubscription": PushSubscription,
- *   "rssUrls": string | string[]
- * }
- */
-routes.put("/register", async (c: Context) => {
-  if (!verify(c as UmbilicalContext)) {
-    c.status(401);
-    return c.text("Unauthorized.");
-  }
+  routes.use("*", async (c: Context, next) => {
+    c.set("subscriptionManager", subscriptionManager);
+    await next();
+  });
 
-  const body = await c.req.json();
-  if (!isRegisterPutInput(body)) {
-    if (!isPushSubscription(body.pushSubscription)) {
-      throw new TypeError("Invalid pushSubscription");
-    } else {
-      throw new TypeError("Invalid rssUrls");
+  routes.get("/pubkey", (c) => c.text(pusher.getPublicKey()));
+
+  /* Register PUT takes
+   * {
+   *   "pushSubscription": PushSubscription,
+   *   "rssUrls": string | string[]
+   * }
+   */
+  routes.put("/register", async (c: Context) => {
+    if (!verify(c as UmbilicalContext)) {
+      c.status(401);
+      return c.text("Unauthorized.");
     }
-  }
 
-  const subscriptionManager: SubscriptionManager = c.get(
-    "subscriptionManager"
-  ) as SubscriptionManager;
-  subscriptionManager.add(body.pushSubscription, body.rssUrls);
+    const body = await c.req.json();
+    if (!isRegisterPutInput(body)) {
+      if (!isPushSubscription(body.pushSubscription)) {
+        throw new TypeError("Invalid pushSubscription");
+      } else {
+        throw new TypeError("Invalid rssUrls");
+      }
+    }
 
-  return c.json({ success: true });
-});
+    const subscriptionManager: SubscriptionManager = c.get(
+      "subscriptionManager"
+    ) as SubscriptionManager;
+    subscriptionManager.add(body.pushSubscription, body.rssUrls);
 
-/* Register DELETE takes
- * {
- *   "pushSubscription": PushSubscription,
- * }
- */
-routes.delete("/register", async (c: Context) => {
-  if (!verify(c as UmbilicalContext)) {
-    c.status(401);
-    return c.text("Unauthorized.");
-  }
+    return c.json({ success: true });
+  });
 
-  const body = await c.req.json();
-  if (!isRegisterDeleteInput(body)) {
-    throw new TypeError("Missing or invalid pushSubscription");
-  }
+  /* Register DELETE takes
+   * {
+   *   "pushSubscription": PushSubscription,
+   * }
+   */
+  routes.delete("/register", async (c: Context) => {
+    if (!verify(c as UmbilicalContext)) {
+      c.status(401);
+      return c.text("Unauthorized.");
+    }
 
-  const subscriptionManager: SubscriptionManager = c.get(
-    "subscriptionManager"
-  ) as SubscriptionManager;
-  subscriptionManager.remove(body.pushSubscription);
-  return c.json({ success: true });
-});
+    const body = await c.req.json();
+    if (!isRegisterDeleteInput(body)) {
+      throw new TypeError("Missing or invalid pushSubscription");
+    }
+
+    const subscriptionManager: SubscriptionManager = c.get(
+      "subscriptionManager"
+    ) as SubscriptionManager;
+    subscriptionManager.remove(body.pushSubscription);
+    return c.json({ success: true });
+  });
+}
 
 export default routes;
