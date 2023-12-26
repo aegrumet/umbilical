@@ -98,7 +98,10 @@ API:
 
 Sends webpush notifications to subscribed clients.
 
-Note: this feature requires an always-on server deployment, such as Digital Ocean App Platform.
+Note: this feature requires an always-on server deployment, such as Digital
+Ocean App Platform. Also, it relies on ephemeral storage, so deployments should
+use a single vm or container, and clients should regularly re-push their
+subscription.
 
 API:
 
