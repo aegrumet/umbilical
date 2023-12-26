@@ -4,20 +4,15 @@ class SubscriptionManager {
   private rssUrls: Record<string, string[]> = {};
   private pushSubscriptions: Record<string, PushSubscription> = {};
 
-  public add(
-    pushSubscription: PushSubscription,
-    rssUrls: string | string[]
-  ): void {
+  public add(pushSubscription: PushSubscription, rssUrls: string[]): void {
+    this.remove(pushSubscription);
     this.pushSubscriptions[pushSubscription.endpoint] = pushSubscription;
 
     // Refresh rssUrls
-    if (Array.isArray(rssUrls)) {
-      rssUrls.forEach((rssUrl) => {
-        this.addOne(pushSubscription, rssUrl);
-      });
-    } else {
-      this.addOne(pushSubscription, rssUrls);
-    }
+    rssUrls.forEach((rssUrl) => {
+      this.addRssUrlToPushSubscription(pushSubscription, rssUrl);
+    });
+
     console.log(
       `Added. Subscription count: ${
         Object.keys(this.pushSubscriptions).length
@@ -25,7 +20,10 @@ class SubscriptionManager {
     );
   }
 
-  public addOne(subscription: PushSubscription, rssUrl: string) {
+  public addRssUrlToPushSubscription(
+    subscription: PushSubscription,
+    rssUrl: string
+  ) {
     if (
       this.rssUrls[rssUrl] &&
       !this.rssUrls[rssUrl].includes(subscription.endpoint)

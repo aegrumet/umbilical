@@ -12,7 +12,7 @@ describe("Subscription Manager", () => {
   it("should add a single push subscription", () => {
     const rssUrl = "https://example.com/rss";
     const subscriptionManager = new SubscriptionManager();
-    subscriptionManager.add(validPushSubscription, rssUrl);
+    subscriptionManager.add(validPushSubscription, [rssUrl]);
     expect(subscriptionManager.getAllRssUrls()).toEqual([rssUrl]);
     expect(subscriptionManager.getAllPushSubscriptionEndpoints()).toEqual([
       validPushSubscription.endpoint,
@@ -35,14 +35,14 @@ describe("Subscription Manager", () => {
         ...validPushSubscription,
         endpoint: "https://example.com/endpoint1",
       } as PushSubscription,
-      rssUrl
+      [rssUrl]
     );
     subscriptionManager.add(
       {
         ...validPushSubscription,
         endpoint: "https://example.com/endpoint2",
       } as PushSubscription,
-      rssUrl
+      [rssUrl]
     );
     expect(subscriptionManager.getAllRssUrls()).toEqual([rssUrl]);
     expect(
@@ -57,14 +57,14 @@ describe("Subscription Manager", () => {
         ...validPushSubscription,
         endpoint: "https://example.com/endpoint1",
       } as PushSubscription,
-      rssUrl
+      [rssUrl]
     );
     subscriptionManager.add(
       {
         ...validPushSubscription,
         endpoint: "https://example.com/endpoint2",
       } as PushSubscription,
-      rssUrl
+      [rssUrl]
     );
     subscriptionManager.remove({
       ...validPushSubscription,
@@ -78,7 +78,7 @@ describe("Subscription Manager", () => {
   it("should match the non-https of a subscription added with https", () => {
     const rssUrl = "https://example.com/rss";
     const subscriptionManager = new SubscriptionManager();
-    subscriptionManager.add(validPushSubscription, rssUrl);
+    subscriptionManager.add(validPushSubscription, [rssUrl]);
     expect(subscriptionManager.test("http://example.com/rss")).toBeTruthy();
   });
 
