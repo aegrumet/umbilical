@@ -18,6 +18,7 @@ export default class PodpingRelayFiltered {
   private connectDelay = CONNECT_INITIAL_DELAY;
   private reconnectQueued = false;
   private podpingFilter: PodpingFilter;
+  private uuid: string | undefined;
 
   podpingCount = 0;
   emittedCount = 0;
@@ -25,9 +26,12 @@ export default class PodpingRelayFiltered {
   constructor(podpingFilter: PodpingFilter) {
     this.podpingFilter = podpingFilter;
     this.emitter = Evt.create<PodpingV0 | PodpingV1 | Error>();
+    this.uuid = crypto.randomUUID();
     setInterval(() => {
       console.log(
-        `Podping count: ${this.podpingCount}, Emitted count: ${this.emittedCount}`
+        `[${this.uuid!.slice(0, 8)}] Podping count: ${
+          this.podpingCount
+        }, Emitted count: ${this.emittedCount}`
       );
     }, 10 * 60 * 1000);
   }
