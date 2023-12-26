@@ -8,8 +8,8 @@ Lifeline services for podcast PWAs.
 | -------------------- | --------------------------------------------------------------- | -------------------------------- |
 | `ENABLED_FEATURES`   | comma-separated list of features to enable                      | `proxy,search,podping_websocket` |
 | `UMBILICAL_KEYS`     | comma-separated list of valid signing keys (see authentication) | n/a                              |
-| `PI_API_KEY`         | PodcastIndex API key                                            | n/a                              |
-| `PI_API_SECRET`      | PodcastIndex API secret                                         | n/a                              |
+| `PI_API_KEY`         | PodcastIndex API key, used for search                           | n/a                              |
+| `PI_API_SECRET`      | PodcastIndex API secret , used for search                       | n/a                              |
 | `WEBPUSH_JWK_BASE64` | base64-encoded JSON Web Key for webpush                         | n/a                              |
 | `WEBPUSH_CONTACT`    | contact info (subject) for webpush                              | n/a                              |
 
@@ -17,20 +17,20 @@ Lifeline services for podcast PWAs.
 
 Umbilical ships with a number of features whose availability depends on the deployment type. Here is a list of deployment types:
 
-| deployment type  | description                                    | lifetime (typical) | examples                                                      |
-| ---------------- | ---------------------------------------------- | ------------------ | ------------------------------------------------------------- |
-| edge worker      | stateless function                             | &lt;1s             | Deno Deploy, Cloudflare Workers, Google Cloud Run (throttled) |
-| websocket server | stateful for the duration of socket connection | minutes to hours   | Deno Deploy, Cloudflare Workers                               |
-| server           | stateful for the duration of server process    | hours to days      | Google Cloud Run (unthrottled), Digital Ocean App             |
+| deployment type  | description                                    | lifetime (typical) | examples                                          |
+| ---------------- | ---------------------------------------------- | ------------------ | ------------------------------------------------- |
+| edge worker      | stateless function                             | &lt;1s             | Deno Deploy, Cloudflare Workers, Google Cloud Run |
+| websocket server | stateful for the duration of socket connection | minutes to hours   | Deno Deploy, Cloudflare Workers, Google Cloud Run |
+| server           | stateful for the duration of server process    | hours to days      | Digital Ocean App Platform                        |
 
 Here is a list of features and compatible deployment types:
 
-| feature           | description                                                                                          | deploy type      |
-| ----------------- | ---------------------------------------------------------------------------------------------------- | ---------------- |
-| proxy             | proxy RSS, chapters, and opml files                                                                  | all              |
-| search            | proxy PodcastIndex search API                                                                        | all              |
-| podping_websocket | proxy podpings from Livewire's podping websocket for subsribed podcast back to the PWA, while online | websocket server |
-| podping_webpush   | send webpush notifications to subscribed clients (see below)                                         | server           |
+| feature           | description                                                                                           | deploy type      |
+| ----------------- | ----------------------------------------------------------------------------------------------------- | ---------------- |
+| proxy             | proxy RSS, chapters, and opml files                                                                   | all              |
+| search            | proxy PodcastIndex search API                                                                         | all              |
+| podping_websocket | proxy podpings from Livewire's podping websocket for subscribed podcast back to the PWA, while online | websocket server |
+| podping_webpush   | send webpush notifications to subscribed clients (see below)                                          | server           |
 
 ## authentication
 
@@ -109,7 +109,7 @@ API:
   - response body:
 
     ```
-    publicKey: string
+    string
     ```
 
 - `PUT /API/server/podping-webpush/register`: subscribe to podping updates for the given RSS URLs and push subscription
@@ -126,7 +126,7 @@ API:
   - The push subscription should be a JSON object as returned by the [PushManager.subscribe()](https://developer.mozilla.org/en-US/docs/Web/API/PushManager/subscribe) method.
   - Subsequent calls overwrite previous state for the given subscription.
 
-- `DELETE /API/server/podping-webpush/register`: unsubscribe from podping updates for the given RSS URLs and push subscription
+- `DELETE /API/server/podping-webpush/register`: unsubscribe from podping updates for the given push subscription
 
   - body:
 
