@@ -54,11 +54,11 @@ class PodpingWebsocketProxy {
         if (json.pong) {
           this.isAlive = true;
         }
-        if (json.addRssUrl) {
-          this.subscriptionManager.addRssUrls(json.addRssUrl);
+        if (json.addRssUrls) {
+          this.subscriptionManager.addRssUrls(json.addRssUrls);
           if (c.env.DEBUG) {
             console.log(
-              "Podping Websocket: subscribed to ${this.subscriptionManager.patterns.length} patterns"
+              `Podping Websocket: subscribed to ${this.subscriptionManager.patterns.length} rssUrls`
             );
           }
         }
