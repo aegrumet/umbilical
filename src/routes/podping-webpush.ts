@@ -45,7 +45,7 @@ if ((Deno.env.get("ENABLED_FEATURES") ?? "").includes("podping_webpush")) {
    *   "rssUrls": string | string[]
    * }
    */
-  routes.put("/register", async (c: Context) => {
+  routes.put("/subscription", async (c: Context) => {
     if (!verify(c as UmbilicalContext)) {
       c.status(401);
       return c.text("Unauthorized.");
@@ -73,7 +73,7 @@ if ((Deno.env.get("ENABLED_FEATURES") ?? "").includes("podping_webpush")) {
    *   "pushSubscription": PushSubscription,
    * }
    */
-  routes.delete("/register", async (c: Context) => {
+  routes.delete("/subscription", async (c: Context) => {
     if (!verify(c as UmbilicalContext)) {
       c.status(401);
       return c.text("Unauthorized.");

@@ -110,7 +110,7 @@ API:
     string
     ```
 
-- `PUT /API/server/podping-webpush/register`: subscribe to podping updates for the given RSS URLs and push subscription
+- `PUT /API/server/podping-webpush/subscription`: add push subscription for podping messages from the provided RSS URLs
 
   - body:
 
@@ -122,9 +122,9 @@ API:
     ```
 
   - The push subscription should be a JSON object as returned by the [PushManager.subscribe()](https://developer.mozilla.org/en-US/docs/Web/API/PushManager/subscribe) method.
-  - Subsequent calls overwrite previous state for the given subscription.
+  - Subsequent calls overwrite previous state for the subscription.
 
-- `DELETE /API/server/podping-webpush/register`: unsubscribe from podping updates for the given push subscription
+- `DELETE /API/server/podping-webpush/subscription`: delete the push subscription
 
   - body:
 
