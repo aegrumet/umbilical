@@ -19,7 +19,7 @@ const routes = new Hono();
 // this reason we can't pull environment variable values from c.env, so we
 // reference Deno directly. NB: This is incompatible work with Cloudflare
 // Workers.
-if ((Deno.env.get("ENABLED_FEATURES") ?? "").includes("PODPING_WEBPUSH")) {
+if ((Deno.env.get("ENABLED_FEATURES") ?? "").includes("podping_webpush")) {
   const subscriptionManager: SubscriptionManager = new SubscriptionManager();
   const podpingRelayFiltered = new PodpingRelayFiltered(
     subscriptionManager as PodpingFilter

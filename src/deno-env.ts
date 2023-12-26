@@ -10,7 +10,7 @@ const denoEnv = (): UmbilicalEnv => {
     DEBUG: Deno.env.get("DEBUG") === "true",
     ENABLED_FEATURES:
       Deno.env.get("ENABLED_FEATURES") ??
-      "PROXY|SEARCH|PODPING_WEBPUSH|PODPING_WEBSOCKET",
+      "proxy,search,podping_websocket,podping_webpush",
   };
 };
 

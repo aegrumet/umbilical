@@ -2,6 +2,36 @@
 
 Lifeline services for podcast PWAs.
 
+## environment variables
+
+| name                 | description                                                     | default                          |
+| -------------------- | --------------------------------------------------------------- | -------------------------------- |
+| `ENABLED_FEATURES`   | comma-separated list of features to enable                      | `proxy,search,podping_websocket` |
+| `UMBILICAL_KEYS`     | comma-separated list of valid signing keys (see authentication) | n/a                              |
+| `PI_API_KEY`         | PodcastIndex API key                                            | n/a                              |
+| `PI_API_SECRET`      | PodcastIndex API secret                                         | n/a                              |
+| `WEBPUSH_JWK_BASE64` | base64-encoded JSON Web Key for webpush                         | n/a                              |
+| `WEBPUSH_CONTACT`    | contact info (subject) for webpush                              | n/a                              |
+
+## features and deployment types
+
+Umbilical ships with a number of features whose availability depends on the deployment type. Here is a list of deployment types:
+
+| deployment type  | description                                    | lifetime (typical) | examples                                                      |
+| ---------------- | ---------------------------------------------- | ------------------ | ------------------------------------------------------------- |
+| edge worker      | stateless function                             | &lt;1s             | Deno Deploy, Cloudflare Workers, Google Cloud Run (throttled) |
+| websocket server | stateful for the duration of socket connection | minutes to hours   | Deno Deploy, Cloudflare Workers                               |
+| server           | stateful for the duration of server process    | hours to days      | Google Cloud Run (unthrottled), Digital Ocean App             |
+
+Here is a list of features and compatible deployment types:
+
+| feature           | description                                                                                          | deploy type      |
+| ----------------- | ---------------------------------------------------------------------------------------------------- | ---------------- |
+| proxy             | proxy RSS, chapters, and opml files                                                                  | all              |
+| search            | proxy PodcastIndex search API                                                                        | all              |
+| podping_websocket | proxy podpings from Livewire's podping websocket for subsribed podcast back to the PWA, while online | websocket server |
+| podping_webpush   | send webpush notifications to subscribed clients (see below)                                         | server           |
+
 ## authentication
 
 You must set `UMBILICAL_KEYS` in the runtime environment in order to serve
@@ -21,11 +51,11 @@ See `src/verify.ts` for full details of signature verification.
 
 ## proxy API
 
-`GET /API/proxy?rss=<rss url>`
+`GET /API/worker/proxy?rss=<rss url>`
 
-`GET /API/proxy?chapters=<chapters url>`
+`GET /API/worker/proxy?chapters=<chapters url>`
 
-`GET /API/proxy?opml=<opml url>`
+`GET /API/worker/proxy?opml=<opml url>`
 
 Proxies the RSS, chapters, or opml url. Returns an error if the resource fails parsing. Returns the raw unparsed resource if parsing passes.
 
@@ -33,7 +63,7 @@ Philsophy: Proxy only known formats, to protect the service, but be otherwise un
 
 ## search API
 
-`GET /API/search?q=<search query>`
+`GET /API/worker/search?q=<search query>`
 
 Relays a query to [PodcastIndex's](https://podcastindex.org/) [Search Podcasts API](https://podcastindex-org.github.io/docs-api/#get-/search/byterm).
 
@@ -44,9 +74,9 @@ Requires the following environment variables to be set:
 
 You can sign up for free credentials at [api.podcastindex.org](https://api.podcastindex.org/).
 
-## podping proxy API
+## podping websocket API
 
-Proxies podpings from [Livewire's podping websocket service](https://livewire.io/podping-via-websockets/).
+Proxies podpings from [Livewire's podping websocket service](https://livewire.io/podping-via-websockets/) via websocket while online.
 
 By default, all podpings are filtered out. Callers must subscribe to URLs or IRIs of interest.
 
@@ -57,7 +87,7 @@ simple JSON objects having top-level `ping` and `pong` properties, respectively.
 Messages are passed unmodified using Livewire's format as either `PodpingV0` or
 `PodpingV1` (see the post linked above for details).
 
-Websocket Endpoint: `/ws-API/podping`
+Websocket Endpoint: `/API/websocket/podping`
 
 API:
 
@@ -66,6 +96,48 @@ API:
 - `subscribeRegExp(string, string[])`: subscribe to podpings whose URLs (v0.x) or IRIs (v1.x) match RegExps built from the given string(s)
 - `unsubscribeRegExp(string, string[])`: unsubscribe from podpings whose URLs (v0.x) or IRIs (v1.x) match RegExps built from the given string(s)
 
+## podping webpush API (experimental)
+
+Sends webpush notifications to subscribed clients.
+
+Note: this feature requires an always-on server deployment, such as Digital Ocean App or Google Cloud Run with cpu throttling disabled.
+
+API:
+
+- `GET /API/server/podping-webpush/pubkey`: get the public key for webpush
+
+  - response body:
+
+    ```
+    publicKey: string
+    ```
+
+- `PUT /API/server/podping-webpush/register`: subscribe to podping updates for the given RSS URLs and push subscription
+
+  - body:
+
+    ```
+    {
+        rssUrls: string[],
+        pushSubscription: PushSubscription
+    }
+    ```
+
+  - The push subscription should be a JSON object as returned by the [PushManager.subscribe()](https://developer.mozilla.org/en-US/docs/Web/API/PushManager/subscribe) method.
+  - Subsequent calls overwrite previous state for the given subscription.
+
+- `DELETE /API/server/podping-webpush/register`: unsubscribe from podping updates for the given RSS URLs and push subscription
+
+  - body:
+
+    ```
+    {
+        pushSubscription: PushSubscription
+    }
+    ```
+
+  - The push subscription should be a JSON object as returned by the [PushManager.subscribe()](https://developer.mozilla.org/en-US/docs/Web/API/PushManager/subscribe) method.
+
 ## deploy
 
 The latest image for this repo is posted to [Docker Hub](https://hub.docker.com/r/aegrumet/umbilical/tags).
@@ -73,6 +145,7 @@ The latest image for this repo is posted to [Docker Hub](https://hub.docker.com/
 - Run on Cloudflare: [deploy/cloudflare](deploy/cloudflare)
 - Run on Deno Deploy: [deploy/deno](deploy/deno)
 - Run on Google Cloud Run: [deploy/gcloud/terraform](deploy/gcloud/terraform)
+- Run on Digital Ocean App: TODO
 - Run on other clouds: submit pull request.
 
 ## warnings
