@@ -114,61 +114,7 @@ export class PodpingPusher {
   }
 
   inject(url: string, reason: string) {
-    this.relay.inject(url);
-  }
-
-  async testPush(url: string, reason: string): Promise<void> {
-    const notifications: Promise<WebPushResult | void>[] = [];
-
-    const endpoints =
-      this.subscriptionManager.getAllPushSubscriptionEndpoints();
-
-    // Angular-style notification body, see
-    // https://angular.io/guide/service-worker-notifications#notification-click-handling
-    // TODO: Make this templatized and selectable.
-    const notification = {
-      notification: {
-        title: `New podping: ${url}, ${reason}`,
-        data: {
-          onActionClick: {
-            default: {
-              operation: "navigateLastFocusedOrOpen",
-              url: `/show-episodes?rssUrl=${encodeURIComponent(
-                url
-              )}&source=podping-${encodeURIComponent(reason)}`,
-            },
-          },
-        },
-      },
-    };
-
-    const webPushMessageInfo: WebPushMessage = {
-      data: JSON.stringify(notification),
-      urgency: "normal",
-      sub: this.webpushSub,
-      ttl: 60 * 24 * 7,
-    };
-
-    endpoints.forEach((endpoint: string) => {
-      console.log(`Sending test notification to ${endpoint}`);
-      const subscription = this.subscriptionManager.getSubscriptionByEndpoint(
-        endpoint
-      ) as unknown as PushSubscription;
-      const p = sendWebPushMessage(
-        webPushMessageInfo,
-        {
-          endpoint: subscription.endpoint,
-          auth: base64UrlToBase64(subscription.keys.auth),
-          key: base64UrlToBase64(subscription.keys.p256dh),
-        },
-        this.vapidKeys
-      );
-      notifications.push(
-        p.catch((e: Error) => console.error("Caught web-push error", e))
-      );
-    });
-
-    await Promise.all(notifications);
+    this.relay.inject(url, reason);
   }
 
   handlePodping(podping: PodpingV0 | PodpingV1) {

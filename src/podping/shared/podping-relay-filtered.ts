@@ -126,13 +126,13 @@ export default class PodpingRelayFiltered {
    * Inject a PodpingV1 message with the iris field set to an array containing
    * the given url. For testing.
    */
-  public inject(str: string, filter = true) {
-    if (!filter || this.podpingFilter.test(str)) {
+  public inject(iri: string, reason = "update", filter = true) {
+    if (!filter || this.podpingFilter.test(iri)) {
       this.postUpdate({
         version: "1.0",
         medium: "podcast",
-        reason: "update",
-        iris: [str],
+        reason: reason,
+        iris: [iri],
       } as PodpingV1);
     }
   }
