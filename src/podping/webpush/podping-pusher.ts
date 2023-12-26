@@ -113,6 +113,10 @@ export class PodpingPusher {
     await Promise.all(notifications);
   }
 
+  inject(url: string, reason: string) {
+    this.relay.inject(url);
+  }
+
   async testPush(url: string, reason: string): Promise<void> {
     const notifications: Promise<WebPushResult | void>[] = [];
 

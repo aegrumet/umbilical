@@ -56,6 +56,11 @@ class PodpingWebsocketProxy {
         }
         if (json.subscribe) {
           this.subscriptionManager.subscribe(json.subscribe);
+          if (c.env.DEBUG) {
+            console.log(
+              "Podping Websocket: subscribed to ${this.subscriptionManager.patterns.length} patterns"
+            );
+          }
         }
         if (json.unsubscribe) {
           this.subscriptionManager.unsubscribe(json.unsubscribe);

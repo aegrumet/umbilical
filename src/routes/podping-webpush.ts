@@ -90,6 +90,21 @@ if ((Deno.env.get("ENABLED_FEATURES") ?? "").includes("podping_webpush")) {
     subscriptionManager.remove(body.pushSubscription);
     return c.json({ success: true });
   });
+
+  if (Deno.env.get("DEBUG") === "true") {
+    routes.get("/inject", (c: Context) => {
+      let url: string | undefined = "https://mp3s.nashownotes.com/pc20rss.xml";
+      if (c.req.query("url")) {
+        url = c.req.query("url");
+      }
+      let reason: string | undefined = "update";
+      if (c.req.query("reason")) {
+        reason = c.req.query("reason");
+      }
+      pusher.inject(url!, reason!);
+      return c.text("ok");
+    });
+  }
 }
 
 export default routes;
