@@ -25,12 +25,12 @@ Umbilical ships with a number of features whose availability depends on the depl
 
 Here is a list of features and compatible deployment types:
 
-| feature           | description                                                                                            | deploy type      |
-| ----------------- | ------------------------------------------------------------------------------------------------------ | ---------------- |
-| proxy             | proxy RSS, chapters, and opml files                                                                    | all              |
-| search            | proxy PodcastIndex search API                                                                          | all              |
-| podping_websocket | proxy podpings from Livewire's podping websocket for subscribed podcasts back to the PWA, while online | websocket server |
-| podping_webpush   | send webpush notifications to subscribed clients (see below)                                           | server           |
+| feature           | description                                                                                     | deploy type      |
+| ----------------- | ----------------------------------------------------------------------------------------------- | ---------------- |
+| proxy             | proxy RSS, chapters, and opml files                                                             | all              |
+| search            | proxy PodcastIndex search API                                                                   | all              |
+| podping_websocket | relay podpings from Livewire's podping websocket service to a running PWA, for subscribed feeds | websocket server |
+| podping_webpush   | send webpush notifications to subscribed PWAs, even while not running (see below)               | server           |
 
 ## authentication
 
