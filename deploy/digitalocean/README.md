@@ -1,4 +1,4 @@
-# Deploy on Deno Deploy
+# Deploy on Digital Ocean App Platform
 
 [Digital Ocean App Platform](https://www.digitalocean.com/products/app-platform)
 is a fully-managed infrastructure provider that provides always-on server
