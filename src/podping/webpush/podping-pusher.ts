@@ -69,9 +69,11 @@ export class PodpingPusher {
     // https://angular.io/guide/service-worker-notifications#notification-click-handling
     // TODO: Make this templatized and selectable.
     const notification = {
-      title: `New podping: ${url}, ${reason}`,
+      title: `Podcast Update`,
+      body: `${reason} from ${url}`,
       notification: {
-        title: `New podping: ${url}, ${reason}`,
+        title: `Podcast Update`,
+        body: `${reason} from ${url}`,
         data: {
           onActionClick: {
             default: {
