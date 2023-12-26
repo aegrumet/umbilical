@@ -30,7 +30,7 @@ Here is a list of features and compatible deployment types:
 | proxy             | proxy RSS, chapters, and opml files                                                             | all              |
 | search            | proxy PodcastIndex search API                                                                   | all              |
 | podping_websocket | relay podpings from Livewire's podping websocket service to a running PWA, for subscribed feeds | websocket server |
-| podping_webpush   | send webpush notifications to subscribed PWAs, even while not running (see below)               | server           |
+| podping_webpush   | send webpush notifications to PWAs even while not running, for subscribed feeds (see below)     | server           |
 
 ## authentication
 
