@@ -145,7 +145,7 @@ The latest image for this repo is posted to [Docker Hub](https://hub.docker.com/
 - Run on Cloudflare: [deploy/cloudflare](deploy/cloudflare)
 - Run on Deno Deploy: [deploy/deno](deploy/deno)
 - Run on Google Cloud Run: [deploy/gcloud/terraform](deploy/gcloud/terraform)
-- Run on Digital Ocean App: TODO
+- Run on Digital Ocean App Platform: [deploy/digitaocean](deploy/digitalocean)
 - Run on other clouds: submit pull request.
 
 ## warnings
