@@ -7,26 +7,18 @@ class SubscriptionManager implements PodpingFilter {
     this.patterns = Array<RegExp>();
   }
 
-  public subscribe(p: string | string[]) {
-    this.unsubscribe(p); // de-dupe
-    if (Array.isArray(p)) {
-      this.patterns.push(
-        ...p.map(
-          (pattern) => new RegExp("^" + this.escapeRegExp(pattern) + "$")
-        )
-      );
-    } else {
-      this.patterns.push(new RegExp("^" + this.escapeRegExp(p) + "$"));
-    }
+  public addRssUrls(p: string[]) {
+    this.deleteRssUrls(p); // de-dupe
+
+    this.patterns.push(
+      ...p.map((pattern) => new RegExp("^" + this.escapeRegExp(pattern) + "$"))
+    );
   }
 
-  public subscribeRegExp(p: string | string[]) {
-    this.unsubscribeRegExp(p); // de-dupe
-    if (Array.isArray(p)) {
-      this.patterns.push(...p.map((pattern) => new RegExp(pattern)));
-    } else {
-      this.patterns.push(new RegExp(p));
-    }
+  public addRssUrlsRegExp(p: string[]) {
+    this.deleteRssUrlsRegExp(p); // de-dupe
+
+    this.patterns.push(...p.map((pattern) => new RegExp(pattern)));
   }
 
   /**
@@ -34,34 +26,20 @@ class SubscriptionManager implements PodpingFilter {
    * to apply the forward transformation RegExp.source to both sides of the
    * comparison.
    */
-  public unsubscribe(p: string | string[]) {
-    if (Array.isArray(p)) {
-      const exclusionList = p.map(
-        (pattern) => new RegExp("^" + this.escapeRegExp(pattern) + "$").source
-      );
-      this.patterns = this.patterns.filter((pattern) => {
-        return !exclusionList.includes(pattern.source);
-      });
-    } else {
-      this.patterns = this.patterns.filter((pattern) => {
-        return (
-          pattern.source !== new RegExp("^" + this.escapeRegExp(p) + "$").source
-        );
-      });
-    }
+  public deleteRssUrls(p: string[]) {
+    const exclusionList = p.map(
+      (pattern) => new RegExp("^" + this.escapeRegExp(pattern) + "$").source
+    );
+    this.patterns = this.patterns.filter((pattern) => {
+      return !exclusionList.includes(pattern.source);
+    });
   }
 
-  public unsubscribeRegExp(p: string | string[]) {
-    if (Array.isArray(p)) {
-      const exclusionList = p.map((pattern) => new RegExp(pattern).source);
-      this.patterns = this.patterns.filter((pattern) => {
-        return !exclusionList.includes(pattern.source);
-      });
-    } else {
-      this.patterns = this.patterns.filter((pattern) => {
-        return pattern.source !== new RegExp(p).source;
-      });
-    }
+  public deleteRssUrlsRegExp(p: string[]) {
+    const exclusionList = p.map((pattern) => new RegExp(pattern).source);
+    this.patterns = this.patterns.filter((pattern) => {
+      return !exclusionList.includes(pattern.source);
+    });
   }
 
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions

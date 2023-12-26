@@ -91,10 +91,8 @@ Websocket Endpoint: `/API/websocket/podping`
 
 API:
 
-- `subscribe(string, string[])`: subscribe to podpings whose URL (v0.x) or IRI (v1.x) match the given string(s) exactly
-- `unsubscribe(string, string[])`: unsubscribe from podpings whose URL (v0.x) or IRI (v1.x) match the given string(s) exactly
-- `subscribeRegExp(string, string[])`: subscribe to podpings whose URLs (v0.x) or IRIs (v1.x) match RegExps built from the given string(s)
-- `unsubscribeRegExp(string, string[])`: unsubscribe from podpings whose URLs (v0.x) or IRIs (v1.x) match RegExps built from the given string(s)
+- `addRssUrls(string[])`: subscribe to podpings whose URLs (v0.x) or IRIs (v1.x) match the given strings exactly
+- `deleteRssUrls(string[])`: unsubscribe from podpings whose URLs (v0.x) or IRIs (v1.x) match the given strings exactly
 
 ## podping webpush API (experimental)
 

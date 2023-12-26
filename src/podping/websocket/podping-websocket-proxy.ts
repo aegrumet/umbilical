@@ -54,22 +54,24 @@ class PodpingWebsocketProxy {
         if (json.pong) {
           this.isAlive = true;
         }
-        if (json.subscribe) {
-          this.subscriptionManager.subscribe(json.subscribe);
+        if (json.addRssUrl) {
+          this.subscriptionManager.addRssUrls(json.addRssUrl);
           if (c.env.DEBUG) {
             console.log(
               "Podping Websocket: subscribed to ${this.subscriptionManager.patterns.length} patterns"
             );
           }
         }
-        if (json.unsubscribe) {
-          this.subscriptionManager.unsubscribe(json.unsubscribe);
+        if (json.deleteRssUrls) {
+          this.subscriptionManager.deleteRssUrls(json.deleteRssUrls);
         }
-        if (json.subscribeRegExp) {
-          this.subscriptionManager.subscribeRegExp(json.subscribeRegExp);
+        if (json.addRssUrlsRegExp) {
+          this.subscriptionManager.addRssUrlsRegExp(json.addRssUrlsRegExp);
         }
-        if (json.unsubscribeRegExp) {
-          this.subscriptionManager.unsubscribeRegExp(json.unsubscribeRegExp);
+        if (json.deleteRssUrlsRegExp) {
+          this.subscriptionManager.deleteRssUrlsRegExp(
+            json.deleteRssUrlsRegExp
+          );
         }
         if (json.inject) {
           this.relay.inject(json.inject);
