@@ -3,7 +3,7 @@ export type UmbilicalEnv = {
   PI_API_KEY: string | undefined;
   PI_API_SECRET: string | undefined;
   WEBPUSH_JWK_BASE64: string | undefined;
-  WEBPUSH_SUB: string | undefined;
+  WEBPUSH_CONTACT: string | undefined;
   DEBUG: boolean | undefined;
   ENABLED_FEATURES: string;
 };

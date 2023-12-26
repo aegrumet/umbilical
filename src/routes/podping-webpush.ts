@@ -29,7 +29,7 @@ if ((Deno.env.get("ENABLED_FEATURES") ?? "").includes("podping_webpush")) {
     subscriptionManager,
     podpingRelayFiltered,
     Deno.env.get("WEBPUSH_JWK_BASE64") || "",
-    Deno.env.get("WEBPUSH_SUB") || "mailto:test@test.com"
+    Deno.env.get("WEBPUSH_CONTACT") || "mailto:test@test.com"
   );
 
   routes.use("*", async (c: Context, next) => {
