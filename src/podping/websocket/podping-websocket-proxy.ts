@@ -16,6 +16,7 @@ class PodpingWebsocketProxy {
   interval: number | undefined;
   subscriptionManager: SubscriptionManager;
   relay: PodpingRelayFiltered;
+  debug = false;
 
   constructor(
     subscriptionManager: SubscriptionManager,
@@ -32,6 +33,7 @@ class PodpingWebsocketProxy {
   }
 
   proxy(c: Context, p: WebSocketProvider) {
+    this.debug = c.env.DEBUG;
     this.shouldUnsubscribe = false;
 
     const { response, socket } = p.upgradeWebSocket(c);
@@ -43,6 +45,9 @@ class PodpingWebsocketProxy {
     this.isAlive = true;
 
     socket.addEventListener("close", () => {
+      if (c.env.DEBUG) {
+        console.log("Podping Websocket: close message handler");
+      }
       this.shouldUnsubscribe = true;
       this.shutdown(socket, this.relay);
     });
@@ -76,8 +81,10 @@ class PodpingWebsocketProxy {
         if (json.inject) {
           this.relay.inject(json.inject);
         }
-      } catch (_) {
-        // do nothing
+      } catch (e) {
+        if (c.env.DEBUG) {
+          console.log("Podping Websocket message loop error", e);
+        }
       }
     });
 
@@ -115,6 +122,9 @@ class PodpingWebsocketProxy {
 
   // Close connections and stop processing.
   shutdown(socket: WebSocket, relay: PodpingRelayFiltered) {
+    if (this.debug) {
+      console.log("Podping Websocket: shutting down");
+    }
     if (this.interval) {
       clearInterval(this.interval);
       this.interval = undefined;
