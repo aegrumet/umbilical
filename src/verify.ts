@@ -81,7 +81,10 @@ const verify = (c: UmbilicalContext, body: string | null = null): boolean => {
   // https version of the url as well.
   if (c.req.url.startsWith("http://")) {
     const fixedUrl = c.req.url.replace(/^http/, "https");
-    const fixedTimestampedPayload = `${timestamp}.${fixedUrl}`;
+    let fixedTimestampedPayload = `${timestamp}.${fixedUrl}`;
+    if (body !== null) {
+      fixedTimestampedPayload += `.${body}`;
+    }
     if (verifySignature(signature, keys, fixedTimestampedPayload)) return true;
   }
 
