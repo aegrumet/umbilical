@@ -55,13 +55,6 @@ export default class PodpingRelayFiltered {
     });
   }
 
-  public close() {
-    this.cleanup();
-    if (this.ws) {
-      this.ws.close();
-    }
-  }
-
   public handleOpen(_: Event) {
     this.connectAttemptNumber = 0;
     this.connectDelay = CONNECT_INITIAL_DELAY;
@@ -89,7 +82,7 @@ export default class PodpingRelayFiltered {
     } else {
       console.log("Failed to connect to Podping Server. Giving up.");
       this.postError(new Error("Failed to connect to Podping Server."));
-      this.cleanup();
+      this.shutdown();
       return;
     }
   }
@@ -163,10 +156,18 @@ export default class PodpingRelayFiltered {
     return new WebSocket(url);
   }
 
-  // Clean up any ongoing internal timers, etc when we're done.
-  public cleanup() {
+  // Close connections and stop processing.
+  public shutdown() {
     if (this.logInterval) {
       clearInterval(this.logInterval);
+      this.logInterval = undefined;
+    }
+    try {
+      if (this.ws && this.ws.readyState !== WebSocket.CLOSED) {
+        this.ws.close();
+      }
+    } catch (_) {
+      // do nothing
     }
   }
 }

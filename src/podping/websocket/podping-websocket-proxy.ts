@@ -44,7 +44,7 @@ class PodpingWebsocketProxy {
 
     socket.addEventListener("close", () => {
       this.shouldUnsubscribe = true;
-      clearInterval(this.interval);
+      this.shutdown(socket, this.relay);
     });
 
     // deno-lint-ignore no-explicit-any
@@ -95,21 +95,39 @@ class PodpingWebsocketProxy {
     return response;
   }
 
-  listen = async (socket: WebSocket, relay: PodpingRelayFiltered) => {
-    for await (const ping of this.podpingEmitter) {
-      if (typeof ping === typeof Error) {
-        console.log("websocket error", ping);
+  async listen(socket: WebSocket, relay: PodpingRelayFiltered) {
+    for await (const podping of this.podpingEmitter) {
+      if (typeof podping === typeof Error) {
+        console.log("websocket error", podping);
         break;
       }
       if (!this.shouldUnsubscribe) {
-        socket.send(JSON.stringify(ping));
+        socket.send(JSON.stringify(podping));
       } else {
         break;
       }
     }
-    relay.close();
-    socket.close();
-  };
+    this.shutdown(socket, relay);
+  }
+
+  // Close connections and stop processing.
+  shutdown(socket: WebSocket, relay: PodpingRelayFiltered) {
+    if (this.interval) {
+      clearInterval(this.interval);
+      this.interval = undefined;
+    }
+    try {
+      relay.shutdown();
+    } catch (_) {
+      // do nothing
+    }
+    try {
+      socket.readyState !== WebSocket.CLOSED;
+      socket.close();
+    } catch (_) {
+      // do nothing
+    }
+  }
 }
 
 export default PodpingWebsocketProxy;
