@@ -19,6 +19,7 @@ export default class PodpingRelayFiltered {
   private reconnectQueued = false;
   private podpingFilter: PodpingFilter;
   private uuid: string | undefined;
+  private logInterval: number | undefined;
 
   podpingCount = 0;
   emittedCount = 0;
@@ -27,7 +28,7 @@ export default class PodpingRelayFiltered {
     this.podpingFilter = podpingFilter;
     this.emitter = Evt.create<PodpingV0 | PodpingV1 | Error>();
     this.uuid = crypto.randomUUID();
-    setInterval(() => {
+    this.logInterval = setInterval(() => {
       console.log(
         `[${this.uuid!.slice(0, 8)}] Podping count: ${
           this.podpingCount
@@ -55,6 +56,7 @@ export default class PodpingRelayFiltered {
   }
 
   public close() {
+    this.cleanup();
     if (this.ws) {
       this.ws.close();
     }
@@ -87,6 +89,7 @@ export default class PodpingRelayFiltered {
     } else {
       console.log("Failed to connect to Podping Server. Giving up.");
       this.postError(new Error("Failed to connect to Podping Server."));
+      this.cleanup();
       return;
     }
   }
@@ -158,5 +161,12 @@ export default class PodpingRelayFiltered {
   // Stubbable function for testability.
   public newWebSocket(url: string) {
     return new WebSocket(url);
+  }
+
+  // Clean up any ongoing internal timers, etc when we're done.
+  public cleanup() {
+    if (this.logInterval) {
+      clearInterval(this.logInterval);
+    }
   }
 }
