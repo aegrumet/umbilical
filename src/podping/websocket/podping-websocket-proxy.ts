@@ -85,6 +85,9 @@ class PodpingWebsocketProxy {
 
     this.interval = setInterval(() => {
       if (!this.isAlive) {
+        if (c.env.DEBUG) {
+          console.log("Client failed to respond to ping, closing socket");
+        }
         socket.close();
         return;
       }
