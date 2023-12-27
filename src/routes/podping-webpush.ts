@@ -46,12 +46,14 @@ if ((Deno.env.get("ENABLED_FEATURES") ?? "").includes("podping_webpush")) {
    * }
    */
   routes.put("/subscription", async (c: Context) => {
-    if (!verify(c as UmbilicalContext)) {
+    const bodyText = await c.req.text();
+
+    if (!verify(c as UmbilicalContext, bodyText)) {
       c.status(401);
       return c.text("Unauthorized.");
     }
 
-    const body = await c.req.json();
+    const body = JSON.parse(bodyText);
     if (!isRegisterPutInput(body)) {
       if (!isPushSubscription(body.pushSubscription)) {
         throw new TypeError("Invalid pushSubscription");
@@ -74,12 +76,14 @@ if ((Deno.env.get("ENABLED_FEATURES") ?? "").includes("podping_webpush")) {
    * }
    */
   routes.delete("/subscription", async (c: Context) => {
-    if (!verify(c as UmbilicalContext)) {
+    const bodyText = await c.req.text();
+
+    if (!verify(c as UmbilicalContext, bodyText)) {
       c.status(401);
       return c.text("Unauthorized.");
     }
 
-    const body = await c.req.json();
+    const body = JSON.parse(bodyText);
     if (!isRegisterDeleteInput(body)) {
       throw new TypeError("Missing or invalid pushSubscription");
     }

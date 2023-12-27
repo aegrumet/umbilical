@@ -40,7 +40,11 @@ requests. It should be set to a comma-separated list of valid signing keys.
 To authenticate, clients should send a request header with the following format:
 
 ```
+    GET:
     X-Umbilical-Signature: t=<timestamp in milliseconds>,s=<hmac-sha256(`${timestamp}.${full request url}`)>
+
+    POST,PUT,DELETE:
+    X-Umbilical-Signature: t=<timestamp in milliseconds>,s=<hmac-sha256(`${timestamp}.${full request url}.${body text}`)>
 ```
 
 The hmac should be generated using one of the signing keys in `UMBILICAL_KEYS`.
