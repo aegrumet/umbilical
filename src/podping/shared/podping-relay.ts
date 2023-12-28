@@ -33,7 +33,7 @@ export default class PodpingRelay {
           this.podpingCount
         }, Emitted count: ${this.emittedCount}`
       );
-    }, 0.2 * 60 * 1000);
+    }, 10 * 60 * 1000);
   }
 
   // explicitConnect is used for testing. It allows the client to spy on

@@ -30,7 +30,7 @@ export default class PodpingRelayFiltered {
           this.podpingCount
         }, Emitted count: ${this.emittedCount}`
       );
-    }, 0.2 * 60 * 1000);
+    }, 10 * 60 * 1000);
   }
 
   async connect() {
