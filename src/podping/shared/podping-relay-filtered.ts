@@ -1,4 +1,4 @@
-import { Evt } from "../../../deps.ts";
+import { Evt, Ctx } from "../../../deps.ts";
 import {
   PodpingV0,
   PodpingV1,
@@ -10,6 +10,7 @@ import PodpingRelayFactory from "./podping-relay-factory.ts";
 export default class PodpingRelayFiltered {
   private relay: PodpingRelay;
   private relayEmitter: Evt<PodpingV0 | PodpingV1 | Error>;
+  private relayEmitterCtx: Ctx;
   private filterEmitter: Evt<PodpingV0 | PodpingV1 | Error>;
   private podpingFilter: PodpingFilter;
   private uuid: string | undefined;
@@ -21,6 +22,7 @@ export default class PodpingRelayFiltered {
   constructor(podpingFilter: PodpingFilter) {
     this.relay = PodpingRelayFactory.getInstance().getPodpingRelay();
     this.relayEmitter = this.relay.getEmitter();
+    this.relayEmitterCtx = Evt.newCtx();
     this.podpingFilter = podpingFilter;
     this.filterEmitter = Evt.create<PodpingV0 | PodpingV1 | Error>();
     this.uuid = crypto.randomUUID();
@@ -34,7 +36,7 @@ export default class PodpingRelayFiltered {
   }
 
   async connect() {
-    for await (const podping of this.relayEmitter) {
+    for await (const podping of this.relayEmitter.iter(this.relayEmitterCtx)) {
       if (typeof podping === typeof Error) {
         console.log("relay error", podping);
       } else {
@@ -102,5 +104,6 @@ export default class PodpingRelayFiltered {
       clearInterval(this.logInterval);
       this.logInterval = undefined;
     }
+    this.relayEmitterCtx.done();
   }
 }

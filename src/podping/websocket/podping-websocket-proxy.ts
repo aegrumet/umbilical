@@ -1,4 +1,4 @@
-import { Context, Evt } from "../../../deps.ts";
+import { Context, Evt, Ctx } from "../../../deps.ts";
 import { WebSocketProvider } from "../../interfaces/websocket-provider.ts";
 import {
   PodpingV0,
@@ -16,7 +16,9 @@ class PodpingWebsocketProxy {
   interval: number | undefined;
   subscriptionManager: SubscriptionManager;
   relay: PodpingRelayFiltered;
+  podpingEmitterCtx: Ctx;
   debug = false;
+  private uuid: string | undefined;
 
   constructor(
     subscriptionManager: SubscriptionManager,
@@ -26,6 +28,8 @@ class PodpingWebsocketProxy {
     this.relay = podpingRelayFiltered;
     this.relay.connect();
     this.podpingEmitter = this.relay.getEmitter();
+    this.podpingEmitterCtx = Evt.newCtx();
+    this.uuid = crypto.randomUUID();
   }
 
   ping(ws: WebSocket) {
@@ -106,7 +110,9 @@ class PodpingWebsocketProxy {
   }
 
   async listen(socket: WebSocket, relay: PodpingRelayFiltered) {
-    for await (const podping of this.podpingEmitter) {
+    for await (const podping of this.podpingEmitter.iter(
+      this.podpingEmitterCtx
+    )) {
       if (typeof podping === typeof Error) {
         console.log("websocket error", podping);
         break;
@@ -140,6 +146,7 @@ class PodpingWebsocketProxy {
     } catch (_) {
       // do nothing
     }
+    this.podpingEmitterCtx.done();
   }
 }
 
