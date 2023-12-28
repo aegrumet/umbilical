@@ -10,14 +10,14 @@ import PodpingRelayFiltered from "../shared/podping-relay-filtered.ts";
 const HEARTBEAT_INTERVAL = 1000 * 30;
 
 class PodpingWebsocketProxy {
-  shouldUnsubscribe = false;
-  podpingEmitter: Evt<PodpingV0 | PodpingV1 | Error>;
-  isAlive = false;
-  interval: number | undefined;
-  subscriptionManager: SubscriptionManager;
-  relay: PodpingRelayFiltered;
-  podpingEmitterCtx: Ctx;
-  debug = false;
+  private shouldUnsubscribe = false;
+  private podpingEmitter: Evt<PodpingV0 | PodpingV1 | Error>;
+  private isAlive = false;
+  private interval: number | undefined;
+  private subscriptionManager: SubscriptionManager;
+  private relay: PodpingRelayFiltered;
+  private podpingEmitterCtx: Ctx;
+  private debug = false;
   private uuid: string | undefined;
 
   constructor(
