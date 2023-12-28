@@ -3,6 +3,7 @@ import { describe, it, expect } from "../../../dev_deps.ts";
 import { validPushSubscription } from "../../../mocks/push-subscription.ts";
 import SubscriptionManager from "./subscription-manager.ts";
 import { PushSubscription } from "../../../npm_deps.ts";
+import { normalizedKeyFromUrl } from "../../lib/url.ts";
 
 describe("Subscription Manager", () => {
   it("should create", () => {
@@ -13,7 +14,9 @@ describe("Subscription Manager", () => {
     const rssUrl = "https://example.com/rss";
     const subscriptionManager = new SubscriptionManager();
     subscriptionManager.add(validPushSubscription, [rssUrl]);
-    expect(subscriptionManager.getAllRssUrls()).toEqual([rssUrl]);
+    expect(subscriptionManager.getAllNormalizedRssKeys()).toEqual([
+      normalizedKeyFromUrl(rssUrl),
+    ]);
     expect(subscriptionManager.getAllPushSubscriptionEndpoints()).toEqual([
       validPushSubscription.endpoint,
     ]);
@@ -22,7 +25,9 @@ describe("Subscription Manager", () => {
     const rssUrls = ["https://example.com/rss1", "https://example.com/rss2"];
     const subscriptionManager = new SubscriptionManager();
     subscriptionManager.add(validPushSubscription, rssUrls);
-    expect(subscriptionManager.getAllRssUrls()).toEqual(rssUrls);
+    expect(subscriptionManager.getAllNormalizedRssKeys()).toEqual(
+      rssUrls.map((x) => normalizedKeyFromUrl(x))
+    );
     expect(subscriptionManager.getAllPushSubscriptionEndpoints()).toEqual([
       validPushSubscription.endpoint,
     ]);
@@ -44,7 +49,9 @@ describe("Subscription Manager", () => {
       } as PushSubscription,
       [rssUrl]
     );
-    expect(subscriptionManager.getAllRssUrls()).toEqual([rssUrl]);
+    expect(subscriptionManager.getAllNormalizedRssKeys()).toEqual([
+      normalizedKeyFromUrl(rssUrl),
+    ]);
     expect(
       subscriptionManager.getAllPushSubscriptionEndpoints().length
     ).toEqual(2);
@@ -70,7 +77,9 @@ describe("Subscription Manager", () => {
       ...validPushSubscription,
       endpoint: "https://example.com/endpoint1",
     } as PushSubscription);
-    expect(subscriptionManager.getAllRssUrls()).toEqual([rssUrl]);
+    expect(subscriptionManager.getAllNormalizedRssKeys()).toEqual([
+      normalizedKeyFromUrl(rssUrl),
+    ]);
     expect(subscriptionManager.getAllPushSubscriptionEndpoints()).toEqual([
       "https://example.com/endpoint2",
     ]);

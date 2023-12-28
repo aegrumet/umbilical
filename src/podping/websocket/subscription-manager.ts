@@ -1,4 +1,5 @@
 import { PodpingFilter } from "../../interfaces/podping-filter.ts";
+import { normalizedKeyFromUrl } from "../../lib/url.ts";
 
 class SubscriptionManager implements PodpingFilter {
   public patterns: Array<RegExp>;
@@ -11,10 +12,17 @@ class SubscriptionManager implements PodpingFilter {
     this.deleteRssUrls(p); // de-dupe
 
     this.patterns.push(
-      ...p.map((pattern) => new RegExp("^" + this.escapeRegExp(pattern) + "$"))
+      ...p.map(
+        (pattern) =>
+          new RegExp(
+            "^" + this.escapeRegExp(normalizedKeyFromUrl(pattern)) + "$"
+          )
+      )
     );
   }
 
+  // We don't generate normalized keys for RegExps. If you're using RegExps we
+  // assume that you know what you're doing :-)
   public addRssUrlsRegExp(p: string[]) {
     this.deleteRssUrlsRegExp(p); // de-dupe
 
@@ -28,7 +36,9 @@ class SubscriptionManager implements PodpingFilter {
    */
   public deleteRssUrls(p: string[]) {
     const exclusionList = p.map(
-      (pattern) => new RegExp("^" + this.escapeRegExp(pattern) + "$").source
+      (pattern) =>
+        new RegExp("^" + this.escapeRegExp(normalizedKeyFromUrl(pattern)) + "$")
+          .source
     );
     this.patterns = this.patterns.filter((pattern) => {
       return !exclusionList.includes(pattern.source);
@@ -49,7 +59,7 @@ class SubscriptionManager implements PodpingFilter {
 
   public test(str: string) {
     for (const pattern of this.patterns) {
-      if (pattern.test(str)) {
+      if (pattern.test(normalizedKeyFromUrl(str))) {
         return true;
       }
     }

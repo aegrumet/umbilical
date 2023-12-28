@@ -1,5 +1,6 @@
 import { describe, it, beforeEach, assertEquals } from "../../../dev_deps.ts";
 import SubscriptionManager from "./subscription-manager.ts";
+import { normalizedKeyFromUrl } from "../../lib/url.ts";
 
 describe("Stateful podping relay", () => {
   let subscriptionManager: SubscriptionManager;
@@ -19,15 +20,24 @@ describe("Stateful podping relay", () => {
     testPatterns.forEach((pattern, index) => {
       assertEquals(
         subscriptionManager.patterns[index].source,
-        new RegExp("^" + subscriptionManager.escapeRegExp(pattern) + "$").source
+        new RegExp(
+          "^" +
+            subscriptionManager.escapeRegExp(normalizedKeyFromUrl(pattern)) +
+            "$"
+        ).source
       );
     });
     subscriptionManager.deleteRssUrls([testPatterns[0]]);
     assertEquals(subscriptionManager.patterns.length, 1);
     assertEquals(
       subscriptionManager.patterns[0].source,
-      new RegExp("^" + subscriptionManager.escapeRegExp(testPatterns[1]) + "$")
-        .source
+      new RegExp(
+        "^" +
+          subscriptionManager.escapeRegExp(
+            normalizedKeyFromUrl(testPatterns[1])
+          ) +
+          "$"
+      ).source
     );
   });
 

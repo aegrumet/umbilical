@@ -1,6 +1,8 @@
 import { PushSubscription } from "../../../npm_deps.ts";
+import { PodpingFilter } from "../../interfaces/podping-filter.ts";
+import { normalizedKeyFromUrl } from "../../lib/url.ts";
 
-class SubscriptionManager {
+class SubscriptionManager implements PodpingFilter {
   private rssUrls: Record<string, string[]> = {};
   private pushSubscriptions: Record<string, PushSubscription> = {};
 
@@ -24,23 +26,26 @@ class SubscriptionManager {
     subscription: PushSubscription,
     rssUrl: string
   ) {
+    const normalizedRssKey = normalizedKeyFromUrl(rssUrl);
     if (
-      this.rssUrls[rssUrl] &&
-      !this.rssUrls[rssUrl].includes(subscription.endpoint)
+      this.rssUrls[normalizedRssKey] &&
+      !this.rssUrls[normalizedRssKey].includes(subscription.endpoint)
     ) {
-      this.rssUrls[rssUrl].push(subscription.endpoint);
+      this.rssUrls[normalizedRssKey].push(subscription.endpoint);
     } else {
-      this.rssUrls[rssUrl] = [subscription.endpoint];
+      this.rssUrls[normalizedRssKey] = [subscription.endpoint];
     }
   }
 
   public remove(pushSubscription: PushSubscription) {
-    Object.keys(this.rssUrls).forEach((rssUrl) => {
-      this.rssUrls[rssUrl] = this.rssUrls[rssUrl].filter((endpoint) => {
-        return endpoint !== pushSubscription.endpoint;
-      });
-      if (this.rssUrls[rssUrl].length === 0) {
-        delete this.rssUrls[rssUrl];
+    Object.keys(this.rssUrls).forEach((normalizedRssKey) => {
+      this.rssUrls[normalizedRssKey] = this.rssUrls[normalizedRssKey].filter(
+        (endpoint) => {
+          return endpoint !== pushSubscription.endpoint;
+        }
+      );
+      if (this.rssUrls[normalizedRssKey].length === 0) {
+        delete this.rssUrls[normalizedRssKey];
       }
     });
     delete this.pushSubscriptions[pushSubscription.endpoint];
@@ -51,7 +56,7 @@ class SubscriptionManager {
     );
   }
 
-  public getAllRssUrls(): string[] {
+  public getAllNormalizedRssKeys(): string[] {
     return Object.keys(this.rssUrls);
   }
 
@@ -60,7 +65,8 @@ class SubscriptionManager {
   }
 
   public getSubscriptionEndpointsByRssUrl(rssUrl: string): string[] {
-    return this.rssUrls[rssUrl] ?? [];
+    const normalizedRssKey = normalizedKeyFromUrl(rssUrl);
+    return this.rssUrls[normalizedRssKey] ?? [];
   }
 
   public getSubscriptionByEndpoint(endpoint: string): PushSubscription {
@@ -68,10 +74,8 @@ class SubscriptionManager {
   }
 
   public test(str: string): boolean {
-    return (
-      this.getAllRssUrls().includes(str) ||
-      this.getAllRssUrls().includes(str.replace(/^http:/, "https:"))
-    );
+    const normalizedRssKey = normalizedKeyFromUrl(str);
+    return this.getAllNormalizedRssKeys().includes(normalizedRssKey);
   }
 }
 
