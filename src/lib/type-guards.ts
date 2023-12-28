@@ -1,25 +1,26 @@
+import {
+  PushSubscriptionSchema,
+  RegisterPutInputSchema,
+  RegisterDeleteInputSchema,
+} from "../interfaces/pusher-api.ts";
+
 import { PushSubscription } from "../../npm_deps.ts";
 import {
   RegisterDeleteInput,
   RegisterPutInput,
 } from "../interfaces/pusher-api.ts";
 
+// deno-lint-ignore no-explicit-any
 export const isPushSubscription = (b: any): b is PushSubscription => {
-  return (
-    b.endpoint !== undefined &&
-    b.keys !== undefined &&
-    b.keys.auth !== undefined &&
-    b.keys.p256dh !== undefined
-  );
+  return PushSubscriptionSchema.safeParse(b).success;
 };
 
+// deno-lint-ignore no-explicit-any
 export const isRegisterPutInput = (b: any): b is RegisterPutInput => {
-  return (
-    isPushSubscription(b.pushSubscription) &&
-    (typeof b.rssUrls === "string" || Array.isArray(b.rssUrls))
-  );
+  return RegisterPutInputSchema.safeParse(b).success;
 };
 
+// deno-lint-ignore no-explicit-any
 export const isRegisterDeleteInput = (b: any): b is RegisterDeleteInput => {
-  return "pushSubscription" in b && isPushSubscription(b.pushSubscription);
+  return RegisterDeleteInputSchema.safeParse(b).success;
 };

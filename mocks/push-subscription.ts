@@ -9,7 +9,11 @@ export const validPushSubscription = {
   },
 } as unknown as PushSubscription;
 
-export const validRegisterPutArg = {
+export const invalidPushSubscription = {
+  endpoint: "https://example.com",
+};
+
+export const validRegisterPutInput = {
   pushSubscription: {
     endpoint: "https://example.com",
     keys: {
@@ -20,9 +24,15 @@ export const validRegisterPutArg = {
   rssUrls: ["https://example.com"],
 };
 
-export const invalidRegisterPutArg = {
-  pushSubscription: {
-    endpoint: "https://example.com",
-  },
+export const invalidRegisterPutInput = {
+  pushSubscription: invalidPushSubscription,
   rssUrls: ["https://example.com"],
+};
+
+export const validRegisterDeleteInput = {
+  pushSubscription: validPushSubscription,
+};
+
+export const invalidRegisterDeleteInput = {
+  notAPushSubscription: validPushSubscription,
 };

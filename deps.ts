@@ -17,3 +17,5 @@ export { encodeHex } from "https://deno.land/std@0.210.0/encoding/hex.ts";
 export { Evt } from "https://deno.land/x/evt@v2.5.3/mod.ts";
 
 export { decodeBase64Url } from "https://deno.land/std@0.210.0/encoding/base64url.ts";
+
+export { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
