@@ -10,7 +10,6 @@ import PodpingRelayFiltered from "../shared/podping-relay-filtered.ts";
 const HEARTBEAT_INTERVAL = 1000 * 30;
 
 class PodpingWebsocketProxy {
-  private shouldUnsubscribe = false;
   private podpingEmitter: Evt<PodpingV0 | PodpingV1 | Error>;
   private isAlive = false;
   private interval: number | undefined;
@@ -38,7 +37,6 @@ class PodpingWebsocketProxy {
 
   proxy(c: Context, p: WebSocketProvider) {
     this.debug = c.env.DEBUG;
-    this.shouldUnsubscribe = false;
 
     const { response, socket } = p.upgradeWebSocket(c);
 
@@ -52,7 +50,6 @@ class PodpingWebsocketProxy {
       if (c.env.DEBUG) {
         console.log("Podping Websocket: close message handler");
       }
-      this.shouldUnsubscribe = true;
       this.shutdown(socket, this.relay);
     });
 
@@ -117,11 +114,7 @@ class PodpingWebsocketProxy {
         console.log("websocket error", podping);
         break;
       }
-      if (!this.shouldUnsubscribe) {
-        socket.send(JSON.stringify(podping));
-      } else {
-        break;
-      }
+      socket.send(JSON.stringify(podping));
     }
     this.shutdown(socket, relay);
   }
