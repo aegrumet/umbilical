@@ -47,4 +47,36 @@ const searchByTerm = async (query: string, c: UmbilicalContext) => {
   return await res.json();
 };
 
+export const searchByGuid = async (guid: string, c: UmbilicalContext) => {
+  const { apiKey, apiSecret } = checkEnv(c);
+
+  const timestamp = Math.floor(Date.now() / 1000);
+
+  // This will delegate to the runtime's WebCrypto implementation.
+  const Authorization = encodeHex(
+    await crypto.subtle.digest(
+      "SHA-1",
+      new TextEncoder().encode(apiKey + apiSecret + timestamp)
+    )
+  );
+
+  const url = `${API}/podcasts/byguid?guid=${guid}`;
+  const options = {
+    method: "GET",
+    headers: {
+      "User-Agent": umbilicalUserAgent,
+      "X-Auth-Date": "" + timestamp,
+      "X-Auth-Key": apiKey,
+      Authorization,
+    },
+  };
+
+  const res = await fetch(url, options);
+  if (res.status < 200 || res.status >= 300) {
+    throw new Error("Error calling podcast index api");
+  }
+
+  return await res.json();
+};
+
 export default searchByTerm;
