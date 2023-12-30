@@ -4,14 +4,14 @@ Lifeline services for podcast PWAs.
 
 ## environment variables
 
-| name                 | description                                                     | default                          |
-| -------------------- | --------------------------------------------------------------- | -------------------------------- |
-| `ENABLED_FEATURES`   | comma-separated list of features to enable                      | `proxy,search,podping_websocket` |
-| `UMBILICAL_KEYS`     | comma-separated list of valid signing keys (see authentication) | n/a                              |
-| `PI_API_KEY`         | PodcastIndex API key, used for search                           | n/a                              |
-| `PI_API_SECRET`      | PodcastIndex API secret , used for search                       | n/a                              |
-| `WEBPUSH_JWK_BASE64` | base64-encoded JSON Web Key for webpush                         | n/a                              |
-| `WEBPUSH_CONTACT`    | contact info (subject) for webpush                              | n/a                              |
+| name                 | description                                                     | default                                  |
+| -------------------- | --------------------------------------------------------------- | ---------------------------------------- |
+| `ENABLED_FEATURES`   | comma-separated list of features to enable                      | `proxy,search,podroll,podping_websocket` |
+| `UMBILICAL_KEYS`     | comma-separated list of valid signing keys (see authentication) | n/a                                      |
+| `PI_API_KEY`         | PodcastIndex API key, used for search                           | n/a                                      |
+| `PI_API_SECRET`      | PodcastIndex API secret , used for search                       | n/a                                      |
+| `WEBPUSH_JWK_BASE64` | base64-encoded JSON Web Key for webpush                         | n/a                                      |
+| `WEBPUSH_CONTACT`    | contact info (subject) for webpush                              | n/a                                      |
 
 ## features and deployment types
 
@@ -29,6 +29,7 @@ Here is a list of features and compatible deployment types:
 | ----------------- | ----------------------------------------------------------------------------------------------- | ---------------- |
 | proxy             | proxy RSS, chapters, and opml files                                                             | all              |
 | search            | proxy PodcastIndex search API                                                                   | all              |
+| podroll           | extract podroll from RSS and return as OPML                                                     | server           |
 | podping_websocket | relay podpings from Livewire's podping websocket service to a running PWA, for subscribed feeds | websocket server |
 | podping_webpush   | send podpings to running or non-running PWAs using webpush, for subscribed feeds (see below)    | server           |
 
@@ -77,6 +78,16 @@ Requires the following environment variables to be set:
 - `PI_API_SECRET`
 
 You can sign up for free credentials at [api.podcastindex.org](https://api.podcastindex.org/).
+
+## podroll API
+
+`GET /API/worker/podroll?rss=<rss url>`
+
+Returns the rss feed's podroll in OPML format.
+
+Returns an error if the feed has no podroll.
+
+Requires PodcastIndex credentials (see [search API](#search-api)).
 
 ## podping websocket API
 
