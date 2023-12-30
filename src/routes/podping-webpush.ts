@@ -12,9 +12,11 @@ import { PodpingPusher } from "../podping/webpush/podping-pusher.ts";
 import { PodpingFilter } from "../interfaces/podping-filter.ts";
 import { ENABLED_FEATURES_DEFAULT } from "../env-defaults.ts";
 import { authenticate, gateFeature } from "./middleware.ts";
+import verify from "../verify.ts";
+import UmbilicalContext from "../interfaces/umbilical-context.ts";
 
 const routes = new Hono();
-routes.use("*", authenticate);
+routes.use("/pubkey", authenticate);
 routes.use("*", gateFeature("podping_webpush"));
 
 // The PodpingPusher is always-on even when there is no connection context. For
@@ -53,6 +55,15 @@ if (
    */
   routes.put("/subscription", async (c: Context) => {
     const bodyText = await c.req.text();
+
+    // Handling inline, instead of in middleware, so that we can pass the
+    // bodyText along. TODO: Consider moving bodyText consumption into
+    // middleware.
+    if (!verify(c as UmbilicalContext, bodyText)) {
+      c.status(401);
+      return c.text("Unauthorized.");
+    }
+
     const body = JSON.parse(bodyText);
     if (!isRegisterPutInput(body)) {
       if (!isPushSubscription(body.pushSubscription)) {
@@ -77,6 +88,15 @@ if (
    */
   routes.delete("/subscription", async (c: Context) => {
     const bodyText = await c.req.text();
+
+    // Handling inline, instead of in middleware, so that we can pass the
+    // bodyText along. TODO: Consider moving bodyText consumption into
+    // middleware.
+    if (!verify(c as UmbilicalContext, bodyText)) {
+      c.status(401);
+      return c.text("Unauthorized.");
+    }
+
     const body = JSON.parse(bodyText);
     if (!isRegisterDeleteInput(body)) {
       throw new TypeError("Missing or invalid pushSubscription");
