@@ -3,17 +3,13 @@ import proxyRss from "../proxy/proxy-rss.ts";
 import proxyChapters from "../proxy/proxy-chapters.ts";
 import proxyOpml from "../proxy/proxy-opml.ts";
 
-import verify from "../verify.ts";
-import UmbilicalContext from "../interfaces/umbilical-context.ts";
+import { authenticate, gateFeature } from "./middleware.ts";
 
 const routes = new Hono();
+routes.use("*", authenticate);
+routes.use("*", gateFeature("proxy"));
 
 routes.get("/", async (c: Context) => {
-  if (!verify(c as UmbilicalContext)) {
-    c.status(401);
-    return c.text("Unauthorized.");
-  }
-
   const rss: string | undefined = c.req.query("rss");
   if (rss) {
     return await proxyRss(c);

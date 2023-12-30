@@ -1,3 +1,4 @@
+import { ENABLED_FEATURES_DEFAULT } from "./env-defaults.ts";
 import { UmbilicalEnv } from "./interfaces/umbilical-context.ts";
 
 const denoEnv = (): UmbilicalEnv => {
@@ -9,8 +10,7 @@ const denoEnv = (): UmbilicalEnv => {
     WEBPUSH_CONTACT: Deno.env.get("WEBPUSH_CONTACT"),
     DEBUG: Deno.env.get("DEBUG") === "true",
     ENABLED_FEATURES:
-      Deno.env.get("ENABLED_FEATURES") ??
-      "proxy,search,podping_websocket,podping_webpush",
+      Deno.env.get("ENABLED_FEATURES") ?? ENABLED_FEATURES_DEFAULT,
   };
 };
 

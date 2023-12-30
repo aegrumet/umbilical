@@ -4,11 +4,13 @@ import SubscriptionManager from "../podping/websocket/subscription-manager.ts";
 import PodpingWebsocketProxy from "../podping/websocket/podping-websocket-proxy.ts";
 import PodpingRelayFiltered from "../podping/shared/podping-relay-filtered.ts";
 import { PodpingFilter } from "../interfaces/podping-filter.ts";
+import { gateFeature } from "./middleware.ts";
 
 function getWebsocketRoutes(websocketProvider: WebSocketProvider): Hono {
-  const websocket = new Hono();
+  const routes = new Hono();
+  routes.use("*", gateFeature("podping_websocket"));
 
-  websocket.get("/podping", (c: Context) => {
+  routes.get("/podping", (c: Context) => {
     const subscriptionManager: SubscriptionManager = new SubscriptionManager();
     const podpingRelayFiltered = new PodpingRelayFiltered(
       subscriptionManager as PodpingFilter
@@ -19,7 +21,7 @@ function getWebsocketRoutes(websocketProvider: WebSocketProvider): Hono {
     ).proxy(c, websocketProvider);
   });
 
-  return websocket;
+  return routes;
 }
 
 export default getWebsocketRoutes;

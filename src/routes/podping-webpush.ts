@@ -10,16 +10,22 @@ import {
 import PodpingRelayFiltered from "../podping/shared/podping-relay-filtered.ts";
 import { PodpingPusher } from "../podping/webpush/podping-pusher.ts";
 import { PodpingFilter } from "../interfaces/podping-filter.ts";
-import verify from "../verify.ts";
-import UmbilicalContext from "../interfaces/umbilical-context.ts";
+import { ENABLED_FEATURES_DEFAULT } from "../env-defaults.ts";
+import { authenticate, gateFeature } from "./middleware.ts";
 
 const routes = new Hono();
+routes.use("*", authenticate);
+routes.use("*", gateFeature("podping_webpush"));
 
 // The PodpingPusher is always-on even when there is no connection context. For
 // this reason we can't pull environment variable values from c.env, so we
 // reference Deno directly. NB: This is incompatible work with Cloudflare
 // Workers.
-if ((Deno.env.get("ENABLED_FEATURES") ?? "").includes("podping_webpush")) {
+if (
+  (Deno.env.get("ENABLED_FEATURES") ?? ENABLED_FEATURES_DEFAULT).includes(
+    "podping_webpush"
+  )
+) {
   const subscriptionManager: SubscriptionManager = new SubscriptionManager();
   const podpingRelayFiltered = new PodpingRelayFiltered(
     subscriptionManager as PodpingFilter
@@ -47,12 +53,6 @@ if ((Deno.env.get("ENABLED_FEATURES") ?? "").includes("podping_webpush")) {
    */
   routes.put("/subscription", async (c: Context) => {
     const bodyText = await c.req.text();
-
-    if (!verify(c as UmbilicalContext, bodyText)) {
-      c.status(401);
-      return c.text("Unauthorized.");
-    }
-
     const body = JSON.parse(bodyText);
     if (!isRegisterPutInput(body)) {
       if (!isPushSubscription(body.pushSubscription)) {
@@ -77,12 +77,6 @@ if ((Deno.env.get("ENABLED_FEATURES") ?? "").includes("podping_webpush")) {
    */
   routes.delete("/subscription", async (c: Context) => {
     const bodyText = await c.req.text();
-
-    if (!verify(c as UmbilicalContext, bodyText)) {
-      c.status(401);
-      return c.text("Unauthorized.");
-    }
-
     const body = JSON.parse(bodyText);
     if (!isRegisterDeleteInput(body)) {
       throw new TypeError("Missing or invalid pushSubscription");
