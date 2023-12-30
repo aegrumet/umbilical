@@ -1,4 +1,4 @@
-import { Hono, Context } from "../../deps.ts";
+import { Hono, Context, cors } from "../../deps.ts";
 
 import SubscriptionManager from "../podping/webpush/subscription-manager.ts";
 import {
@@ -14,6 +14,7 @@ import { ENABLED_FEATURES_DEFAULT } from "../env-defaults.ts";
 import { authenticate, gateFeature } from "./middleware.ts";
 
 const routes = new Hono();
+routes.use("*", cors());
 routes.use("*", authenticate);
 routes.use("*", gateFeature("podping_webpush"));
 
