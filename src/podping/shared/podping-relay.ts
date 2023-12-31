@@ -17,7 +17,8 @@ export default class PodpingRelay {
   private emitter: Evt<PodpingV0 | PodpingV1 | Error>;
   private connectAttemptNumber = 0;
   private connectDelay = CONNECT_INITIAL_DELAY;
-  private reconnectQueued = false;
+  // deno-lint-ignore no-explicit-any
+  private reconnectTimeout: any | null = null;
   private uuid: string | undefined;
   private logInterval: number | undefined;
 
@@ -72,7 +73,7 @@ export default class PodpingRelay {
   }
 
   public handleCloseOrError(reason: string) {
-    if (this.reconnectQueued) {
+    if (this.reconnectTimeout !== null) {
       return;
     }
     console.log(
@@ -85,9 +86,8 @@ export default class PodpingRelay {
           this.connectDelay +
           "ms."
       );
-      this.reconnectQueued = true;
-      setTimeout(() => {
-        this.reconnectQueued = false;
+      this.reconnectTimeout = setTimeout(() => {
+        this.reconnectTimeout = null;
         this.connect();
       }, this.connectDelay);
     } else {
@@ -151,6 +151,10 @@ export default class PodpingRelay {
     if (this.logInterval) {
       clearInterval(this.logInterval);
       this.logInterval = undefined;
+    }
+    if (this.reconnectTimeout !== null) {
+      clearTimeout(this.reconnectTimeout);
+      this.reconnectTimeout = null;
     }
     try {
       if (this.ws && this.ws.readyState !== WebSocket.CLOSED) {
