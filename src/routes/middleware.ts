@@ -1,7 +1,9 @@
 import { Context } from "../../deps.ts";
 import { ENABLED_FEATURES_DEFAULT } from "../env-defaults.ts";
 import UmbilicalContext from "../interfaces/umbilical-context.ts";
-import verify from "../verify.ts";
+import verifyFromHttpRequest, {
+  verifyFromWebsocketRequest,
+} from "../verify.ts";
 
 export function gateFeature(feature: string) {
   return async (c: Context, next: () => Promise<void>) => {
@@ -16,7 +18,18 @@ export function gateFeature(feature: string) {
 }
 
 export async function authenticate(c: Context, next: () => Promise<void>) {
-  if (!verify(c as UmbilicalContext)) {
+  if (!verifyFromHttpRequest(c as UmbilicalContext)) {
+    c.status(401);
+    return c.text("Unauthorized.");
+  }
+  await next();
+}
+
+export async function authenticateWebsocket(
+  c: Context,
+  next: () => Promise<void>
+) {
+  if (!verifyFromWebsocketRequest(c as UmbilicalContext)) {
     c.status(401);
     return c.text("Unauthorized.");
   }

@@ -1,11 +1,14 @@
 import { describe, it, assertEquals } from "../../dev_deps.ts";
-import verify from "../verify.ts";
+import verifyFromHttpRequest from "../verify.ts";
 import { hmac } from "../../deps.ts";
 import { UmbilicalContext } from "./umbilical-context.ts";
 
 function generateSignatureHeader(url: string, key: string): string {
   const timestamp = Date.now();
-  const timestampedPayload = `${timestamp}.${url}`;
+  const urlObject = new URL(url);
+  const timestampedPayload = `${timestamp}.${url.slice(
+    urlObject.protocol.length + 2
+  )}.`;
   const expectedSignature = hmac(
     "sha256",
     key,
@@ -17,7 +20,7 @@ function generateSignatureHeader(url: string, key: string): string {
   return `t=${timestamp},s=${expectedSignature}`;
 }
 
-const url = "/API/proxy?rss=http://example.com/basefeed";
+const url = "https://example.com/API/proxy?rss=http://example.com/basefeed";
 const UMBILICAL_KEY_1 = "G98S6lOSmNJdZ1JL7HTgmRiPDXiWin88";
 const UMBILICAL_KEY_2 = "MmyVKjEKEpScM1688mgEae120cS5NADY";
 
@@ -155,7 +158,7 @@ describe("Verification", () => {
         },
       } as UmbilicalContext;
 
-      assertEquals(verify(c), test.expected);
+      assertEquals(verifyFromHttpRequest(c), test.expected);
     });
   });
 });

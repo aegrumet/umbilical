@@ -12,7 +12,7 @@ import { PodpingPusher } from "../podping/webpush/podping-pusher.ts";
 import { PodpingFilter } from "../interfaces/podping-filter.ts";
 import { ENABLED_FEATURES_DEFAULT } from "../env-defaults.ts";
 import { authenticate, gateFeature } from "./middleware.ts";
-import verify from "../verify.ts";
+import verifyFromHttpRequest from "../verify.ts";
 import UmbilicalContext from "../interfaces/umbilical-context.ts";
 
 const routes = new Hono();
@@ -59,7 +59,7 @@ if (
     // Handling inline, instead of in middleware, so that we can pass the
     // bodyText along. TODO: Consider moving bodyText consumption into
     // middleware.
-    if (!verify(c as UmbilicalContext, bodyText)) {
+    if (!verifyFromHttpRequest(c as UmbilicalContext, bodyText)) {
       c.status(401);
       return c.text("Unauthorized.");
     }
@@ -92,7 +92,7 @@ if (
     // Handling inline, instead of in middleware, so that we can pass the
     // bodyText along. TODO: Consider moving bodyText consumption into
     // middleware.
-    if (!verify(c as UmbilicalContext, bodyText)) {
+    if (!verifyFromHttpRequest(c as UmbilicalContext, bodyText)) {
       c.status(401);
       return c.text("Unauthorized.");
     }
