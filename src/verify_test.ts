@@ -1,7 +1,7 @@
-import { describe, it, assertEquals } from "../../dev_deps.ts";
-import verifyFromHttpRequest from "../verify.ts";
-import { hmac } from "../../deps.ts";
-import { UmbilicalContext } from "./umbilical-context.ts";
+import { describe, it, assertEquals } from "../dev_deps.ts";
+import verifyFromHttpRequest from "./verify.ts";
+import { hmac } from "../deps.ts";
+import { UmbilicalContext } from "./interfaces/umbilical-context.ts";
 
 function generateSignatureHeader(url: string, key: string): string {
   const timestamp = Date.now();
