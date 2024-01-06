@@ -4,7 +4,6 @@ import {
   afterAll,
   beforeAll,
   assertEquals,
-  mf,
 } from "../dev_deps.ts";
 import denoEnv from "./deno-env.ts";
 import {
