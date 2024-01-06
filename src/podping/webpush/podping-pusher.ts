@@ -1,4 +1,4 @@
-import { Evt, decodeBase64Url } from "../../../deps.ts";
+import { Evt, decodeBase64Url, Eta } from "../../../deps.ts";
 import { PushSubscription } from "../../../npm_deps.ts";
 import {
   PodpingV0,
@@ -14,6 +14,7 @@ import {
   WebPushMessage,
   WebPushResult,
 } from "./webpush.ts";
+import { NOTIFICATION_TEMPLATES } from "./notification-templates.ts";
 
 export class PodpingPusher {
   podpingEmitter: Evt<PodpingV0 | PodpingV1 | Error>;
@@ -59,33 +60,23 @@ export class PodpingPusher {
       }
     }
   }
-  async broadcast(url: string, reason: string): Promise<void> {
+  async broadcast(podping: PodpingV1): Promise<void> {
     const notifications: Promise<WebPushResult | void>[] = [];
 
-    const endpoints =
-      this.subscriptionManager.getSubscriptionEndpointsByRssUrl(url);
+    const endpoints = this.subscriptionManager.getSubscriptionEndpointsByRssUrl(
+      podping.iris[0]
+    );
 
     // Angular-style notification body, see
     // https://angular.io/guide/service-worker-notifications#notification-click-handling
-    // TODO: Make this templatized and selectable.
-    const notification = {
-      title: `Podcast Update`,
-      body: `${reason} from ${url}`,
-      notification: {
-        title: `Podcast Update`,
-        body: `${reason} from ${url}`,
-        data: {
-          onActionClick: {
-            default: {
-              operation: "navigateLastFocusedOrOpen",
-              url: `/show-episodes?rssUrl=${encodeURIComponent(
-                url
-              )}&source=podping-${encodeURIComponent(reason)}`,
-            },
-          },
-        },
-      },
-    };
+    const notification = renderNotificationTemplate(podping, "angular");
+
+    if (notification === null) {
+      console.log(
+        `Error rendering notification for podping. There's probably a problem with the template. No notification will be sent.`
+      );
+      return;
+    }
 
     const webPushMessageInfo: WebPushMessage = {
       data: JSON.stringify(notification),
@@ -123,16 +114,51 @@ export class PodpingPusher {
     //NB: The emitter will fire once per matching iri or url,
     //and return a length-1 podping payload for each.
     if ("iris" in podping) {
-      this.broadcast(podping.iris[0], podping.reason);
+      this.broadcast(podping);
     }
     if ("urls" in podping) {
-      this.broadcast(podping.urls[0], podping.reason);
+      this.broadcast({
+        version: "1.0",
+        reason: "update",
+        medium: "podcast",
+        iris: [podping.urls[0]],
+      } as PodpingV1);
     }
   }
 
   getPublicKey(): string {
     return this.publicKey;
   }
+}
+
+// Renders a JSON/ETA template and parses to JSON.
+// Returns null on errors.
+export function renderNotificationTemplate(
+  podping: PodpingV1,
+  templateKey: string
+  // deno-lint-ignore no-explicit-any
+): any {
+  if (!NOTIFICATION_TEMPLATES[templateKey]) {
+    console.log(`Error: no notification template found for key ${templateKey}`);
+    return null;
+  }
+  const eta = new Eta();
+  const serializedJson = eta.renderString(
+    NOTIFICATION_TEMPLATES[templateKey],
+    podping
+  );
+  // deno-lint-ignore no-explicit-any
+  let result: any = null;
+  try {
+    result = JSON.parse(serializedJson);
+  } catch (e) {
+    console.log(
+      `Error parsing JSON from ETA template for key ${templateKey}`,
+      e
+    );
+    return null;
+  }
+  return result;
 }
 
 // The web push sender expects vanilla base64, not base64url.

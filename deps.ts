@@ -24,3 +24,5 @@ export { decodeBase64Url } from "https://deno.land/std@0.210.0/encoding/base64ur
 export { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 
 export { WeakLRUCache } from "https://deno.land/x/weakcache@v1.1.4/index.js";
+
+export { Eta } from "https://deno.land/x/eta@v3.2.0/src/index.ts";
