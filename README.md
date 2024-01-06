@@ -68,7 +68,7 @@ Examples:
 | wss://umbilical.example.com/API/websocket/podping?t=1704348921430&s=9b0d3593a7f154e1f2e706526c0316d6a5ccd7ac89f70d11d92fcb13495db73a | umbilical.example.com/API/websocket/podping                             |
 |                                                                                                                                      |                                                                         |
 
-For PUT, POST, and DELETE requests, the bodyText is serialized JSON. For GET requests the body payload is empty.
+For PUT, POST, and DELETE requests, the bodyText is serialized JSON. For GET requests the bodyText is empty.
 
 The hmac should be generated using one of the signing keys in `UMBILICAL_KEYS`.
 
