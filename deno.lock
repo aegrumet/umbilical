@@ -3,6 +3,7 @@
   "packages": {
     "specifiers": {
       "npm:@types/express@4.17.20": "npm:@types/express@4.17.20",
+      "npm:@types/node": "npm:@types/node@18.16.19",
       "npm:@types/web-push@3.6.3": "npm:@types/web-push@3.6.3",
       "npm:axios@1.5.1": "npm:axios@1.5.1",
       "npm:cors@2.8.5": "npm:cors@2.8.5",

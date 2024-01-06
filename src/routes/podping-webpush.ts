@@ -10,7 +10,10 @@ import {
 import PodpingRelayFiltered from "../podping/shared/podping-relay-filtered.ts";
 import { PodpingPusher } from "../podping/webpush/podping-pusher.ts";
 import { PodpingFilter } from "../interfaces/podping-filter.ts";
-import { ENABLED_FEATURES_DEFAULT } from "../env-defaults.ts";
+import {
+  ENABLED_FEATURES_DEFAULT,
+  WEBPUSH_TEMPLATE_DEFAULT,
+} from "../env-defaults.ts";
 import { authenticate, gateFeature } from "./middleware.ts";
 import verifyFromHttpRequest from "../verify.ts";
 import UmbilicalContext from "../interfaces/umbilical-context.ts";
@@ -37,7 +40,8 @@ if (
     subscriptionManager,
     podpingRelayFiltered,
     Deno.env.get("WEBPUSH_JWK_BASE64") || "",
-    Deno.env.get("WEBPUSH_CONTACT") || "mailto:test@test.com"
+    Deno.env.get("WEBPUSH_CONTACT") || "mailto:test@test.com",
+    Deno.env.get("WEBPUSH_TEMPLATE") || WEBPUSH_TEMPLATE_DEFAULT
   );
 
   routes.use("*", async (c: Context, next) => {

@@ -6,16 +6,18 @@ Lifeline services for podcast PWAs.
 
 | name                 | description                                                     | default                                  |
 | -------------------- | --------------------------------------------------------------- | ---------------------------------------- |
-| `ENABLED_FEATURES`   | comma-separated list of features to enable                      | `proxy,search,podroll,podping_websocket` |
+| `ENABLED_FEATURES`   | comma-separated list of features to enable                      | 'proxy,search,podroll,podping_websocket' |
 | `UMBILICAL_KEYS`     | comma-separated list of valid signing keys (see authentication) | n/a                                      |
 | `PI_API_KEY`         | PodcastIndex API key, used for search                           | n/a                                      |
 | `PI_API_SECRET`      | PodcastIndex API secret , used for search                       | n/a                                      |
 | `WEBPUSH_JWK_BASE64` | base64-encoded JSON Web Key for webpush                         | n/a                                      |
 | `WEBPUSH_CONTACT`    | contact info (subject) for webpush                              | n/a                                      |
+| `WEBPUSH_TEMPLATE`   | template for webpush notification messages                      | 'angular'                                |
 
 ## features and deployment types
 
-Umbilical ships with a number of features whose availability depends on the deployment type. Here is a list of deployment types:
+Umbilical ships with a number of features whose availability depends on the
+deployment type. Here is a list of deployment types:
 
 | deployment type  | description                                    | lifetime (typical) | examples                                          |
 | ---------------- | ---------------------------------------------- | ------------------ | ------------------------------------------------- |
@@ -73,6 +75,8 @@ The hmac should be generated using one of the signing keys in `UMBILICAL_KEYS`.
 To allow unauthenticated requests, set `UMBILICAL_KEYS` to "DANGEROUSLY_ALLOW_ALL".
 
 See `src/verify.ts` for full details of signature verification.
+
+[examples/authentication.md](examples/authentication.md) has example code for signing requests.
 
 ## proxy API
 
@@ -177,6 +181,15 @@ API:
     ```
 
   - The push subscription should be a JSON object as returned by the [PushManager.subscribe()](https://developer.mozilla.org/en-US/docs/Web/API/PushManager/subscribe) method.
+
+### notification templates
+
+Webpush notifications are developer-customizable. To create a new template, add
+a key to
+[src/podping/webpush/notification-templates.ts](src/podping/webpush/notification-templates.ts)
+and set `WEBPUSH_TEMPLATE` to that key in the runtime environment. Templates are
+serialized JSON strings that use [Eta template
+syntax](https://eta.js.org/docs/intro/template-syntax) to interpolate values from the podping message.
 
 ## deploy
 

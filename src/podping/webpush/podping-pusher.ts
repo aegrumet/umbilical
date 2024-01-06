@@ -26,6 +26,7 @@ export class PodpingPusher {
 
   webpushJwkBase64: string;
   webpushSub: string;
+  webpushTemplate: string;
 
   vapidKeys: Readonly<JWK>;
   publicKey: string;
@@ -34,7 +35,8 @@ export class PodpingPusher {
     subscriptionManager: SubscriptionManager,
     podpingRelayFiltered: PodpingRelayFiltered,
     webpushJwkBase64: string,
-    webpushSub: string
+    webpushSub: string,
+    webpushTemplate: string
   ) {
     this.subscriptionManager = subscriptionManager;
     this.relay = podpingRelayFiltered;
@@ -46,6 +48,7 @@ export class PodpingPusher {
     this.vapidKeys = JSON.parse(vapidKeysJson);
     this.publicKey = b64ToUrlEncoded(exportPublicKeyPair(this.vapidKeys));
     this.webpushSub = webpushSub;
+    this.webpushTemplate = webpushTemplate;
 
     console.log(`Configured push with public key: ${this.publicKey}`);
     this.listen();
@@ -67,9 +70,10 @@ export class PodpingPusher {
       podping.iris[0]
     );
 
-    // Angular-style notification body, see
-    // https://angular.io/guide/service-worker-notifications#notification-click-handling
-    const notification = renderNotificationTemplate(podping, "angular");
+    const notification = renderNotificationTemplate(
+      podping,
+      this.webpushTemplate
+    );
 
     if (notification === null) {
       console.log(

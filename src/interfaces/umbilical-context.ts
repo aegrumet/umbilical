@@ -4,6 +4,7 @@ export type UmbilicalEnv = {
   PI_API_SECRET: string | undefined;
   WEBPUSH_JWK_BASE64: string | undefined;
   WEBPUSH_CONTACT: string | undefined;
+  WEBPUSH_TEMPLATE: string;
   PODPING_TIMEOUT_MINUTES: number;
   DEBUG: boolean | undefined;
   ENABLED_FEATURES: string;
