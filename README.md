@@ -111,23 +111,27 @@ Requires PodcastIndex credentials (see [search API](#search-api)).
 
 ## podping websocket API
 
-Proxies podpings from [Livewire's podping websocket service](https://livewire.io/podping-via-websockets/) via websocket while online.
+Proxies podpings from [Livewire's podping websocket
+service](https://livewire.io/podping-via-websockets/) via websocket to connected
+clients.
 
-By default, all podpings are filtered out. Callers must subscribe to URLs or IRIs of interest.
+By default, all podpings are filtered out. Clients must subscribe to URLs or IRIs of interest.
 
 Also, clients MUST respond to a ping message with a pong message. If a client
-fails to respond to a ping message, it will be disconnected. Pings and Pongs are
-simple JSON objects having top-level `ping` and `pong` properties, respectively.
+fails to respond, it will be disconnected. Pings and Pongs are simple JSON
+objects having top-level `ping` and `pong` properties, respectively.
 
-Messages are passed unmodified using Livewire's format as either `PodpingV0` or
-`PodpingV1` (see the post linked above for details).
+Podping messages are passed unmodified using Livewire's format as either
+`PodpingV0` or `PodpingV1` (see the post linked above for details).
 
 Websocket Endpoint: `/API/websocket/podping`
 
 API:
 
-- `addRssUrls(string[])`: subscribe to podpings whose URLs (v0.x) or IRIs (v1.x) match the given strings exactly
-- `deleteRssUrls(string[])`: unsubscribe from podpings whose URLs (v0.x) or IRIs (v1.x) match the given strings exactly
+- `addRssUrls(string[])`: subscribe to podpings whose URLs (v0.x) or IRIs (v1.x) match the given strings
+- `deleteRssUrls(string[])`: unsubscribe from podpings whose URLs (v0.x) or IRIs (v1.x) match the given strings
+
+For matching purposes, url schemes and trailing slashes are ignored.
 
 ## podping webpush API (experimental)
 
