@@ -27,13 +27,13 @@ deployment type. Here is a list of deployment types:
 
 Here is a list of features and compatible deployment types:
 
-| feature           | description                                                                                     | deploy type      |
-| ----------------- | ----------------------------------------------------------------------------------------------- | ---------------- |
-| proxy             | proxy RSS, chapters, and opml files                                                             | all              |
-| search            | proxy PodcastIndex search API                                                                   | all              |
-| podroll           | extract podroll from RSS and return as OPML                                                     | all              |
-| podping_websocket | relay podpings from Livewire's podping websocket service to a running PWA, for subscribed feeds | websocket server |
-| podping_webpush   | send podpings to running or non-running PWAs using webpush, for subscribed feeds (see below)    | server           |
+| feature           | description                                                                                     | deploy type              |
+| ----------------- | ----------------------------------------------------------------------------------------------- | ------------------------ |
+| proxy             | proxy RSS, chapters, and opml files                                                             | all                      |
+| search            | proxy PodcastIndex search API                                                                   | all                      |
+| podroll           | extract podroll from RSS and return as OPML                                                     | all                      |
+| podping_websocket | relay podpings from Livewire's podping websocket service to a running PWA, for subscribed feeds | websocket server, server |
+| podping_webpush   | send podpings to running or non-running PWAs using webpush, for subscribed feeds (see below)    | server                   |
 
 ## authentication
 
