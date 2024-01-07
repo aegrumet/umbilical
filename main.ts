@@ -4,6 +4,7 @@ import websocket from "./websocket-routes.ts";
 import rest from "./rest-routes.ts";
 import restServer from "./rest-routes-server.ts";
 import { UmbilicalEnv } from "./src/interfaces/umbilical-context.ts";
+import { umbilicalUserAgent } from "./src/config.ts";
 
 const app = new Hono();
 
@@ -18,6 +19,7 @@ Deno.serve((r) => {
 });
 
 if (env.DEBUG) {
+  console.log(`Umbilical User-Agent: ${umbilicalUserAgent}`);
   // Log the run duration for this process.
   const startTime = new Date();
   setInterval(() => {
