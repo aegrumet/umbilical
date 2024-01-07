@@ -6,6 +6,7 @@
   "tasks": {
     "dev": "deno run --allow-read --allow-net --allow-env --watch main.ts",
     "start": "deno run --allow-read --allow-net --allow-env main.ts",
-    "test": "deno test --allow-read --allow-env --allow-net src"
+    "test": "deno test --allow-read --allow-env --allow-net src",
+    "version": "deno run --allow-run --allow-read --allow-write --allow-env scripts/write-version-info.ts"
   }
 }
