@@ -1,23 +1,23 @@
 {
   "dirty": false,
-  "raw": "v0.2.2-0-ga475f81",
-  "hash": "ga475f81",
+  "raw": "v0.2.4-0-g10ec54f",
+  "hash": "g10ec54f",
   "distance": 0,
-  "tag": "v0.2.2",
+  "tag": "v0.2.4",
   "semver": {
     "options": {
       "loose": false,
       "includePrerelease": false
     },
     "loose": false,
-    "raw": "v0.2.2",
+    "raw": "v0.2.4",
     "major": 0,
     "minor": 2,
-    "patch": 2,
+    "patch": 4,
     "prerelease": [],
     "build": [],
-    "version": "0.2.2"
+    "version": "0.2.4"
   },
-  "suffix": "0-ga475f81",
-  "semverString": "0.2.2"
+  "suffix": "0-g10ec54f",
+  "semverString": "0.2.4"
 }
