@@ -1,17 +1,18 @@
 import { WeakLRUCache } from "../../../deps.ts";
-import UmbilicalContext from "../../interfaces/umbilical-context.ts";
 
 export default class PodpingCache {
   private static instance: PodpingCache;
   private cache: WeakLRUCache;
+  private timeoutMinutes: number;
 
-  private constructor() {
+  private constructor(timeoutMinutes: number) {
     this.cache = new WeakLRUCache();
+    this.timeoutMinutes = timeoutMinutes;
   }
 
-  public static getInstance(): PodpingCache {
+  public static getInstance(timeoutMinutes: number): PodpingCache {
     if (!PodpingCache.instance) {
-      PodpingCache.instance = new PodpingCache();
+      PodpingCache.instance = new PodpingCache(timeoutMinutes);
     }
 
     return PodpingCache.instance;
@@ -21,20 +22,13 @@ export default class PodpingCache {
     this.cache = new WeakLRUCache();
   }
 
-  public shouldNotify(
-    c: UmbilicalContext,
-    iri: string,
-    reason: string
-  ): boolean {
+  public shouldNotify(iri: string, reason: string): boolean {
     const key = `${iri}-${reason}`;
     const value: Date | undefined = this.cache.getValue(key);
     if (value === undefined) {
       return true;
     }
-    if (
-      Date.now() - value.getTime() >
-      c.env.PODPING_TIMEOUT_MINUTES * 60 * 1000
-    ) {
+    if (Date.now() - value.getTime() > this.timeoutMinutes * 60 * 1000) {
       return true;
     } else {
       return false;

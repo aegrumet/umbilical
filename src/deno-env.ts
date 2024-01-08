@@ -6,8 +6,6 @@ import {
 import { UmbilicalEnv } from "./interfaces/umbilical-context.ts";
 
 const denoEnv = (): UmbilicalEnv => {
-  const podpingTimeoutMinutes = Number(Deno.env.get("PODPING_TIMEOUT_MINUTES"));
-
   return {
     UMBILICAL_KEYS: Deno.env.get("UMBILICAL_KEYS"),
     PI_API_KEY: Deno.env.get("PI_API_KEY"),
@@ -19,9 +17,9 @@ const denoEnv = (): UmbilicalEnv => {
     DEBUG: Deno.env.get("DEBUG") === "true",
     ENABLED_FEATURES:
       Deno.env.get("ENABLED_FEATURES") ?? ENABLED_FEATURES_DEFAULT,
-    PODPING_TIMEOUT_MINUTES: isNaN(podpingTimeoutMinutes)
-      ? PODPING_TIMEOUT_MINUTES_DEFAULT
-      : podpingTimeoutMinutes,
+    PODPING_TIMEOUT_MINUTES:
+      Deno.env.get("PODPING_TIMEOUT_MINUTES") ??
+      PODPING_TIMEOUT_MINUTES_DEFAULT,
   };
 };
 

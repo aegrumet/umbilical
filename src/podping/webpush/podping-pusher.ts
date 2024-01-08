@@ -15,6 +15,7 @@ import {
   WebPushResult,
 } from "./webpush.ts";
 import { NOTIFICATION_TEMPLATES } from "./notification-templates.ts";
+import PodpingCache from "../shared/podping-cache.ts";
 
 export class PodpingPusher {
   podpingEmitter: Evt<PodpingV0 | PodpingV1 | Error>;
@@ -31,12 +32,15 @@ export class PodpingPusher {
   vapidKeys: Readonly<JWK>;
   publicKey: string;
 
+  podpingCache: PodpingCache;
+
   constructor(
     subscriptionManager: SubscriptionManager,
     podpingRelayFiltered: PodpingRelayFiltered,
     webpushJwkBase64: string,
     webpushSub: string,
-    webpushTemplate: string
+    webpushTemplate: string,
+    podpingTimeoutMinutes: number
   ) {
     this.subscriptionManager = subscriptionManager;
     this.relay = podpingRelayFiltered;
@@ -49,6 +53,7 @@ export class PodpingPusher {
     this.publicKey = b64ToUrlEncoded(exportPublicKeyPair(this.vapidKeys));
     this.webpushSub = webpushSub;
     this.webpushTemplate = webpushTemplate;
+    this.podpingCache = PodpingCache.getInstance(podpingTimeoutMinutes);
 
     console.log(`Configured push with public key: ${this.publicKey}`);
     this.listen();
@@ -64,6 +69,13 @@ export class PodpingPusher {
     }
   }
   async broadcast(podping: PodpingV1): Promise<void> {
+    if (!this.podpingCache.shouldNotify(podping.iris[0], podping.reason)) {
+      console.log(
+        `Skipping notification for ${podping.iris[0]} ${podping.reason} because it was recently sent.`
+      );
+      return;
+    }
+
     const notifications: Promise<WebPushResult | void>[] = [];
 
     const endpoints = this.subscriptionManager.getSubscriptionEndpointsByRssUrl(
@@ -108,6 +120,7 @@ export class PodpingPusher {
     });
 
     await Promise.all(notifications);
+    this.podpingCache.markNotified(podping.iris[0], podping.reason);
   }
 
   inject(url: string, reason: string) {

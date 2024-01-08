@@ -27,8 +27,8 @@ describe("denoEnv", () => {
   });
 
   it("sets PODPING_TIMEOUT_MINUTES to the environment value.", () => {
-    const value = 120;
-    Deno.env.set("PODPING_TIMEOUT_MINUTES", value.toString());
+    const value = "120";
+    Deno.env.set("PODPING_TIMEOUT_MINUTES", value);
     const env = denoEnv();
     assertEquals(env.PODPING_TIMEOUT_MINUTES, value);
     Deno.env.delete("PODPING_TIMEOUT_MINUTES");

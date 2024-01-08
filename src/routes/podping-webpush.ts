@@ -13,6 +13,7 @@ import { PodpingFilter } from "../interfaces/podping-filter.ts";
 import {
   ENABLED_FEATURES_DEFAULT,
   WEBPUSH_TEMPLATE_DEFAULT,
+  PODPING_TIMEOUT_MINUTES_DEFAULT,
 } from "../env-defaults.ts";
 import { authenticate, gateFeature } from "./middleware.ts";
 import verifyFromHttpRequest from "../verify.ts";
@@ -35,13 +36,17 @@ if (
   const podpingRelayFiltered = new PodpingRelayFiltered(
     subscriptionManager as PodpingFilter
   );
+  const podpingTimeoutMinutes = Number(Deno.env.get("PODPING_TIMEOUT_MINUTES"));
 
   const pusher = new PodpingPusher(
     subscriptionManager,
     podpingRelayFiltered,
     Deno.env.get("WEBPUSH_JWK_BASE64") || "",
     Deno.env.get("WEBPUSH_CONTACT") || "mailto:test@test.com",
-    Deno.env.get("WEBPUSH_TEMPLATE") || WEBPUSH_TEMPLATE_DEFAULT
+    Deno.env.get("WEBPUSH_TEMPLATE") || WEBPUSH_TEMPLATE_DEFAULT,
+    isNaN(podpingTimeoutMinutes)
+      ? Number(PODPING_TIMEOUT_MINUTES_DEFAULT)
+      : podpingTimeoutMinutes
   );
 
   routes.use("*", async (c: Context, next) => {

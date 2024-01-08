@@ -14,7 +14,9 @@ describe("Podping Cache", () => {
 
   beforeEach(() => {
     new FakeTime(); // Allows cache tests to run without leaking async ops.
-    cache = PodpingCache.getInstance();
+    cache = PodpingCache.getInstance(
+      Number(MockUmbilicalContext.env.PODPING_TIMEOUT_MINUTES)
+    );
     cache.reset();
   });
 
@@ -24,7 +26,7 @@ describe("Podping Cache", () => {
     const iri = "https://example.com";
     const reason = "update";
 
-    const shouldNotify = cache.shouldNotify(MockUmbilicalContext, iri, reason);
+    const shouldNotify = cache.shouldNotify(iri, reason);
     assertEquals(shouldNotify, true);
   });
 
@@ -34,7 +36,7 @@ describe("Podping Cache", () => {
 
     cache.markNotified(iri, reason);
 
-    const shouldNotify = cache.shouldNotify(MockUmbilicalContext, iri, reason);
+    const shouldNotify = cache.shouldNotify(iri, reason);
     assertEquals(shouldNotify, false);
   });
 
@@ -47,11 +49,13 @@ describe("Podping Cache", () => {
       reason,
       new Date(
         Date.now() -
-          (MockUmbilicalContext.env.PODPING_TIMEOUT_MINUTES + 1) * 60 * 1000
+          (Number(MockUmbilicalContext.env.PODPING_TIMEOUT_MINUTES) + 1) *
+            60 *
+            1000
       )
     );
 
-    const shouldNotify = cache.shouldNotify(MockUmbilicalContext, iri, reason);
+    const shouldNotify = cache.shouldNotify(iri, reason);
     assertEquals(shouldNotify, true);
   });
 });

@@ -20,6 +20,9 @@ Deno.serve((r) => {
 
 if (env.DEBUG) {
   console.log(`Umbilical User-Agent: ${umbilicalUserAgent}`);
+  console.log(
+    `Podping throttle timeout: ${env.PODPING_TIMEOUT_MINUTES} minutes`
+  );
   // Log the run duration for this process.
   const startTime = new Date();
   setInterval(() => {
