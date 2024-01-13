@@ -8,7 +8,7 @@ import {
 import denoEnv from "./deno-env.ts";
 import {
   ENABLED_FEATURES_DEFAULT,
-  PODPING_TIMEOUT_MINUTES_DEFAULT,
+  WEBPUSH_THROTTLE_MINUTES_DEFAULT,
 } from "./env-defaults.ts";
 
 describe("denoEnv", () => {
@@ -21,16 +21,19 @@ describe("denoEnv", () => {
     assertEquals(env.ENABLED_FEATURES, ENABLED_FEATURES_DEFAULT);
   });
 
-  it("sets PODPING_TIMEOUT_MINUTES to the default value if PODPING_TIMEOUT_MINUTES is not set in the environment.", () => {
+  it("sets WEBPUSH_THROTTLE_MINUTES to the default value if WEBPUSH_THROTTLE_MINUTES is not set in the environment.", () => {
     const env = denoEnv();
-    assertEquals(env.PODPING_TIMEOUT_MINUTES, PODPING_TIMEOUT_MINUTES_DEFAULT);
+    assertEquals(
+      env.WEBPUSH_THROTTLE_MINUTES,
+      WEBPUSH_THROTTLE_MINUTES_DEFAULT
+    );
   });
 
-  it("sets PODPING_TIMEOUT_MINUTES to the environment value.", () => {
+  it("sets WEBPUSH_THROTTLE_MINUTES to the environment value.", () => {
     const value = "120";
-    Deno.env.set("PODPING_TIMEOUT_MINUTES", value);
+    Deno.env.set("WEBPUSH_THROTTLE_MINUTES", value);
     const env = denoEnv();
-    assertEquals(env.PODPING_TIMEOUT_MINUTES, value);
-    Deno.env.delete("PODPING_TIMEOUT_MINUTES");
+    assertEquals(env.WEBPUSH_THROTTLE_MINUTES, value);
+    Deno.env.delete("WEBPUSH_THROTTLE_MINUTES");
   });
 });

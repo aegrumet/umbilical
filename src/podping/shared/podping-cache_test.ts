@@ -15,7 +15,7 @@ describe("Podping Cache", () => {
   beforeEach(() => {
     new FakeTime(); // Allows cache tests to run without leaking async ops.
     cache = PodpingCache.getInstance(
-      Number(MockUmbilicalContext.env.PODPING_TIMEOUT_MINUTES)
+      Number(MockUmbilicalContext.env.WEBPUSH_THROTTLE_MINUTES)
     );
     cache.reset();
   });
@@ -49,7 +49,7 @@ describe("Podping Cache", () => {
       reason,
       new Date(
         Date.now() -
-          (Number(MockUmbilicalContext.env.PODPING_TIMEOUT_MINUTES) + 1) *
+          (Number(MockUmbilicalContext.env.WEBPUSH_THROTTLE_MINUTES) + 1) *
             60 *
             1000
       )

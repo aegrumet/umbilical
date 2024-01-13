@@ -13,7 +13,7 @@ import { PodpingFilter } from "../interfaces/podping-filter.ts";
 import {
   ENABLED_FEATURES_DEFAULT,
   WEBPUSH_TEMPLATE_DEFAULT,
-  PODPING_TIMEOUT_MINUTES_DEFAULT,
+  WEBPUSH_THROTTLE_MINUTES_DEFAULT,
 } from "../env-defaults.ts";
 import { authenticate, gateFeature } from "./middleware.ts";
 import verifyFromHttpRequest from "../verify.ts";
@@ -36,7 +36,9 @@ if (
   const podpingRelayFiltered = new PodpingRelayFiltered(
     subscriptionManager as PodpingFilter
   );
-  const podpingTimeoutMinutes = Number(Deno.env.get("PODPING_TIMEOUT_MINUTES"));
+  const podpingTimeoutMinutes = Number(
+    Deno.env.get("WEBPUSH_THROTTLE_MINUTES")
+  );
 
   const pusher = new PodpingPusher(
     subscriptionManager,
@@ -45,7 +47,7 @@ if (
     Deno.env.get("WEBPUSH_CONTACT") || "mailto:test@test.com",
     Deno.env.get("WEBPUSH_TEMPLATE") || WEBPUSH_TEMPLATE_DEFAULT,
     isNaN(podpingTimeoutMinutes)
-      ? Number(PODPING_TIMEOUT_MINUTES_DEFAULT)
+      ? Number(WEBPUSH_THROTTLE_MINUTES_DEFAULT)
       : podpingTimeoutMinutes
   );
 

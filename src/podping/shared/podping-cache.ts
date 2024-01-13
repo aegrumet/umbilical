@@ -3,16 +3,16 @@ import { WeakLRUCache } from "../../../deps.ts";
 export default class PodpingCache {
   private static instance: PodpingCache;
   private cache: WeakLRUCache;
-  private timeoutMinutes: number;
+  private throttleMinutes: number;
 
-  private constructor(timeoutMinutes: number) {
+  private constructor(throttleMinutes: number) {
     this.cache = new WeakLRUCache();
-    this.timeoutMinutes = timeoutMinutes;
+    this.throttleMinutes = throttleMinutes;
   }
 
-  public static getInstance(timeoutMinutes: number): PodpingCache {
+  public static getInstance(throttleMinutes: number): PodpingCache {
     if (!PodpingCache.instance) {
-      PodpingCache.instance = new PodpingCache(timeoutMinutes);
+      PodpingCache.instance = new PodpingCache(throttleMinutes);
     }
 
     return PodpingCache.instance;
@@ -28,7 +28,7 @@ export default class PodpingCache {
     if (value === undefined) {
       return true;
     }
-    if (Date.now() - value.getTime() > this.timeoutMinutes * 60 * 1000) {
+    if (Date.now() - value.getTime() > this.throttleMinutes * 60 * 1000) {
       return true;
     } else {
       return false;

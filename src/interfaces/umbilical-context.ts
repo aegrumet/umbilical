@@ -5,7 +5,7 @@ export type UmbilicalEnv = {
   WEBPUSH_JWK_BASE64: string | undefined;
   WEBPUSH_CONTACT: string | undefined;
   WEBPUSH_TEMPLATE: string;
-  PODPING_TIMEOUT_MINUTES: string;
+  WEBPUSH_THROTTLE_MINUTES: string;
   DEBUG: boolean | undefined;
   ENABLED_FEATURES: string;
 };
