@@ -19,10 +19,26 @@ export { encodeHex } from "https://deno.land/std@0.210.0/encoding/hex.ts";
 
 export { Evt, Ctx } from "https://deno.land/x/evt@v2.5.3/mod.ts";
 
-export { decodeBase64Url } from "https://deno.land/std@0.210.0/encoding/base64url.ts";
+export {
+  decodeBase64Url,
+  encodeBase64Url,
+} from "https://deno.land/std@0.210.0/encoding/base64url.ts";
 
 export { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 
 export { WeakLRUCache } from "https://deno.land/x/weakcache@v1.1.4/index.js";
 
 export { Eta } from "https://deno.land/x/eta@v3.2.0/src/index.ts";
+
+export { OAuth2Client } from "https://deno.land/x/oauth2_client@v1.0.2/mod.ts";
+export {
+  Session,
+  sessionMiddleware,
+  CookieStore,
+  MemoryStore,
+} from "https://deno.land/x/hono_sessions@v0.3.3/mod.ts";
+
+export { parseArgs } from "https://deno.land/std@0.210.0/cli/parse_args.ts";
+export { existsSync } from "https://deno.land/std@0.212.0/fs/mod.ts";
+
+export { SHA256 } from "https://deno.land/x/sha256@v1.0.2/mod.ts";

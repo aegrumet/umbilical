@@ -1,0 +1,15 @@
+{
+  "pwaRedirectUris": ["http://localhost:4200"],
+  "clients": {
+    "alby": {
+      "clientId": "abcdefg",
+      "clientSecret": "hijklmnop",
+      "authorizationEndpointUri": "https://getalby.com/oauth",
+      "tokenUri": "https://api.getalby.com/oauth/token",
+      "redirectUri": "http://umbilical.example.com/API/worker/oauth2/alby/callback",
+      "defaults": {
+        "scope": "balance:read payments:send transactions:read account:read"
+      }
+    }
+  }
+}
