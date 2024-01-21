@@ -67,9 +67,9 @@ export const handleOauth2Callback = async (
   return c.redirect(redirectUri.toString());
 };
 
-export const handlePWATokenRequest = async (c: Context) => {
+export const handlePWATokenRequest = async (c: Context, bodyText: string) => {
   const cache = Oauth2Cache.getInstance();
-  const requestBody = await c.req.json();
+  const requestBody = JSON.parse(bodyText);
   const cachedInfo = cache.getValue(requestBody.code as string);
 
   if (!cachedInfo) {

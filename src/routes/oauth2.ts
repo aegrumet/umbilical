@@ -13,6 +13,8 @@ import {
   handleLoginRedirect,
   handlePWATokenRequest,
 } from "../oauth2/oauth2.ts";
+import verifyFromHttpRequest from "../verify.ts";
+import UmbilicalContext from "../interfaces/umbilical-context.ts";
 
 const routes = new Hono<{
   Variables: {
@@ -36,7 +38,6 @@ const middleware = sessionMiddleware({
 
 // @ts-ignore: reason: Middleware type mismatch
 routes.use("*", middleware);
-routes.use("/*/token", authenticate);
 routes.use("*", gateFeature("oauth2"));
 
 routes.get("/:clientkey/login", (c: Context) => {
@@ -88,7 +89,17 @@ routes.get("/:clientkey/callback", (c: Context) => {
   return handleOauth2Callback(c, oauthConfig.clients[clientKey]);
 });
 
-routes.post("/:clientkey/token", (c: Context) => {
+routes.post("/:clientkey/token", async (c: Context) => {
+  const bodyText = await c.req.text();
+
+  // Handling inline, instead of in middleware, so that we can pass the
+  // bodyText along. TODO: Consider moving bodyText consumption into
+  // middleware.
+  if (!verifyFromHttpRequest(c as UmbilicalContext, bodyText)) {
+    c.status(401);
+    return c.text("Unauthorized.");
+  }
+
   const decoder = new TextDecoder("utf-8");
   const oauthConfig = JSON.parse(
     decoder.decode(decodeBase64Url(Deno.env.get("OAUTH2_CONFIG")!))
@@ -100,7 +111,7 @@ routes.post("/:clientkey/token", (c: Context) => {
     return c.text("Oauth2 config not found.");
   }
 
-  return handlePWATokenRequest(c);
+  return handlePWATokenRequest(c, bodyText);
 });
 
 export default routes;
