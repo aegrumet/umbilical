@@ -39,12 +39,12 @@ routes.use("*", middleware);
 routes.use("/*/token", authenticate);
 routes.use("*", gateFeature("oauth2"));
 
-const decoder = new TextDecoder("utf-8");
-const oauthConfig = JSON.parse(
-  decoder.decode(decodeBase64Url(Deno.env.get("OAUTH2_CONFIG")!))
-);
-
 routes.get("/:clientkey/login", (c: Context) => {
+  const decoder = new TextDecoder("utf-8");
+  const oauthConfig = JSON.parse(
+    decoder.decode(decodeBase64Url(Deno.env.get("OAUTH2_CONFIG")!))
+  );
+
   const clientKey = getClientKey(c);
   if (clientKey === null || !(clientKey in oauthConfig.clients)) {
     c.status(404);
@@ -74,6 +74,11 @@ routes.get("/:clientkey/login", (c: Context) => {
 });
 
 routes.get("/:clientkey/callback", (c: Context) => {
+  const decoder = new TextDecoder("utf-8");
+  const oauthConfig = JSON.parse(
+    decoder.decode(decodeBase64Url(Deno.env.get("OAUTH2_CONFIG")!))
+  );
+
   const clientKey = getClientKey(c);
   if (clientKey === null || !(clientKey in oauthConfig.clients)) {
     c.status(404);
@@ -84,6 +89,11 @@ routes.get("/:clientkey/callback", (c: Context) => {
 });
 
 routes.post("/:clientkey/token", (c: Context) => {
+  const decoder = new TextDecoder("utf-8");
+  const oauthConfig = JSON.parse(
+    decoder.decode(decodeBase64Url(Deno.env.get("OAUTH2_CONFIG")!))
+  );
+
   const clientKey = getClientKey(c);
   if (clientKey === null || !(clientKey in oauthConfig.clients)) {
     c.status(404);
