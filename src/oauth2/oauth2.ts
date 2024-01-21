@@ -1,4 +1,4 @@
-import { Context, OAuth2Client } from "../../deps.ts";
+import { Context, OAuth2Client, RefreshTokenGrant } from "../../deps.ts";
 import { OauthClientConfig } from "../interfaces/oauth2.ts";
 import Oauth2Cache from "./oauth2-cache.ts";
 import { getRandomCode, hash } from "./oauth2-helpers.ts";
@@ -85,4 +85,16 @@ export const handlePWATokenRequest = async (c: Context, bodyText: string) => {
     return c.text("Invalid code challenge.");
   }
   return c.json(cachedInfo.tokens);
+};
+
+export const handlePWARefreshTokenRequest = async (
+  c: Context,
+  oauthConfig: OauthClientConfig,
+  bodyText: string
+) => {
+  const requestBody = JSON.parse(bodyText);
+  const oauth2Client = new OAuth2Client(oauthConfig);
+  const refreshTokenGrant = new RefreshTokenGrant(oauth2Client);
+  const tokens = await refreshTokenGrant.refresh(requestBody.refresh_token);
+  return c.json(tokens);
 };

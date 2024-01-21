@@ -6,12 +6,13 @@ import {
   sessionMiddleware,
   decodeBase64Url,
 } from "../../deps.ts";
-import { authenticate, gateFeature } from "./middleware.ts";
+import { gateFeature } from "./middleware.ts";
 import { getClientKey } from "../oauth2/oauth2-helpers.ts";
 import {
   handleOauth2Callback,
   handleLoginRedirect,
   handlePWATokenRequest,
+  handlePWARefreshTokenRequest,
 } from "../oauth2/oauth2.ts";
 import verifyFromHttpRequest from "../verify.ts";
 import UmbilicalContext from "../interfaces/umbilical-context.ts";
@@ -112,6 +113,35 @@ routes.post("/:clientkey/token", async (c: Context) => {
   }
 
   return handlePWATokenRequest(c, bodyText);
+});
+
+routes.post("/:clientkey/refreshToken", async (c: Context) => {
+  const bodyText = await c.req.text();
+
+  // Handling inline, instead of in middleware, so that we can pass the
+  // bodyText along. TODO: Consider moving bodyText consumption into
+  // middleware.
+  if (!verifyFromHttpRequest(c as UmbilicalContext, bodyText)) {
+    c.status(401);
+    return c.text("Unauthorized.");
+  }
+
+  const decoder = new TextDecoder("utf-8");
+  const oauthConfig = JSON.parse(
+    decoder.decode(decodeBase64Url(Deno.env.get("OAUTH2_CONFIG")!))
+  );
+
+  const clientKey = getClientKey(c);
+  if (clientKey === null || !(clientKey in oauthConfig.clients)) {
+    c.status(404);
+    return c.text("Oauth2 config not found.");
+  }
+
+  return handlePWARefreshTokenRequest(
+    c,
+    oauthConfig.clients[clientKey],
+    bodyText
+  );
 });
 
 export default routes;

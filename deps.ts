@@ -31,6 +31,8 @@ export { WeakLRUCache } from "https://deno.land/x/weakcache@v1.1.4/index.js";
 export { Eta } from "https://deno.land/x/eta@v3.2.0/src/index.ts";
 
 export { OAuth2Client } from "https://deno.land/x/oauth2_client@v1.0.2/mod.ts";
+export { RefreshTokenGrant } from "https://deno.land/x/oauth2_client@v1.0.2/src/refresh_token_grant.ts";
+
 export {
   Session,
   sessionMiddleware,
