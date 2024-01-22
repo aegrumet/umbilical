@@ -202,7 +202,8 @@ Retrieve tokens from an Oauth2 authorization server.
 This could also be handled directly from the client using a PKCE flow.
 
 In this implementation, Umbilical stores the `client_id` and `client_secret`.
-Unlike with a PWA, Umbilical can keep the `client_secret` secret.
+Unlike with a PWA, Umbilical can keep the `client_secret` secret. Also, it
+unbundles the `client_id` from the PWA and thereby keeps the client generic.
 
 This implementation uses Umbilical authentication and a PKCE-like flow to
 guard token handoff from Umbilical to the PWA.
