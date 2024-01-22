@@ -1,6 +1,9 @@
 # umbilical
 
-Lifeline services for podcast PWAs.
+Umbilical is server side companion for PWAs, supporting stuff that can't be done
+client side.
+
+By design it aims to be ephemeral, minimal, and cheap to run.
 
 ## environment variables
 
@@ -138,7 +141,7 @@ API:
 
 For matching purposes, url schemes and trailing slashes are ignored.
 
-## podping webpush API (experimental)
+## podping webpush API
 
 Sends webpush notifications to subscribed clients.
 
@@ -191,6 +194,37 @@ a key to
 and set `WEBPUSH_TEMPLATE` to that key in the runtime environment. Templates are
 serialized JSON strings that use [Eta template
 syntax](https://eta.js.org/docs/intro/template-syntax) to interpolate values from the podping message.
+
+## oauth2 bridge API (experimental)
+
+Retrieve tokens from an Oauth2 authorization server.
+
+This could also be handled directly from the client using a PKCE flow.
+
+In this implementation, Umbilical stores the `client_id` and `client_secret`.
+Unlike with a PWA, Umbilical can keep the `client_secret` secret.
+
+This implementation uses Umbilical authentication and a PKCE-like flow to
+guard token handoff from Umbilical to the PWA.
+
+Before calling Umbilical's `login` method, the PWA should generate a
+`code_verifier` and `code_challenge` in the same manner as a PKCE flow.
+
+`GET /API/worker/oauth2/:clientkey/login`
+
+`GET /API/worker/oauth2/:clientkey/callback`
+
+`POST /API/worker/oauth2/:clientkey/token` (requires authentication)
+
+`POST /API/worker/oauth2/:clientkey/refreshToken` (requires authentication)
+
+Oauth clients are configured by populating the data structure in
+[mocks/oauth2-config.json](mocks/oauth2-config.json), base64url-encoding it, and
+setting the `OAUTH2_CONFIG` environment variable to the result.
+
+A helper script is provided to generate the base64url-encoded config:
+
+`deno task encode-oauth2-config mocks/oauth2-config.json`
 
 ## deploy
 
