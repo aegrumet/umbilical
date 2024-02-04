@@ -4,7 +4,9 @@
  * Encodes oauth2 config json into a base64 string for populating the
  * OAUTH2_CONFIG environment variable.
  */
-import { existsSync, encodeBase64Url } from "../deps.ts";
+import { encodeBase64Url } from "../deps.ts";
+import { existsSync } from "../npm_deps.ts";
+
 import { OauthConfigSchema, OauthConfig } from "../src/interfaces/oauth2.ts";
 
 const file = Deno.args[0];

@@ -17,6 +17,7 @@ By design it aims to be ephemeral, minimal, and cheap to run.
 | `WEBPUSH_CONTACT`          | contact info (subject) for webpush                                                                                                   | n/a                                      |
 | `WEBPUSH_TEMPLATE`         | template for webpush notification messages                                                                                           | 'angular'                                |
 | `WEBPUSH_THROTTLE_MINUTES` | number of minutes to wait before emitting a podping push notification for the same `(iri, reason, medium)`. Set to 0 for no waiting. | 60                                       |
+| `OAUTH2_CONFIG`            | base64url-encoded JSON object containing oauth2 client configurations (see oauth2 bridge API)                                        | n/a                                      |
 
 ## features and deployment types
 
@@ -38,6 +39,7 @@ Here is a list of features and compatible deployment types:
 | podroll           | extract podroll from RSS and return as OPML                                                     | all                      |
 | podping_websocket | relay podpings from Livewire's podping websocket service to a running PWA, for subscribed feeds | websocket server, server |
 | podping_webpush   | send podpings to running or non-running PWAs using webpush, for subscribed feeds (see below)    | server                   |
+| oauth2            | retrieve tokens from an Oauth2 authorization server                                             | server                   |
 
 ## authentication
 
@@ -211,13 +213,13 @@ guard token handoff from Umbilical to the PWA.
 Before calling Umbilical's `login` method, the PWA should generate a
 `code_verifier` and `code_challenge` in the same manner as a PKCE flow.
 
-`GET /API/worker/oauth2/:clientkey/login`
+`GET /API/server/oauth2/:clientkey/login`
 
-`GET /API/worker/oauth2/:clientkey/callback`
+`GET /API/server/oauth2/:clientkey/callback`
 
-`POST /API/worker/oauth2/:clientkey/token` (requires authentication)
+`POST /API/server/oauth2/:clientkey/token` (requires authentication)
 
-`POST /API/worker/oauth2/:clientkey/refreshToken` (requires authentication)
+`POST /API/server/oauth2/:clientkey/refreshToken` (requires authentication)
 
 Oauth clients are configured by populating the data structure in
 [mocks/oauth2-config.json](mocks/oauth2-config.json), base64url-encoding it, and
