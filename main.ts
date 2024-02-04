@@ -1,18 +1,38 @@
 import denoEnv from "./src/deno-env.ts";
-import { Hono } from "./deps.ts";
+import { Context, Hono } from "./deps.ts";
 import websocket from "./websocket-routes.ts";
 import rest from "./rest-routes.ts";
 import restServer from "./rest-routes-server.ts";
 import { UmbilicalEnv } from "./src/interfaces/umbilical-context.ts";
 import { umbilicalUserAgent } from "./src/config.ts";
+import { Telemetry } from "./src/interfaces/telemetry.ts";
+import { OpenTelemetry } from "./src/telemetry/open-telemetry.ts";
+
+const env: UmbilicalEnv = denoEnv();
 
 const app = new Hono();
+
+if (env.OTEL_EXPORTER_OTLP_ENDPOINT) {
+  console.log(
+    `OpenTelemetry enabled, sending telemetry to ${env.OTEL_EXPORTER_OTLP_ENDPOINT}`
+  );
+  const openTelemetry: Telemetry = new OpenTelemetry();
+
+  app.use("*", async (c: Context, next) => {
+    c.set("telemetry", openTelemetry);
+    await next();
+  });
+}
+
+app.use("*", async (c: Context, next) => {
+  const telemetry: Telemetry = c.get("telemetry");
+  telemetry.incrementCounter("http_requests", 1);
+  await next();
+});
 
 app.route("/API/worker", rest);
 app.route("/API/server", restServer);
 app.route("/API/websocket", websocket);
-
-const env: UmbilicalEnv = denoEnv();
 
 Deno.serve((r) => {
   return app.fetch(r, env);

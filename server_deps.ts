@@ -11,3 +11,14 @@ export {
   CookieStore,
   MemoryStore,
 } from "https://deno.land/x/hono_sessions@v0.3.3/mod.ts";
+
+import opentelemetry from "npm:@opentelemetry/api";
+export { opentelemetry };
+export { Resource } from "npm:@opentelemetry/resources";
+export {
+  MeterProvider,
+  PeriodicExportingMetricReader,
+  ConsoleMetricExporter,
+} from "npm:@opentelemetry/sdk-metrics";
+// grpc doesn't seem to work with Deno
+export { OTLPMetricExporter } from "npm:@opentelemetry/exporter-metrics-otlp-http";

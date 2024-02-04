@@ -8,6 +8,7 @@ export type UmbilicalEnv = {
   WEBPUSH_THROTTLE_MINUTES: string;
   DEBUG: boolean | undefined;
   ENABLED_FEATURES: string;
+  OTEL_EXPORTER_OTLP_ENDPOINT: string;
 };
 
 export type UmbilicalContext = {
