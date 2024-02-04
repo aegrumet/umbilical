@@ -2,7 +2,7 @@
 # Debug image
 # ------------------------------------------------------------------------------
 
-FROM denoland/deno:debian-1.39.0 as debug
+FROM denoland/deno:alpine-1.40.2 as debug
 
 # 1. Source code will be copied to here.
 WORKDIR /app
@@ -32,14 +32,14 @@ EXPOSE 8000
 # Production image
 # ------------------------------------------------------------------------------
 
-FROM denoland/deno:distroless-1.39.0
+FROM denoland/deno:alpine-1.40.2
 
 WORKDIR /app
 
 COPY --from=debug --chown=1993 /deno-dir /deno-dir
 COPY --from=debug --chown=root:root /app .
 
-USER 1993
+#USER 1993
 CMD ["task", "start"]
 
 EXPOSE 8000

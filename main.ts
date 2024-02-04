@@ -1,12 +1,29 @@
 import denoEnv from "./src/deno-env.ts";
-import { Hono } from "./deps.ts";
+import { Context, Hono } from "./deps.ts";
 import websocket from "./websocket-routes.ts";
 import rest from "./rest-routes.ts";
 import restServer from "./rest-routes-server.ts";
 import { UmbilicalEnv } from "./src/interfaces/umbilical-context.ts";
 import { umbilicalUserAgent } from "./src/config.ts";
+import { Telemetry } from "./src/interfaces/telemetry.ts";
+import { ConsoleTelemetry } from "./src/telemetry/console.ts";
+import { OpenTelemetry } from "./src/telemetry/open-telemetry.ts";
 
 const app = new Hono();
+
+const consoleTelemetry = new OpenTelemetry();
+
+app.use("*", async (c: Context, next) => {
+  const telemetry: Telemetry = consoleTelemetry;
+  c.set("telemetry", telemetry);
+  await next();
+});
+
+app.use("*", async (c: Context, next) => {
+  const telemetry: Telemetry = c.get("telemetry");
+  telemetry.incrementCounter("http_requests", 1);
+  await next();
+});
 
 app.route("/API/worker", rest);
 app.route("/API/server", restServer);
