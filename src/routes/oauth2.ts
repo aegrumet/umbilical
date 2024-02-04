@@ -1,5 +1,5 @@
 import { Hono, Context, decodeBase64Url } from "../../deps.ts";
-import { Session, MemoryStore, sessionMiddleware } from "../../npm_deps.ts";
+import { Session, MemoryStore, sessionMiddleware } from "../../server_deps.ts";
 import { gateFeature } from "./middleware.ts";
 import { getClientKey } from "../oauth2/oauth2-helpers.ts";
 import {

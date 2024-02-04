@@ -1,4 +1,4 @@
-import { PushSubscription } from "../../npm_deps.ts";
+import { PushSubscription } from "../../server_deps.ts";
 import { z } from "../../deps.ts";
 
 export interface RegisterPutInput {

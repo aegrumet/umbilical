@@ -2,7 +2,7 @@ import { describe, it, expect } from "../../../dev_deps.ts";
 
 import { validPushSubscription } from "../../../mocks/push-subscription.ts";
 import SubscriptionManager from "./subscription-manager.ts";
-import { PushSubscription } from "../../../npm_deps.ts";
+import { PushSubscription } from "../../../server_deps.ts";
 import { normalizedKeyFromUrl } from "../../lib/url.ts";
 
 describe("Subscription Manager", () => {

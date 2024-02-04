@@ -4,7 +4,7 @@ import {
   RegisterDeleteInputSchema,
 } from "../interfaces/pusher-api.ts";
 
-import { PushSubscription } from "../../npm_deps.ts";
+import { PushSubscription } from "../../server_deps.ts";
 import {
   RegisterDeleteInput,
   RegisterPutInput,

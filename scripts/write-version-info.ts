@@ -1,4 +1,4 @@
-import { gitDescribeSync, GitInfo } from "../npm_deps.ts";
+import { gitDescribeSync, GitInfo } from "../server_deps.ts";
 
 const gitInfo: GitInfo = gitDescribeSync();
 const versionInfoJson: string = JSON.stringify(gitInfo, null, 2);

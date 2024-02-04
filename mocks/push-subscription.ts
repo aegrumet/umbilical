@@ -1,5 +1,5 @@
 import { randomString } from "./utils.ts";
-import { PushSubscription } from "../npm_deps.ts";
+import { PushSubscription } from "../server_deps.ts";
 
 export const validPushSubscription = {
   endpoint: "https://example.com",

@@ -1,5 +1,5 @@
 import { Evt, decodeBase64Url } from "../../../deps.ts";
-import { PushSubscription, Eta } from "../../../npm_deps.ts";
+import { PushSubscription, Eta } from "../../../server_deps.ts";
 import {
   PodpingV0,
   PodpingV1,

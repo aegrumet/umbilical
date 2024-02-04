@@ -1,4 +1,4 @@
-import { PushSubscription } from "../../../npm_deps.ts";
+import { PushSubscription } from "../../../server_deps.ts";
 import { PodpingFilter } from "../../interfaces/podping-filter.ts";
 import { normalizedKeyFromUrl } from "../../lib/url.ts";
 

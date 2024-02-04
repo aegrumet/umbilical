@@ -5,7 +5,7 @@
  * OAUTH2_CONFIG environment variable.
  */
 import { encodeBase64Url } from "../deps.ts";
-import { existsSync } from "../npm_deps.ts";
+import { existsSync } from "../server_deps.ts";
 
 import { OauthConfigSchema, OauthConfig } from "../src/interfaces/oauth2.ts";
 
