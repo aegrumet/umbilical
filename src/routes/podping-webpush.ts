@@ -43,7 +43,9 @@ routes.use("*", gateFeature("podping_webpush"));
 // reference Deno directly. NB: This is incompatible work with Cloudflare
 // Workers.
 if (env.ENABLED_FEATURES.includes("podping_webpush")) {
-  const subscriptionManager: SubscriptionManager = new SubscriptionManager();
+  const subscriptionManager: SubscriptionManager = new SubscriptionManager(
+    telemetry
+  );
   const podpingRelayFiltered = new PodpingRelayFiltered(
     subscriptionManager as PodpingFilter,
     telemetry
@@ -100,11 +102,6 @@ if (env.ENABLED_FEATURES.includes("podping_webpush")) {
       "subscriptionManager"
     ) as SubscriptionManager;
     subscriptionManager.add(body.pushSubscription, body.rssUrls);
-    telemetry.incrementUpDownCounter(
-      "podping.webpush.subscriptions",
-      "global",
-      1
-    );
 
     return c.json({ success: true });
   });
@@ -134,11 +131,7 @@ if (env.ENABLED_FEATURES.includes("podping_webpush")) {
       "subscriptionManager"
     ) as SubscriptionManager;
     subscriptionManager.remove(body.pushSubscription);
-    telemetry.incrementUpDownCounter(
-      "podping.webpush.subscriptions",
-      "global",
-      -1
-    );
+
     return c.json({ success: true });
   });
 

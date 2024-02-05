@@ -58,6 +58,15 @@ class PodpingWebsocketProxy {
       if (c.env.DEBUG) {
         console.log("Podping Websocket: close message handler");
       }
+      try {
+        this.telemetry!.incrementUpDownCounter(
+          "podping.websocket.connections",
+          "global",
+          -1
+        );
+      } catch (_) {
+        // do nothing
+      }
       this.shutdown(socket, this.relay);
     });
 
@@ -144,16 +153,6 @@ class PodpingWebsocketProxy {
     try {
       socket.readyState !== WebSocket.CLOSED;
       socket.close();
-    } catch (_) {
-      // do nothing
-    }
-
-    try {
-      this.telemetry!.incrementUpDownCounter(
-        "podping.websocket.connections",
-        "global",
-        -1
-      );
     } catch (_) {
       // do nothing
     }

@@ -1,10 +1,16 @@
 import { PushSubscription } from "../../../server_deps.ts";
 import { PodpingFilter } from "../../interfaces/podping-filter.ts";
+import { Telemetry } from "../../interfaces/telemetry.ts";
 import { normalizedKeyFromUrl } from "../../lib/url.ts";
 
 class SubscriptionManager implements PodpingFilter {
   private rssUrls: Record<string, string[]> = {};
   private pushSubscriptions: Record<string, PushSubscription> = {};
+  private telemetry: Telemetry;
+
+  public constructor(telemetry: Telemetry) {
+    this.telemetry = telemetry;
+  }
 
   public add(pushSubscription: PushSubscription, rssUrls: string[]): void {
     this.remove(pushSubscription);
@@ -19,6 +25,12 @@ class SubscriptionManager implements PodpingFilter {
       `Added. Subscription count: ${
         Object.keys(this.pushSubscriptions).length
       }, URL count: ${Object.keys(this.rssUrls).length}`
+    );
+
+    this.telemetry.incrementUpDownCounter(
+      "podping.webpush.subscriptions",
+      "global",
+      1
     );
   }
 
@@ -53,6 +65,11 @@ class SubscriptionManager implements PodpingFilter {
       `Removed. Subscription count: ${
         Object.keys(this.pushSubscriptions).length
       }, URL count: ${Object.keys(this.rssUrls).length}`
+    );
+    this.telemetry.incrementUpDownCounter(
+      "podping.webpush.subscriptions",
+      "global",
+      -1
     );
   }
 
