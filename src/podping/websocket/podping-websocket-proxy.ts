@@ -6,6 +6,7 @@ import {
 } from "../../interfaces/livewire-podping-websocket.ts";
 import SubscriptionManager from "./subscription-manager.ts";
 import PodpingRelayFiltered from "../shared/podping-relay-filtered.ts";
+import { Telemetry } from "../../interfaces/telemetry.ts";
 
 const HEARTBEAT_INTERVAL = 1000 * 30;
 
@@ -18,6 +19,7 @@ class PodpingWebsocketProxy {
   private podpingEmitterCtx: Ctx;
   private debug = false;
   private uuid: string | undefined;
+  private telemetry: Telemetry | undefined;
 
   constructor(
     subscriptionManager: SubscriptionManager,
@@ -37,6 +39,12 @@ class PodpingWebsocketProxy {
 
   proxy(c: Context, p: WebSocketProvider) {
     this.debug = c.env.DEBUG;
+    this.telemetry = c.get("telemetry");
+    this.telemetry!.incrementUpDownCounter(
+      "podping.websocket.connections",
+      "global",
+      1
+    );
 
     const { response, socket } = p.upgradeWebSocket(c);
 
@@ -139,6 +147,17 @@ class PodpingWebsocketProxy {
     } catch (_) {
       // do nothing
     }
+
+    try {
+      this.telemetry!.incrementUpDownCounter(
+        "podping.websocket.connections",
+        "global",
+        -1
+      );
+    } catch (_) {
+      // do nothing
+    }
+
     this.podpingEmitterCtx.done();
   }
 }

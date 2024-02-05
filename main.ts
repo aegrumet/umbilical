@@ -7,28 +7,33 @@ import { UmbilicalEnv } from "./src/interfaces/umbilical-context.ts";
 import { umbilicalUserAgent } from "./src/config.ts";
 import { Telemetry } from "./src/interfaces/telemetry.ts";
 import { OpenTelemetry } from "./src/telemetry/open-telemetry.ts";
+import { ConsoleTelemetry } from "./src/telemetry/console-telemetry.ts";
 
 const env: UmbilicalEnv = denoEnv();
 
-const app = new Hono();
-
+let telemetry: Telemetry;
 if (env.OTEL_EXPORTER_OTLP_ENDPOINT) {
   console.log(
     `OpenTelemetry enabled, sending telemetry to ${env.OTEL_EXPORTER_OTLP_ENDPOINT}`
   );
-  const openTelemetry: Telemetry = new OpenTelemetry();
-
-  app.use("*", async (c: Context, next) => {
-    c.set("telemetry", openTelemetry);
-    await next();
-  });
-
-  app.use("*", async (c: Context, next) => {
-    const telemetry: Telemetry = c.get("telemetry");
-    telemetry.incrementCounter("http_requests", 1);
-    await next();
-  });
+  telemetry = OpenTelemetry.getInstance();
+} else {
+  console.log("OpenTelemetry disabled, sending telemetry to console.");
+  telemetry = new ConsoleTelemetry();
 }
+
+const app = new Hono();
+
+app.use("*", async (c: Context, next) => {
+  c.set("telemetry", telemetry);
+  await next();
+});
+
+app.use("*", async (c: Context, next) => {
+  const telemetry: Telemetry = c.get("telemetry");
+  telemetry.incrementCounter("http.requests", "global", 1);
+  await next();
+});
 
 app.route("/API/worker", rest);
 app.route("/API/server", restServer);

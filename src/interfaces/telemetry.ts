@@ -1,4 +1,8 @@
 export type Telemetry = {
-  incrementCounter: (name: string, value: number) => void;
-  setGauge: (name: string, value: number) => void;
+  incrementCounter: (counter: string, name: string, value: number) => void;
+  incrementUpDownCounter: (
+    counter: string,
+    name: string,
+    value: number
+  ) => void;
 };

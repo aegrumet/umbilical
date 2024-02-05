@@ -12,6 +12,7 @@ import PodpingRelayFactory from "./podping-relay-factory.ts";
 import PodpingRelayFiltered from "./podping-relay-filtered.ts";
 import MockPodpingFilter from "../../../mocks/podping-filter.ts";
 import MockPodpingRelay from "../../../mocks/podping-relay.ts";
+import { NullTelemetry } from "../../telemetry/null-telemetry.ts";
 
 describe("Filtered podping relay", () => {
   let time: FakeTime;
@@ -32,7 +33,8 @@ describe("Filtered podping relay", () => {
     });
 
     const relayFiltered = new PodpingRelayFiltered(
-      new MockPodpingFilter([iri])
+      new MockPodpingFilter([iri]),
+      new NullTelemetry()
     );
 
     const postUpdateSpy = spy(relayFiltered, "postUpdate");
@@ -56,7 +58,8 @@ describe("Filtered podping relay", () => {
     });
 
     const relayFiltered = new PodpingRelayFiltered(
-      new MockPodpingFilter([iri])
+      new MockPodpingFilter([iri]),
+      new NullTelemetry()
     );
 
     const postUpdateSpy = spy(relayFiltered, "postUpdate");

@@ -1,4 +1,5 @@
 import { Hono, Context } from "../../deps.ts";
+import denoEnv from "../deno-env.ts";
 
 import SubscriptionManager from "../podping/webpush/subscription-manager.ts";
 import {
@@ -10,14 +11,28 @@ import {
 import PodpingRelayFiltered from "../podping/shared/podping-relay-filtered.ts";
 import { PodpingPusher } from "../podping/webpush/podping-pusher.ts";
 import { PodpingFilter } from "../interfaces/podping-filter.ts";
-import {
-  ENABLED_FEATURES_DEFAULT,
-  WEBPUSH_TEMPLATE_DEFAULT,
-  WEBPUSH_THROTTLE_MINUTES_DEFAULT,
-} from "../env-defaults.ts";
+import { WEBPUSH_THROTTLE_MINUTES_DEFAULT } from "../env-defaults.ts";
 import { authenticate, gateFeature } from "./middleware.ts";
 import verifyFromHttpRequest from "../verify.ts";
-import UmbilicalContext from "../interfaces/umbilical-context.ts";
+import UmbilicalContext, {
+  UmbilicalEnv,
+} from "../interfaces/umbilical-context.ts";
+import { Telemetry } from "../interfaces/telemetry.ts";
+import { OpenTelemetry } from "../telemetry/open-telemetry.ts";
+import { ConsoleTelemetry } from "../telemetry/console-telemetry.ts";
+
+const env: UmbilicalEnv = denoEnv();
+
+let telemetry: Telemetry;
+if (env.OTEL_EXPORTER_OTLP_ENDPOINT) {
+  console.log(
+    `OpenTelemetry enabled, sending telemetry to ${env.OTEL_EXPORTER_OTLP_ENDPOINT}`
+  );
+  telemetry = OpenTelemetry.getInstance();
+} else {
+  console.log("OpenTelemetry disabled, sending telemetry to console.");
+  telemetry = new ConsoleTelemetry();
+}
 
 const routes = new Hono();
 routes.use("/pubkey", authenticate);
@@ -27,14 +42,11 @@ routes.use("*", gateFeature("podping_webpush"));
 // this reason we can't pull environment variable values from c.env, so we
 // reference Deno directly. NB: This is incompatible work with Cloudflare
 // Workers.
-if (
-  (Deno.env.get("ENABLED_FEATURES") ?? ENABLED_FEATURES_DEFAULT).includes(
-    "podping_webpush"
-  )
-) {
+if (env.ENABLED_FEATURES.includes("podping_webpush")) {
   const subscriptionManager: SubscriptionManager = new SubscriptionManager();
   const podpingRelayFiltered = new PodpingRelayFiltered(
-    subscriptionManager as PodpingFilter
+    subscriptionManager as PodpingFilter,
+    telemetry
   );
   const podpingTimeoutMinutes = Number(
     Deno.env.get("WEBPUSH_THROTTLE_MINUTES")
@@ -43,9 +55,9 @@ if (
   const pusher = new PodpingPusher(
     subscriptionManager,
     podpingRelayFiltered,
-    Deno.env.get("WEBPUSH_JWK_BASE64") || "",
-    Deno.env.get("WEBPUSH_CONTACT") || "mailto:test@test.com",
-    Deno.env.get("WEBPUSH_TEMPLATE") || WEBPUSH_TEMPLATE_DEFAULT,
+    env.WEBPUSH_JWK_BASE64 || "",
+    env.WEBPUSH_CONTACT || "mailto:test@test.com",
+    env.WEBPUSH_TEMPLATE,
     isNaN(podpingTimeoutMinutes)
       ? Number(WEBPUSH_THROTTLE_MINUTES_DEFAULT)
       : podpingTimeoutMinutes
@@ -88,6 +100,11 @@ if (
       "subscriptionManager"
     ) as SubscriptionManager;
     subscriptionManager.add(body.pushSubscription, body.rssUrls);
+    telemetry.incrementUpDownCounter(
+      "podping.webpush.subscriptions",
+      "global",
+      1
+    );
 
     return c.json({ success: true });
   });
@@ -117,6 +134,11 @@ if (
       "subscriptionManager"
     ) as SubscriptionManager;
     subscriptionManager.remove(body.pushSubscription);
+    telemetry.incrementUpDownCounter(
+      "podping.webpush.subscriptions",
+      "global",
+      -1
+    );
     return c.json({ success: true });
   });
 

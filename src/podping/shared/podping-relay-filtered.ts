@@ -6,6 +6,7 @@ import {
 import { PodpingFilter } from "../../interfaces/podping-filter.ts";
 import PodpingRelay from "./podping-relay.ts";
 import PodpingRelayFactory from "./podping-relay-factory.ts";
+import { Telemetry } from "../../interfaces/telemetry.ts";
 
 export default class PodpingRelayFiltered {
   private relay: PodpingRelay;
@@ -15,11 +16,13 @@ export default class PodpingRelayFiltered {
   private podpingFilter: PodpingFilter;
   private uuid: string | undefined;
   private logInterval: number | undefined;
+  private telemetry: Telemetry;
 
   podpingCount = 0;
   emittedCount = 0;
 
-  constructor(podpingFilter: PodpingFilter) {
+  constructor(podpingFilter: PodpingFilter, telemetry: Telemetry) {
+    this.telemetry = telemetry;
     this.relay = PodpingRelayFactory.getInstance().getPodpingRelay();
     this.relayEmitter = this.relay.getEmitter();
     this.relayEmitterCtx = Evt.newCtx();
@@ -48,6 +51,11 @@ export default class PodpingRelayFiltered {
 
   private handlePodping(podping: PodpingV0 | PodpingV1) {
     this.podpingCount += 1;
+    this.telemetry.incrementCounter(
+      "podping.relay.filtered.podpings",
+      this.uuid!.slice(0, 8),
+      1
+    );
     if ((podping as PodpingV0).urls) {
       // version 0.x payload
       const p: PodpingV0 = podping as PodpingV0;
@@ -91,6 +99,11 @@ export default class PodpingRelayFiltered {
   // Stubbable function for testability.
   public postUpdate(p: PodpingV0 | PodpingV1) {
     this.emittedCount += 1;
+    this.telemetry.incrementCounter(
+      "podping.relay.filtered.emitted",
+      this.uuid!.slice(0, 8),
+      1
+    );
     this.filterEmitter.post(p);
   }
 

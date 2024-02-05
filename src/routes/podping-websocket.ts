@@ -14,7 +14,8 @@ function getWebsocketRoutes(websocketProvider: WebSocketProvider): Hono {
   routes.get("/podping", (c: Context) => {
     const subscriptionManager: SubscriptionManager = new SubscriptionManager();
     const podpingRelayFiltered = new PodpingRelayFiltered(
-      subscriptionManager as PodpingFilter
+      subscriptionManager as PodpingFilter,
+      c.get("telemetry")
     );
     return new PodpingWebsocketProxy(
       subscriptionManager,
