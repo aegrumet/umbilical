@@ -22,13 +22,13 @@ if (env.OTEL_EXPORTER_OTLP_ENDPOINT) {
     c.set("telemetry", openTelemetry);
     await next();
   });
-}
 
-app.use("*", async (c: Context, next) => {
-  const telemetry: Telemetry = c.get("telemetry");
-  telemetry.incrementCounter("http_requests", 1);
-  await next();
-});
+  app.use("*", async (c: Context, next) => {
+    const telemetry: Telemetry = c.get("telemetry");
+    telemetry.incrementCounter("http_requests", 1);
+    await next();
+  });
+}
 
 app.route("/API/worker", rest);
 app.route("/API/server", restServer);
