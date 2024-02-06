@@ -2,7 +2,7 @@
 # Debug image
 # ------------------------------------------------------------------------------
 
-FROM denoland/deno:alpine-1.40.2 as debug
+FROM denoland/deno:alpine-1.40.3 as debug
 
 # 1. Source code will be copied to here.
 WORKDIR /app
@@ -32,7 +32,7 @@ EXPOSE 8000
 # Production image
 # ------------------------------------------------------------------------------
 
-FROM denoland/deno:alpine-1.40.2
+FROM denoland/deno:distroless-1.40.3
 
 WORKDIR /app
 

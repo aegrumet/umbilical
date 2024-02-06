@@ -11,14 +11,13 @@ import {
 
 const COUNTERS = [
   "http.requests",
-  "podping.relay.filtered.podpings",
+  "podping.relay.podpings",
   "podping.relay.filtered.emitted",
 ];
 
-const UP_DOWN_COUNTERS: Array<string> = [
-  "podping.webpush.subscriptions",
-  "podping.websocket.connections",
-];
+const UP_DOWN_COUNTERS: Array<string> = ["podping.websocket.connections"];
+
+const GAUGES: Array<string> = ["podping.webpush.subscriptions"];
 
 export class OpenTelemetry implements Telemetry {
   private static instance: OpenTelemetry;
@@ -32,9 +31,15 @@ export class OpenTelemetry implements Telemetry {
     opentelemetry.UpDownCounter<opentelemetry.Attributes>
   >;
 
+  private gauges: Record<
+    string,
+    opentelemetry.ObservableGauge<opentelemetry.Attributes>
+  >;
+
   private constructor() {
     this.counters = {};
     this.upDownCounters = {};
+    this.gauges = {};
 
     const meterProvider = new MeterProvider({
       resource: new Resource({ "service.name": umbilicalUserAgent }),
@@ -58,6 +63,10 @@ export class OpenTelemetry implements Telemetry {
 
     for (const counter of UP_DOWN_COUNTERS) {
       this.upDownCounters[counter] = meter.createUpDownCounter(counter, {});
+    }
+
+    for (const gauge of GAUGES) {
+      this.gauges[gauge] = meter.createObservableGauge(gauge, {});
     }
   }
 
@@ -85,5 +94,20 @@ export class OpenTelemetry implements Telemetry {
       console.log("Up down counter not found", counter);
     }
     this.upDownCounters[counter].add(value, { name });
+  }
+
+  public addGaugeCallback(gauge: string, callback: (result: any) => void) {
+    if (this.gauges[gauge] === undefined) {
+      console.log("Gauge not found", gauge);
+    }
+    this.gauges[gauge].addCallback(callback);
+  }
+
+  // deno-lint-ignore no-explicit-any
+  public removeGaugeCallback(gauge: string, callback: (result: any) => void) {
+    if (this.gauges[gauge] === undefined) {
+      console.log("Gauge not found", gauge);
+    }
+    this.gauges[gauge].removeCallback(callback);
   }
 }

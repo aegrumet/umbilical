@@ -1,6 +1,7 @@
 // Deno doesn't support stubbing for class methods. If we want to support
 // testing we're gonna have to use a factory :-/
 
+import { Telemetry } from "../../interfaces/telemetry.ts";
 import PodpingRelay from "./podping-relay.ts";
 
 export default class PodpingRelayFactory {
@@ -15,7 +16,7 @@ export default class PodpingRelayFactory {
 
     return PodpingRelayFactory.instance;
   }
-  public getPodpingRelay(): PodpingRelay {
-    return PodpingRelay.getInstance();
+  public getPodpingRelay(telemetry: Telemetry): PodpingRelay {
+    return PodpingRelay.getInstance(telemetry);
   }
 }

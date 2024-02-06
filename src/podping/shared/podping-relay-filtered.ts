@@ -23,7 +23,9 @@ export default class PodpingRelayFiltered {
 
   constructor(podpingFilter: PodpingFilter, telemetry: Telemetry) {
     this.telemetry = telemetry;
-    this.relay = PodpingRelayFactory.getInstance().getPodpingRelay();
+    this.relay = PodpingRelayFactory.getInstance().getPodpingRelay(
+      this.telemetry
+    );
     this.relayEmitter = this.relay.getEmitter();
     this.relayEmitterCtx = Evt.newCtx();
     this.podpingFilter = podpingFilter;
@@ -51,11 +53,6 @@ export default class PodpingRelayFiltered {
 
   private handlePodping(podping: PodpingV0 | PodpingV1) {
     this.podpingCount += 1;
-    this.telemetry.incrementCounter(
-      "podping.relay.filtered.podpings",
-      this.uuid!.slice(0, 8),
-      1
-    );
     if ((podping as PodpingV0).urls) {
       // version 0.x payload
       const p: PodpingV0 = podping as PodpingV0;

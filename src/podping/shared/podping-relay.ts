@@ -4,6 +4,7 @@ import {
   PodpingV0,
   PodpingV1,
 } from "../../interfaces/livewire-podping-websocket.ts";
+import { Telemetry } from "../../interfaces/telemetry.ts";
 
 const PODPING_ORIGIN = "wss://api.livewire.io/ws/podping";
 
@@ -21,11 +22,13 @@ export default class PodpingRelay {
   private reconnectTimeout: any | null = null;
   private uuid: string | undefined;
   private logInterval: number | undefined;
+  private telemetry: Telemetry;
 
   podpingCount = 0;
   emittedCount = 0;
 
-  private constructor() {
+  private constructor(telemetry: Telemetry) {
+    this.telemetry = telemetry;
     this.emitter = Evt.create<PodpingV0 | PodpingV1 | Error>();
     this.uuid = crypto.randomUUID();
     this.logInterval = setInterval(() => {
@@ -39,9 +42,12 @@ export default class PodpingRelay {
 
   // explicitConnect is used for testing. It allows the client to spy on
   // internal methods before attempting to establish a websocket connection.
-  public static getInstance(explicitConnect = false): PodpingRelay {
+  public static getInstance(
+    telemetry: Telemetry,
+    explicitConnect = false
+  ): PodpingRelay {
     if (!PodpingRelay.instance) {
-      PodpingRelay.instance = new PodpingRelay();
+      PodpingRelay.instance = new PodpingRelay(telemetry);
       if (!explicitConnect) {
         PodpingRelay.instance.connect();
       }
@@ -103,6 +109,7 @@ export default class PodpingRelay {
     const msg: PodpingMessage = JSON.parse(event.data);
     if (msg.t === "podping") {
       this.podpingCount += 1;
+      this.telemetry.incrementCounter("podping.relay.podpings", "global", 1);
       for (const op of msg.p) {
         if (op.i === "podping") {
           // version 0.x payload

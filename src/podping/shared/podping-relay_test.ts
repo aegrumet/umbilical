@@ -12,6 +12,7 @@ import {
 import MockWebsocketStubBuilder from "../../../mocks/websocket.ts";
 import PodpingRelay, { MAX_CONNECT_ATTEMPTS } from "./podping-relay.ts";
 import { mockLivewireMessage } from "../../../mocks/livewire-podping.ts";
+import { NullTelemetry } from "../../telemetry/null-telemetry.ts";
 
 describe("Filtered podping relay", () => {
   let time: FakeTime;
@@ -22,7 +23,7 @@ describe("Filtered podping relay", () => {
 
   beforeEach(() => {
     time = new FakeTime();
-    relay = PodpingRelay.getInstance(true);
+    relay = PodpingRelay.getInstance(new NullTelemetry(), true);
   });
 
   afterEach(() => {

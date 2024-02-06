@@ -10,6 +10,12 @@ class SubscriptionManager implements PodpingFilter {
 
   public constructor(telemetry: Telemetry) {
     this.telemetry = telemetry;
+    this.telemetry.addGaugeCallback(
+      "podping.webpush.subscriptions",
+      (result) => {
+        result.observe(Object.keys(this.pushSubscriptions).length);
+      }
+    );
   }
 
   public add(pushSubscription: PushSubscription, rssUrls: string[]): void {
@@ -25,12 +31,6 @@ class SubscriptionManager implements PodpingFilter {
       `Added. Subscription count: ${
         Object.keys(this.pushSubscriptions).length
       }, URL count: ${Object.keys(this.rssUrls).length}`
-    );
-
-    this.telemetry.incrementUpDownCounter(
-      "podping.webpush.subscriptions",
-      "global",
-      1
     );
   }
 
@@ -65,11 +65,6 @@ class SubscriptionManager implements PodpingFilter {
       `Removed. Subscription count: ${
         Object.keys(this.pushSubscriptions).length
       }, URL count: ${Object.keys(this.rssUrls).length}`
-    );
-    this.telemetry.incrementUpDownCounter(
-      "podping.webpush.subscriptions",
-      "global",
-      -1
     );
   }
 
