@@ -35,7 +35,7 @@ services:
     value: proxy,search,podping_websocket,podping_webpush,podroll,oauth2
   - key: DEBUG
     scope: RUN_AND_BUILD_TIME
-    value: 
+    value: "false"
   - key: WEBPUSH_TEMPLATE
     scope: RUN_AND_BUILD_TIME
     value: angular
