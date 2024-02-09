@@ -1,0 +1,56 @@
+alerts:
+- rule: DEPLOYMENT_FAILED
+- rule: DOMAIN_FAILED
+features:
+- buildpack-stack=ubuntu-22
+ingress:
+  rules:
+  - component:
+      name: umbilical
+    match:
+      path:
+        prefix: /
+name: umbilical-minimal
+region: nyc
+services:
+- dockerfile_path: Dockerfile
+  envs:
+  - key: WEBPUSH_JWK_BASE64
+    scope: RUN_AND_BUILD_TIME
+    value: 
+  - key: WEBPUSH_SUB
+    scope: RUN_AND_BUILD_TIME
+    value: 
+  - key: PI_API_KEY
+    scope: RUN_AND_BUILD_TIME
+    value: 
+  - key: PI_API_SECRET
+    scope: RUN_AND_BUILD_TIME
+    value: 
+  - key: UMBILICAL_KEYS
+    scope: RUN_AND_BUILD_TIME
+    value: 
+  - key: ENABLED_FEATURES
+    scope: RUN_AND_BUILD_TIME
+    value: proxy,search,podping_websocket,podping_webpush,podroll,oauth2
+  - key: DEBUG
+    scope: RUN_AND_BUILD_TIME
+    value: 
+  - key: WEBPUSH_TEMPLATE
+    scope: RUN_AND_BUILD_TIME
+    value: angular
+  - key: OAUTH2_CONFIG
+    scope: RUN_AND_BUILD_TIME
+    value: 
+  - key: OTEL_EXPORTER_OTLP_ENDPOINT
+    scope: RUN_AND_BUILD_TIME
+    value: 
+  github:
+    branch: main
+    deploy_on_push: true
+    repo: aegrumet/umbilical
+  http_port: 8000
+  instance_count: 1
+  instance_size_slug: basic-xxs
+  name: umbilical
+  source_dir: /

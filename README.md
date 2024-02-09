@@ -1,7 +1,7 @@
 # umbilical
 
-Umbilical is server side companion for PWAs, supporting stuff that can't be done
-client side.
+Umbilical is server side companion for podcast PWAs, supporting stuff that can't
+be done client side.
 
 By design it aims to be ephemeral, minimal, and cheap to run.
 
@@ -220,13 +220,39 @@ guard token handoff from Umbilical to the PWA.
 Before calling Umbilical's `login` method, the PWA should generate a
 `code_verifier` and `code_challenge` in the same manner as a PKCE flow.
 
-`GET /API/server/oauth2/:clientkey/login`
+- `GET /API/server/oauth2/:clientkey/login?code_challenge=<code_challenge>&redirect_uri=<redirect_uri>`
 
-`GET /API/server/oauth2/:clientkey/callback`
+  - Initiates a login flow using the oauth client mapped to `clientkey` in the config.
 
-`POST /API/server/oauth2/:clientkey/token` (requires authentication)
+- `GET /API/server/oauth2/:clientkey/callback`
 
-`POST /API/server/oauth2/:clientkey/refreshToken` (requires authentication)
+  - Handles the oauth2 callback from the authorization server.
+  - Returns a random `code` to the PWA.
+
+- `POST /API/server/oauth2/:clientkey/token` (requires authentication)
+
+  - body:
+
+    ```
+    {
+        code: string,
+        code_verifier: string
+    }
+    ```
+
+  - PWA uses this call to exchange the `code` for an access token.
+
+- `POST /API/server/oauth2/:clientkey/refreshToken` (requires authentication)
+
+  - body:
+
+    ```
+    {
+        refreshToken: string
+    }
+    ```
+
+  - PWA uses this call to refresh the access token.
 
 Oauth clients are configured by populating the data structure in
 [mocks/oauth2-config.json](mocks/oauth2-config.json), base64url-encoding it, and

@@ -4,7 +4,7 @@
 is a fully-managed infrastructure provider that provides always-on server
 processes needed for webpush.
 
-## Deploy steps
+## Deploy steps (manual)
 
 - Sign in/up on Digital Ocean
 - Create a new project on Digital Ocean
@@ -17,3 +17,13 @@ processes needed for webpush.
   - Unless you can guarantee stickiness between clients and containers, stick to 1 container.
 - Under **Environment Variables** add environment variables (see the top level README.md for details)
 - Review remaining settings and deploy.
+
+## Deploy steps (automated)
+
+- Sign in/up on Digital Ocean
+- Create a new project on Digital Ocean
+- Edit `umbilical-minimal.yaml` or `umbilical-with-telemetry.yaml` and set the environment variables
+- Deploy with
+  ```sh
+  doctl apps create --project-id your-project-id --spec umbilical-minimal.yaml
+  ```
