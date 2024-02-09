@@ -7,18 +7,18 @@ By design it aims to be ephemeral, minimal, and cheap to run.
 
 ## environment variables
 
-| name                              | description                                                                                                                          | default                                  |
-| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------- |
-| `ENABLED_FEATURES`                | comma-separated list of features to enable                                                                                           | 'proxy,search,podroll,podping_websocket' |
-| `UMBILICAL_KEYS`                  | comma-separated list of valid signing keys (see authentication)                                                                      | n/a                                      |
-| `PI_API_KEY`                      | PodcastIndex API key, used for search                                                                                                | n/a                                      |
-| `PI_API_SECRET`                   | PodcastIndex API secret , used for search                                                                                            | n/a                                      |
-| `WEBPUSH_JWK_BASE64`              | base64-encoded JSON Web Key for webpush                                                                                              | n/a                                      |
-| `WEBPUSH_CONTACT`                 | contact info (subject) for webpush                                                                                                   | n/a                                      |
-| `WEBPUSH_TEMPLATE`                | template for webpush notification messages                                                                                           | 'angular'                                |
-| `WEBPUSH_THROTTLE_MINUTES`        | number of minutes to wait before emitting a podping push notification for the same `(iri, reason, medium)`. Set to 0 for no waiting. | 60                                       |
-| `OAUTH2_CONFIG`                   | base64url-encoded JSON object containing oauth2 client configurations (see oauth2 bridge API)                                        | n/a                                      |
-| `OTELOTEL_EXPORTER_OTLP_ENDPOINT` | OTLP http endpoint for exporting telemetry data to an OpenTelemetry collector                                                        | n/a                                      |
+| name                          | description                                                                                                                          | default                                  |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------- |
+| `ENABLED_FEATURES`            | comma-separated list of features to enable                                                                                           | 'proxy,search,podroll,podping_websocket' |
+| `UMBILICAL_KEYS`              | comma-separated list of valid signing keys (see authentication)                                                                      | n/a                                      |
+| `PI_API_KEY`                  | PodcastIndex API key, used for search                                                                                                | n/a                                      |
+| `PI_API_SECRET`               | PodcastIndex API secret , used for search                                                                                            | n/a                                      |
+| `WEBPUSH_JWK_BASE64`          | base64-encoded JSON Web Key for webpush                                                                                              | n/a                                      |
+| `WEBPUSH_CONTACT`             | contact info (subject) for webpush                                                                                                   | n/a                                      |
+| `WEBPUSH_TEMPLATE`            | template for webpush notification messages                                                                                           | 'angular'                                |
+| `WEBPUSH_THROTTLE_MINUTES`    | number of minutes to wait before emitting a podping push notification for the same `(iri, reason, medium)`. Set to 0 for no waiting. | 60                                       |
+| `OAUTH2_CONFIG`               | base64url-encoded JSON object containing oauth2 client configurations (see oauth2 bridge API)                                        | n/a                                      |
+| `OTEL_EXPORTER_OTLP_ENDPOINT` | OTLP http endpoint for exporting telemetry data to an OpenTelemetry collector                                                        | n/a                                      |
 
 ## features and deployment types
 
