@@ -140,7 +140,7 @@
           "useBackend": false
         }
       ],
-      "title": "Podping Rate",
+      "title": "Podpings / Second",
       "type": "timeseries"
     },
     {
