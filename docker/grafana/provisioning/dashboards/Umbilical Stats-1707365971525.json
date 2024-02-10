@@ -230,9 +230,9 @@
           },
           "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "http_requests_total",
+          "expr": "rate(http_requests_total[$__rate_interval])",
           "fullMetaSearch": false,
-          "includeNullMetadata": true,
+          "includeNullMetadata": false,
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
@@ -240,7 +240,7 @@
           "useBackend": false
         }
       ],
-      "title": "HTTP Requests",
+      "title": "HTTP Requests / Second",
       "type": "timeseries"
     },
     {
