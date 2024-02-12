@@ -1,6 +1,6 @@
 import { xml2js, js2xml, Context } from "../../deps.ts";
 import umbilicalUserAgent from "../config.ts";
-import { checkEnv } from "../search/piapi.ts";
+import { checkEnv } from "../lib/piapi.ts";
 import { RssWithPodroll, RssWithPodrollSchema } from "../interfaces/rss.ts";
 import { FeedForOpml } from "../interfaces/opml.ts";
 import { feedInfoFromFeedGuid, feedInfoFromFeedUrl } from "../lib/podroll.ts";

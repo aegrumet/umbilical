@@ -1,5 +1,5 @@
 import { Context } from "../../deps.ts";
-import searchByTerm, { checkEnv } from "./piapi.ts";
+import searchByTerm, { checkEnv } from "../lib/piapi.ts";
 
 const search = async (c: Context) => {
   try {
