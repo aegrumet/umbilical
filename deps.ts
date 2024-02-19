@@ -1,5 +1,5 @@
-import { Hono, Context } from "https://deno.land/x/hono@v3.9.2/mod.ts";
-import { cors } from "https://deno.land/x/hono@v3.9.2/middleware/cors/index.ts";
+import { Hono, Context } from "https://deno.land/x/hono@v4.0.4/mod.ts";
+import { cors } from "https://deno.land/x/hono@v4.0.4/middleware/cors/index.ts";
 export { Hono, cors };
 export type { Context };
 
