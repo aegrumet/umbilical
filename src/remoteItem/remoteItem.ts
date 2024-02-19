@@ -8,7 +8,7 @@ const remoteItemEpisodes = async (c: Context) => {
   } catch (_) {
     c.status(500);
     return c.text(
-      "Search not available for this instance. Either it's not enabled or something else went wrong."
+      "Podcast Index API not available for this instance. Either it's not enabled or something else went wrong."
     );
   }
 
@@ -39,6 +39,30 @@ const remoteItemEpisodes = async (c: Context) => {
   const results = await Promise.all(promises);
 
   return c.json(results);
+};
+
+export const remoteItemEpisode = async (c: Context) => {
+  try {
+    checkEnv(c);
+  } catch (_) {
+    c.status(500);
+    return c.text(
+      "Podcast Index API not available for this instance. Either it's not enabled or something else went wrong."
+    );
+  }
+
+  const feedGuid: string | undefined = c.req.query("feedGuid");
+  const itemGuid: string | undefined = c.req.query("itemGuid");
+
+  if (!feedGuid || !itemGuid) {
+    c.status(500);
+    return c.text("No feedGuid or itemGuid provided.");
+  }
+
+  // deno-lint-ignore no-explicit-any
+  const result: any = await episodeByGuid(itemGuid, feedGuid, c);
+
+  return c.json(result);
 };
 
 export default remoteItemEpisodes;
