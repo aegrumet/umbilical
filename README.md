@@ -207,7 +207,7 @@ syntax](https://eta.js.org/docs/intro/template-syntax) to interpolate values fro
 
 ## remoteItem API
 
-- `GET /API/worker/remoteItem/episodes?feedGuid=<feedGuid>&itemGuid=<itemGuid>`
+- `GET /API/worker/remoteItem/episode?feedGuid=<feedGuid>&itemGuid=<itemGuid>`
 
   - Returns the episode remoteItem from the given feedGuid and itemGuid.
 
