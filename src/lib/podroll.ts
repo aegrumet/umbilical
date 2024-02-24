@@ -1,6 +1,6 @@
 import { xml2js, Context } from "../../deps.ts";
 import umbilicalUserAgent from "../config.ts";
-import { searchByGuid } from "./piapi.ts";
+import { podcastByGuid } from "./piapi.ts";
 import { RssFeedInfo, RssFeedInfoSchema } from "../interfaces/rss.ts";
 import { FeedForOpml, FeedForOpmlSchema } from "../interfaces/opml.ts";
 
@@ -8,7 +8,7 @@ export async function feedInfoFromFeedGuid(
   feedGuid: string,
   c: Context
 ): Promise<FeedForOpml | null> {
-  const promise = searchByGuid(feedGuid, c);
+  const promise = podcastByGuid(feedGuid, c);
   promise.catch((e) => {
     console.log(e);
   });

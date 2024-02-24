@@ -1,7 +1,7 @@
 import { Hono, Context } from "../../deps.ts";
 
 import searchHandler from "../search/search.ts";
-import { remoteItemEpisode } from "../remoteItem/remoteItem.ts";
+import { remoteItemEpisodeHandler } from "../remoteItem/remoteItem.ts";
 import { podcastByGuidHandler } from "../podcastByGuid/podcastByGuid.ts";
 import { podcastByFeedUrlHandler } from "../podcastByFeedUrl/podcastByFeedUrl.ts";
 
@@ -16,7 +16,7 @@ routes.get("/search/byterm", async (c: Context) => {
 });
 
 routes.get("/episodes/byguid", async (c: Context) => {
-  return await remoteItemEpisode(c);
+  return await remoteItemEpisodeHandler(c);
 });
 
 routes.get("/podcasts/byguid", async (c: Context) => {

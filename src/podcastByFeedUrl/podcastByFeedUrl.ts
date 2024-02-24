@@ -1,5 +1,5 @@
 import { Context } from "../../deps.ts";
-import { searchByFeedUrl, checkEnv } from "../lib/piapi.ts";
+import { podcastByFeedUrl, checkEnv } from "../lib/piapi.ts";
 
 export const podcastByFeedUrlHandler = async (c: Context) => {
   try {
@@ -19,6 +19,6 @@ export const podcastByFeedUrlHandler = async (c: Context) => {
   }
 
   // deno-lint-ignore no-explicit-any
-  const results: any = await searchByFeedUrl(feedUrl, c);
+  const results: any = await podcastByFeedUrl(feedUrl, c);
   return c.json(results);
 };

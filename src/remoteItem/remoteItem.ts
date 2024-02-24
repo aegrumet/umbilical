@@ -2,7 +2,7 @@ import { Context } from "../../deps.ts";
 import { episodeByGuid, checkEnv } from "../lib/piapi.ts";
 import { RemoteItem, RemoteItemsSchema } from "../interfaces/value.ts";
 
-const remoteItemEpisodes = async (c: Context) => {
+const remoteItemEpisodesHandler = async (c: Context) => {
   try {
     checkEnv(c);
   } catch (_) {
@@ -25,7 +25,7 @@ const remoteItemEpisodes = async (c: Context) => {
   }
 
   const parseResult = RemoteItemsSchema.safeParse(body);
-  if (!parseResult.success || remoteItemEpisodes.length === 0) {
+  if (!parseResult.success || remoteItemEpisodesHandler.length === 0) {
     c.status(500);
     return c.text("Invalid request.");
   }
@@ -41,7 +41,7 @@ const remoteItemEpisodes = async (c: Context) => {
   return c.json(results);
 };
 
-export const remoteItemEpisode = async (c: Context) => {
+export const remoteItemEpisodeHandler = async (c: Context) => {
   try {
     checkEnv(c);
   } catch (_) {
@@ -65,4 +65,4 @@ export const remoteItemEpisode = async (c: Context) => {
   return c.json(result);
 };
 
-export default remoteItemEpisodes;
+export default remoteItemEpisodesHandler;

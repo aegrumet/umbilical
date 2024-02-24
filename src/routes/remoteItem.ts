@@ -1,7 +1,7 @@
 import { Hono, Context } from "../../deps.ts";
 
-import remoteItemEpisodes, {
-  remoteItemEpisode,
+import remoteItemEpisodesHandler, {
+  remoteItemEpisodeHandler,
 } from "../remoteItem/remoteItem.ts";
 import { authenticate, gateFeature } from "./middleware.ts";
 
@@ -10,11 +10,11 @@ routes.use("*", authenticate);
 routes.use("*", gateFeature("remoteItem"));
 
 routes.get("/episode", async (c: Context) => {
-  return await remoteItemEpisode(c);
+  return await remoteItemEpisodeHandler(c);
 });
 
 routes.post("/episodes", async (c: Context) => {
-  return await remoteItemEpisodes(c);
+  return await remoteItemEpisodesHandler(c);
 });
 
 export default routes;

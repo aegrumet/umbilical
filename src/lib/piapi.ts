@@ -47,7 +47,7 @@ const searchByTerm = async (query: string, c: UmbilicalContext) => {
   return await res.json();
 };
 
-export const searchByGuid = async (guid: string, c: UmbilicalContext) => {
+export const podcastByGuid = async (guid: string, c: UmbilicalContext) => {
   const { apiKey, apiSecret } = checkEnv(c);
 
   const timestamp = Math.floor(Date.now() / 1000);
@@ -79,7 +79,10 @@ export const searchByGuid = async (guid: string, c: UmbilicalContext) => {
   return await res.json();
 };
 
-export const searchByFeedUrl = async (feedUrl: string, c: UmbilicalContext) => {
+export const podcastByFeedUrl = async (
+  feedUrl: string,
+  c: UmbilicalContext
+) => {
   const { apiKey, apiSecret } = checkEnv(c);
 
   const timestamp = Math.floor(Date.now() / 1000);
