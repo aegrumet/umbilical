@@ -4,6 +4,7 @@ import proxyRoutes from "./src/routes/proxy.ts";
 import searchRoutes from "./src/routes/search.ts";
 import podrollRoutes from "./src/routes/podroll.ts";
 import remoteItem from "./src/routes/remoteItem.ts";
+import podcastIndexRoutes from "./src/routes/podcastIndex.ts";
 
 const rest = new Hono();
 
@@ -12,4 +13,6 @@ rest.route("/proxy", proxyRoutes);
 rest.route("/search", searchRoutes);
 rest.route("/podroll", podrollRoutes);
 rest.route("/remoteItem", remoteItem);
+rest.route("/pi", podcastIndexRoutes);
+
 export default rest;
