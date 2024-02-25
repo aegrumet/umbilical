@@ -39,7 +39,7 @@ Here is a list of features and compatible deployment types:
 | podcastindex      | proxy various PodcastIndex APIs including search and lookups                                    | all                      |
 | podping_websocket | relay podpings from Livewire's podping websocket service to a running PWA, for subscribed feeds | websocket server, server |
 | podping_webpush   | send podpings to running or non-running PWAs using webpush, for subscribed feeds (see below)    | server                   |
-| oauth2            | retrieve tokens from an Oauth2 authorization server                                             | server                   |
+| oauth2            | retrieve tokens from an Oauth2 authorization server and securely hand them back to the PWA      | server                   |
 
 ## authentication
 
