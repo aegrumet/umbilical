@@ -115,21 +115,21 @@ Relays a query to [PodcastIndex's](https://podcastindex.org/) [Search Podcasts A
 
 ### episode By Guid (for resolving remoteItems)
 
-- `GET /API/worker/pi/episodes/byguid?feedGuid=<feedGuid>&itemGuid=<itemGuid>`
+`GET /API/worker/pi/episodes/byguid?feedGuid=<feedGuid>&itemGuid=<itemGuid>`
 
-  - Returns the episode remoteItem from the given feedGuid and itemGuid.
+Returns the episode remoteItem from the given feedGuid and itemGuid.
 
 ### podcast by Feed URL (for podcast:guid lookups)
 
-- `GET /API/worker/pi/podcasts/byfeedurl?feedUrl=<feedUrl>`
+`GET /API/worker/pi/podcasts/byfeedurl?feedUrl=<feedUrl>`
 
-  - Returns the podcast from the given feedUrl.
+Returns the podcast from the given feedUrl.
 
 ### podcast by Feed GUID (for handling feed moves)
 
-- `GET /API/worker/pi/podcasts/byguid?guid=<guid>`
+`GET /API/worker/pi/podcasts/byguid?guid=<guid>`
 
-  - Returns the podcast from the given podcast:guid.
+Returns the podcast from the given podcast:guid.
 
 ### podroll API
 
