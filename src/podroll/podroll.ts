@@ -5,7 +5,7 @@ import { RssWithPodroll, RssWithPodrollSchema } from "../interfaces/rss.ts";
 import { FeedForOpml } from "../interfaces/opml.ts";
 import { feedInfoFromFeedGuid, feedInfoFromFeedUrl } from "../lib/podroll.ts";
 
-const podroll = async (c: Context) => {
+export const podrollHandler = async (c: Context) => {
   try {
     checkEnv(c);
   } catch (_) {
@@ -116,4 +116,4 @@ const podroll = async (c: Context) => {
   return c.text(opmlXml);
 };
 
-export default podroll;
+export default podrollHandler;

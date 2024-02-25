@@ -31,7 +31,7 @@ describe("Search", () => {
     Deno.env.delete("PI_API_SECRET");
 
     const res = await rest.request(
-      "/search?q=batmanuniversity",
+      "/pi/search/byterm?q=batmanuniversity",
       undefined,
       denoEnv()
     );
@@ -42,7 +42,7 @@ describe("Search", () => {
     Deno.env.set("PI_API_KEY", TEST_PI_API_KEY);
     Deno.env.set("PI_API_SECRET", TEST_PI_API_SECRET);
 
-    const res = await rest.request("/search", undefined, denoEnv());
+    const res = await rest.request("/pi/search/byterm", undefined, denoEnv());
     assertEquals(res.status, 500);
   });
 
@@ -51,7 +51,7 @@ describe("Search", () => {
     Deno.env.set("PI_API_SECRET", `NOT${TEST_PI_API_SECRET}`);
 
     const res = await rest.request(
-      "/search?q=batmanuniversity",
+      "/pi/search/byterm?q=batmanuniversity",
       undefined,
       denoEnv()
     );
@@ -63,7 +63,7 @@ describe("Search", () => {
     Deno.env.set("PI_API_SECRET", TEST_PI_API_SECRET);
 
     const res = await rest.request(
-      "/search?q=batmanuniversity",
+      "/pi/search/byterm?q=batmanuniversity",
       undefined,
       denoEnv()
     );

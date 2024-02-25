@@ -7,18 +7,18 @@ By design it aims to be ephemeral, minimal, and cheap to run.
 
 ## environment variables
 
-| name                          | description                                                                                                                          | default                                             |
-| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------- |
-| `ENABLED_FEATURES`            | comma-separated list of features to enable                                                                                           | 'proxy,search,podroll,remoteItem,podping_websocket' |
-| `UMBILICAL_KEYS`              | comma-separated list of valid signing keys (see authentication)                                                                      | n/a                                                 |
-| `PI_API_KEY`                  | PodcastIndex API key, used for search                                                                                                | n/a                                                 |
-| `PI_API_SECRET`               | PodcastIndex API secret , used for search                                                                                            | n/a                                                 |
-| `WEBPUSH_JWK_BASE64`          | base64-encoded JSON Web Key for webpush                                                                                              | n/a                                                 |
-| `WEBPUSH_CONTACT`             | contact info (subject) for webpush                                                                                                   | n/a                                                 |
-| `WEBPUSH_TEMPLATE`            | template for webpush notification messages                                                                                           | 'angular'                                           |
-| `WEBPUSH_THROTTLE_MINUTES`    | number of minutes to wait before emitting a podping push notification for the same `(iri, reason, medium)`. Set to 0 for no waiting. | 60                                                  |
-| `OAUTH2_CONFIG`               | base64url-encoded JSON object containing oauth2 client configurations (see oauth2 bridge API)                                        | n/a                                                 |
-| `OTEL_EXPORTER_OTLP_ENDPOINT` | OTLP http endpoint for exporting telemetry data to an OpenTelemetry collector                                                        | n/a                                                 |
+| name                          | description                                                                                                                          | default                                |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------- |
+| `ENABLED_FEATURES`            | comma-separated list of features to enable                                                                                           | 'proxy,podcastindex,podping_websocket' |
+| `UMBILICAL_KEYS`              | comma-separated list of valid signing keys (see authentication)                                                                      | n/a                                    |
+| `PI_API_KEY`                  | PodcastIndex API key, used for search                                                                                                | n/a                                    |
+| `PI_API_SECRET`               | PodcastIndex API secret , used for search                                                                                            | n/a                                    |
+| `WEBPUSH_JWK_BASE64`          | base64-encoded JSON Web Key for webpush                                                                                              | n/a                                    |
+| `WEBPUSH_CONTACT`             | contact info (subject) for webpush                                                                                                   | n/a                                    |
+| `WEBPUSH_TEMPLATE`            | template for webpush notification messages                                                                                           | 'angular'                              |
+| `WEBPUSH_THROTTLE_MINUTES`    | number of minutes to wait before emitting a podping push notification for the same `(iri, reason, medium)`. Set to 0 for no waiting. | 60                                     |
+| `OAUTH2_CONFIG`               | base64url-encoded JSON object containing oauth2 client configurations (see oauth2 bridge API)                                        | n/a                                    |
+| `OTEL_EXPORTER_OTLP_ENDPOINT` | OTLP http endpoint for exporting telemetry data to an OpenTelemetry collector                                                        | n/a                                    |
 
 ## features and deployment types
 
@@ -36,9 +36,7 @@ Here is a list of features and compatible deployment types:
 | feature           | description                                                                                     | deploy type              |
 | ----------------- | ----------------------------------------------------------------------------------------------- | ------------------------ |
 | proxy             | proxy RSS, chapters, and opml files                                                             | all                      |
-| search            | proxy PodcastIndex search API                                                                   | all                      |
-| podroll           | extract podroll from RSS and return as OPML                                                     | all                      |
-| remoteItem        | return a remoteItem from the PodcastIndex API                                                   | all                      |
+| podcastindex      | proxy various PodcastIndex APIs including search and lookups                                    | all                      |
 | podping_websocket | relay podpings from Livewire's podping websocket service to a running PWA, for subscribed feeds | websocket server, server |
 | podping_webpush   | send podpings to running or non-running PWAs using webpush, for subscribed feeds (see below)    | server                   |
 | oauth2            | retrieve tokens from an Oauth2 authorization server                                             | server                   |
@@ -98,11 +96,9 @@ Proxies the RSS, chapters, or opml url. Returns an error if the resource fails p
 
 Philsophy: Proxy only known formats, to protect the service, but be otherwise unopinionated about parsing.
 
-## search API
+## PodcastIndex APIs
 
-`GET /API/worker/search?q=<search query>`
-
-Relays a query to [PodcastIndex's](https://podcastindex.org/) [Search Podcasts API](https://podcastindex-org.github.io/docs-api/#get-/search/byterm).
+Umbilical supports passthrough for a subset of PodcastIndex APIs and related "extras".
 
 Requires the following environment variables to be set:
 
@@ -111,15 +107,37 @@ Requires the following environment variables to be set:
 
 You can sign up for free credentials at [api.podcastindex.org](https://api.podcastindex.org/).
 
-## podroll API
+### search
 
-`GET /API/worker/podroll?rss=<rss url>`
+`GET /API/worker/pi/search/byterm?q=<search query>`
+
+Relays a query to [PodcastIndex's](https://podcastindex.org/) [Search Podcasts API](https://podcastindex-org.github.io/docs-api/#get-/search/byterm).
+
+### episode By Guid (for resolving remoteItems)
+
+- `GET /API/worker/pi/episodes/byguid?feedGuid=<feedGuid>&itemGuid=<itemGuid>`
+
+  - Returns the episode remoteItem from the given feedGuid and itemGuid.
+
+### podcast by Feed URL (for podcast:guid lookups)
+
+- `GET /API/worker/pi/podcasts/byfeedurl?feedUrl=<feedUrl>`
+
+  - Returns the podcast from the given feedUrl.
+
+### podcast by Feed GUID (for handling feed moves)
+
+- `GET /API/worker/pi/podcasts/byguid?guid=<guid>`
+
+  - Returns the podcast from the given podcast:guid.
+
+### podroll API
+
+`GET /API/worker/pi/extras/podroll?rss=<rss url>`
 
 Returns the rss feed's podroll in OPML format.
 
 Returns an error if the feed has no podroll.
-
-Requires PodcastIndex credentials (see [search API](#search-api)).
 
 ## podping websocket API
 
@@ -204,25 +222,6 @@ a key to
 and set `WEBPUSH_TEMPLATE` to that key in the runtime environment. Templates are
 serialized JSON strings that use [Eta template
 syntax](https://eta.js.org/docs/intro/template-syntax) to interpolate values from the podping message.
-
-## remoteItem API
-
-- `GET /API/worker/remoteItem/episode?feedGuid=<feedGuid>&itemGuid=<itemGuid>`
-
-  - Returns the episode remoteItem from the given feedGuid and itemGuid.
-
-- `POST /API/worker/remoteItem/episodes`:
-
-  - body:
-
-    ```
-    [{
-        feedGuid: string,
-        itemGuid: string
-    }, ...]
-    ```
-
-  - Returns an array of episode remoteItems from the given feedGuids and itemGuids.
 
 ## oauth2 bridge API (experimental)
 

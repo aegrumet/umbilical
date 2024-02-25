@@ -4,6 +4,7 @@ import searchHandler from "../search/search.ts";
 import { remoteItemEpisodeHandler } from "../remoteItem/remoteItem.ts";
 import { podcastByGuidHandler } from "../podcastByGuid/podcastByGuid.ts";
 import { podcastByFeedUrlHandler } from "../podcastByFeedUrl/podcastByFeedUrl.ts";
+import { podrollHandler } from "../podroll/podroll.ts";
 
 import { authenticate, gateFeature } from "./middleware.ts";
 
@@ -25,6 +26,10 @@ routes.get("/podcasts/byguid", async (c: Context) => {
 
 routes.get("/podcasts/byfeedurl", async (c: Context) => {
   return await podcastByFeedUrlHandler(c);
+});
+
+routes.get("/extras/podroll", async (c: Context) => {
+  return await podrollHandler(c);
 });
 
 export default routes;

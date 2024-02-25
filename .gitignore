@@ -35,3 +35,6 @@ terraform.rc
 
 # Private deployment directories
 deploy/**/private
+
+# Mac OS
+.DS_Store
