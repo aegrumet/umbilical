@@ -113,7 +113,7 @@ You can sign up for free credentials at [api.podcastindex.org](https://api.podca
 
 Relays a query to [PodcastIndex's](https://podcastindex.org/) [Search Podcasts API](https://podcastindex-org.github.io/docs-api/#get-/search/byterm).
 
-### episode By Guid (for resolving remoteItems)
+### episode by Guid (for resolving remoteItems)
 
 `GET /API/worker/pi/episodes/byguid?feedGuid=<feedGuid>&itemGuid=<itemGuid>`
 
