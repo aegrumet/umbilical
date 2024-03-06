@@ -1,27 +1,27 @@
-import { assertEquals } from "https://deno.land/std@0.210.0/assert/mod.ts";
+import { assertEquals } from "https://deno.land/std@0.218.2/assert/mod.ts";
 export { assertEquals };
 
 import {
+  afterAll,
   afterEach,
+  beforeAll,
   beforeEach,
   describe,
   it,
-  afterAll,
-  beforeAll,
-} from "https://deno.land/std@0.210.0/testing/bdd.ts";
-export { afterEach, beforeEach, describe, it, afterAll, beforeAll };
+} from "https://deno.land/std@0.218.2/testing/bdd.ts";
+export { afterAll, afterEach, beforeAll, beforeEach, describe, it };
 
-export { FakeTime } from "https://deno.land/std@0.210.0/testing/time.ts";
+export { FakeTime } from "https://deno.land/std@0.218.2/testing/time.ts";
 
 import {
   assertSpyCall,
   assertSpyCalls,
   returnsNext,
-  stub,
   spy,
   type Stub,
-} from "https://deno.land/std@0.210.0/testing/mock.ts";
-export { assertSpyCall, assertSpyCalls, returnsNext, stub, spy, type Stub };
+  stub,
+} from "https://deno.land/std@0.218.2/testing/mock.ts";
+export { assertSpyCall, assertSpyCalls, returnsNext, spy, type Stub, stub };
 
 export { EventEmitter } from "https://deno.land/x/event@2.0.1/mod.ts";
 export { expect } from "https://deno.land/x/expect@v0.4.0/mod.ts";
