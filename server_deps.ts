@@ -14,7 +14,7 @@ export {
 
 import opentelemetry from "npm:@opentelemetry/api@1.8.0";
 export { opentelemetry };
-export { Resource } from "npm:@opentelemetry/resources";
+export { Resource } from "npm:@opentelemetry/resources@1.22.0";
 export {
   ConsoleMetricExporter,
   MeterProvider,
