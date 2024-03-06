@@ -16,6 +16,8 @@ import {
 } from "./webpush.ts";
 import { NOTIFICATION_TEMPLATES } from "./notification-templates.ts";
 import PodpingCache from "../shared/podping-cache.ts";
+import { FeedForOpml } from "../../interfaces/opml.ts";
+import { feedInfoFromFeedUrl } from "../../lib/podroll.ts";
 
 export class PodpingPusher {
   podpingEmitter: Evt<PodpingV0 | PodpingV1 | Error>;
@@ -76,6 +78,10 @@ export class PodpingPusher {
       return;
     }
 
+    const feedInfo: FeedForOpml | null = await feedInfoFromFeedUrl(
+      podping.iris[0]
+    );
+
     const notifications: Promise<WebPushResult | void>[] = [];
 
     const endpoints = this.subscriptionManager.getSubscriptionEndpointsByRssUrl(
@@ -83,7 +89,10 @@ export class PodpingPusher {
     );
 
     const notification = renderNotificationTemplate(
-      podping,
+      {
+        podping,
+        feedInfo,
+      },
       this.webpushTemplate
     );
 
@@ -151,7 +160,10 @@ export class PodpingPusher {
 // Renders a JSON/ETA template and parses to JSON.
 // Returns null on errors.
 export function renderNotificationTemplate(
-  podping: PodpingV1,
+  info: {
+    podping: PodpingV1;
+    feedInfo: FeedForOpml | null;
+  },
   templateKey: string
   // deno-lint-ignore no-explicit-any
 ): any {
@@ -162,7 +174,7 @@ export function renderNotificationTemplate(
   const eta = new Eta();
   const serializedJson = eta.renderString(
     NOTIFICATION_TEMPLATES[templateKey],
-    podping
+    info
   );
   // deno-lint-ignore no-explicit-any
   let result: any = null;
