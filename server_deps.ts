@@ -19,6 +19,6 @@ export {
   ConsoleMetricExporter,
   MeterProvider,
   PeriodicExportingMetricReader,
-} from "npm:@opentelemetry/sdk-metrics";
+} from "npm:@opentelemetry/sdk-metrics@1.22.0";
 // grpc doesn't seem to work with Deno
 export { OTLPMetricExporter } from "npm:@opentelemetry/exporter-metrics-otlp-http@0.49.1";
