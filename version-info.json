@@ -1,23 +1,23 @@
 {
   "dirty": false,
-  "raw": "v0.5.0-0-g99acf07",
-  "hash": "g99acf07",
+  "raw": "v0.5.1-0-gc05a003",
+  "hash": "gc05a003",
   "distance": 0,
-  "tag": "v0.5.0",
+  "tag": "v0.5.1",
   "semver": {
     "options": {
       "loose": false,
       "includePrerelease": false
     },
     "loose": false,
-    "raw": "v0.5.0",
+    "raw": "v0.5.1",
     "major": 0,
     "minor": 5,
-    "patch": 0,
+    "patch": 1,
     "prerelease": [],
     "build": [],
-    "version": "0.5.0"
+    "version": "0.5.1"
   },
-  "suffix": "0-g99acf07",
-  "semverString": "0.5.0"
+  "suffix": "0-gc05a003",
+  "semverString": "0.5.1"
 }
