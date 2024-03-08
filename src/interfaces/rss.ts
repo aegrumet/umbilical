@@ -46,7 +46,8 @@ export const RssFeedInfoSchema = z.object({
       ]),
       description: z.optional(
         z.object({
-          _text: z.string(),
+          _text: z.optional(z.string()),
+          _cdata: z.optional(z.string()),
         })
       ),
       image: z.optional(
