@@ -47,6 +47,10 @@ const proxyRss = async (c: Context) => {
     return c.text("Error parsing feed. Invalid RSS.");
   }
 
+  if (response.url && response.url !== rss) {
+    c.header("X-Final-URL", response.url);
+  }
+
   c.header("Content-Type", "application/rss+xml");
   return c.body(xml);
 };

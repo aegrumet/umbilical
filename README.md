@@ -96,6 +96,9 @@ Proxies the RSS, chapters, or opml url. Returns an error if the resource fails p
 
 Philsophy: Proxy only known formats, to protect the service, but be otherwise unopinionated about parsing.
 
+To assist with detecting feed moves, the proxy adds a `X-Final-URL` header when
+the response url differs from the requested one.
+
 ## PodcastIndex APIs
 
 Umbilical supports passthrough for a subset of PodcastIndex APIs and related "extras".

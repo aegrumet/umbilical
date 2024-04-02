@@ -5,7 +5,13 @@ import podcastIndexRoutes from "./src/routes/podcastIndex.ts";
 
 const rest = new Hono();
 
-rest.use("*", cors());
+rest.use(
+  "*",
+  cors({
+    origin: "*",
+    exposeHeaders: ["X-Final-URL"],
+  })
+);
 rest.route("/proxy", proxyRoutes);
 rest.route("/pi", podcastIndexRoutes);
 
