@@ -3,8 +3,8 @@ export { gitDescribeSync } from "npm:git-describe@4.1.1";
 export type { GitInfo } from "npm:git-describe@4.1.1";
 
 // Deps that don't play well with cloudflare
-export { Eta } from "https://deno.land/x/eta@v3.2.0/src/index.ts";
-export { existsSync } from "https://deno.land/std@0.218.2/fs/mod.ts";
+export { Eta } from "https://deno.land/x/eta@v3.4.0/src/index.ts";
+export { existsSync } from "https://deno.land/std@0.221.0/fs/mod.ts";
 export {
   CookieStore,
   MemoryStore,
