@@ -1,4 +1,4 @@
-FROM quay.io/prometheus/prometheus:v2.45.3
+FROM quay.io/prometheus/prometheus:v2.51.1
 
 COPY docker/prometheus/prometheus.yaml /etc/prometheus/prometheus.yml
 
