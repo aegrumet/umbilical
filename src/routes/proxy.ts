@@ -4,6 +4,7 @@ import proxyChapters from "../proxy/proxy-chapters.ts";
 import proxyOpml from "../proxy/proxy-opml.ts";
 
 import { authenticate, gateFeature } from "./middleware.ts";
+import proxyHead from "../proxy/proxy-head.ts";
 
 const routes = new Hono();
 routes.use("*", authenticate);
@@ -23,6 +24,11 @@ routes.get("/", async (c: Context) => {
   const opml: string | undefined = c.req.query("opml");
   if (opml) {
     return await proxyOpml(c);
+  }
+
+  const headUrl: string | undefined = c.req.query("head");
+  if (headUrl) {
+    return await proxyHead(c);
   }
 
   c.status(500);
