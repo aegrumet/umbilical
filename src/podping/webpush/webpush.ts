@@ -1,5 +1,7 @@
 // Dec 2023: Deno's built-in crypto doesn't fully support npm:web-push, so we're
 // using K0IN's implementation.
+// Jun 2024: Deno's got better crypto support now but still not quite working, see
+// https://github.com/denoland/deno/issues/23693
 import type { JWK } from "https://raw.githubusercontent.com/K0IN/Notify/v0.0.6/app/backend/webpush/jwk.ts";
 import {
   WebPushInfos,
@@ -63,4 +65,29 @@ export async function sendWebPushMessage(
 
   console.error(`Web Push error: ${res.status} body: ${await res.text()}`);
   return WebPushResult.Error;
+}
+
+// Might come in handy if we decide to move off of jwk format.
+export async function extractPrivateKeyUrlSafeBase64(jwk: JWK) {
+  const key = await crypto.subtle.importKey(
+    "jwk",
+    jwk,
+    {
+      name: "ECDSA",
+      namedCurve: jwk.crv,
+    },
+    true,
+    ["sign"]
+  );
+
+  // Extracts the private key
+  const exportedKey = await crypto.subtle.exportKey("pkcs8", key);
+
+  // Converts the exported key to URL-safe Base64 format
+  const base64 = btoa(String.fromCharCode(...new Uint8Array(exportedKey)))
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=+$/, "");
+
+  return base64;
 }
