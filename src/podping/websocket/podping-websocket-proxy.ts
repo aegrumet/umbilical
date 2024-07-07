@@ -20,6 +20,7 @@ class PodpingWebsocketProxy {
   private debug = false;
   private uuid: string | undefined;
   private telemetry: Telemetry | undefined;
+  private openCount = 0; // for telemetry balance
 
   constructor(
     subscriptionManager: SubscriptionManager,
@@ -40,11 +41,6 @@ class PodpingWebsocketProxy {
   proxy(c: Context, p: WebSocketProvider) {
     this.debug = c.env.DEBUG;
     this.telemetry = c.get("telemetry");
-    this.telemetry!.incrementUpDownCounter(
-      "podping.websocket.connections",
-      "global",
-      1
-    );
 
     const { response, socket } = p.upgradeWebSocket(c);
 
@@ -52,20 +48,33 @@ class PodpingWebsocketProxy {
       return response;
     }
 
-    this.isAlive = true;
+    socket.addEventListener("open", () => {
+      this.isAlive = true;
+
+      this.telemetry!.incrementUpDownCounter(
+        "podping.websocket.connections",
+        "global",
+        1
+      );
+
+      this.openCount++;
+    });
 
     socket.addEventListener("close", () => {
       if (c.env.DEBUG) {
         console.log("Podping Websocket: close message handler");
       }
-      try {
-        this.telemetry!.incrementUpDownCounter(
-          "podping.websocket.connections",
-          "global",
-          -1
-        );
-      } catch (_) {
-        // do nothing
+      if (this.openCount > 0) {
+        try {
+          this.telemetry!.incrementUpDownCounter(
+            "podping.websocket.connections",
+            "global",
+            -1
+          );
+        } catch (_) {
+          // do nothing
+        }
+        this.openCount--;
       }
       this.shutdown(socket, this.relay);
     });

@@ -1,4 +1,4 @@
-FROM grafana/grafana:10.4.1
+FROM grafana/grafana:10.4.5
 
 COPY docker/grafana/grafana.ini /etc/grafana/grafana.ini
 COPY docker/grafana/provisioning/ /etc/grafana/provisioning/
