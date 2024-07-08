@@ -1,11 +1,25 @@
-# umbilical
+# Umbilical
 
 Umbilical is server side companion for podcast PWAs, supporting stuff that can't
 be done client side.
 
 By design it aims to be ephemeral, minimal, and cheap to run.
 
-## environment variables
+# Who is this for?
+
+Umbilical should be run as a server, to bridge functional gaps between
+browser-based podcast applications and the rest of the ecosystem. Supported
+features are highlighted in the diagram below in purple text.
+
+![Umbilical system diagram](umbilical.drawio.png)
+
+Umbilical is not designed for managing user accounts or durably storing
+subscription lists. It is intended to be mostly stateless, with the exception of
+podping notifications which require ephemerally stored subscription lists.
+Client applications should regularly republish their subscriptions to Umbilical,
+and should not rely on Umbilical as a storage system.
+
+## Environment variables
 
 | name                          | description                                                                                                                          | default                                |
 | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------- |
@@ -20,7 +34,7 @@ By design it aims to be ephemeral, minimal, and cheap to run.
 | `OAUTH2_CONFIG`               | base64url-encoded JSON object containing oauth2 client configurations (see oauth2 bridge API)                                        | n/a                                    |
 | `OTEL_EXPORTER_OTLP_ENDPOINT` | OTLP http endpoint for exporting telemetry data to an OpenTelemetry collector                                                        | n/a                                    |
 
-## features and deployment types
+## Features and deployment types
 
 Umbilical ships with a number of features whose availability depends on the
 deployment type. Here is a list of deployment types:
@@ -41,7 +55,7 @@ Here is a list of features and compatible deployment types:
 | podping_webpush   | send podpings to running or non-running PWAs using webpush, for subscribed feeds (see below)    | server                   |
 | oauth2            | retrieve tokens from an Oauth2 authorization server and securely hand them back to the PWA      | server                   |
 
-## authentication
+## Authentication
 
 You must set `UMBILICAL_KEYS` in the runtime environment in order to serve
 requests. It should be set to a comma-separated list of valid signing keys.
@@ -84,7 +98,7 @@ See `src/verify.ts` for full details of signature verification.
 
 [examples/authentication.md](examples/authentication.md) has example code for signing requests.
 
-## proxy API
+## Proxy API
 
 `GET /API/worker/proxy?rss=<rss url>`
 
@@ -142,7 +156,7 @@ Returns the rss feed's podroll in OPML format.
 
 Returns an error if the feed has no podroll.
 
-## podping websocket API
+## Podping websocket API
 
 Proxies podpings from [Livewire's podping websocket
 service](https://livewire.io/podping-via-websockets/) via websocket to connected
@@ -166,7 +180,7 @@ API:
 
 For matching purposes, url schemes and trailing slashes are ignored.
 
-## podping webpush API
+## Podping webpush API
 
 Sends webpush notifications to subscribed clients.
 
@@ -226,7 +240,7 @@ and set `WEBPUSH_TEMPLATE` to that key in the runtime environment. Templates are
 serialized JSON strings that use [Eta template
 syntax](https://eta.js.org/docs/intro/template-syntax) to interpolate values from the podping message.
 
-## oauth2 bridge API (experimental)
+## Oauth2 bridge API (experimental)
 
 Retrieve tokens from an Oauth2 authorization server.
 
@@ -284,7 +298,7 @@ A helper script is provided to generate the base64url-encoded config:
 
 `deno task encode-oauth2-config mocks/oauth2-config.json`
 
-## deploy
+## Deploy
 
 The latest image for this repo is posted to [Docker Hub](https://hub.docker.com/r/aegrumet/umbilical/tags).
 
@@ -294,10 +308,10 @@ The latest image for this repo is posted to [Docker Hub](https://hub.docker.com/
 - Run on Digital Ocean App Platform: [deploy/digitaocean](deploy/digitalocean)
 - Run on other clouds: submit pull request.
 
-## warnings
+## Warnings
 
 Operating an open proxy is risky. We strongly recommend not using "DANGEROUSLY_ALLOW_ALL" in production.
 
-## last word
+## Last word
 
 Please consider supporting the index! For more info see **Help us out...** at [podcastindex.org](https://podcastindex.org).
