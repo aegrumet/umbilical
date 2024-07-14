@@ -5,11 +5,12 @@ be done client side.
 
 By design it aims to be ephemeral, minimal, and cheap to run.
 
-# Who is this for?
+# What's this for?
 
 Umbilical should be run as a server, to bridge functional gaps between
 browser-based podcast applications and the rest of the ecosystem. Supported
-features are highlighted in the diagram below in purple text.
+features are highlighted in purple text in the diagram below. Umbilical's role
+in supporting those features is highlighted in orange text.
 
 ![Umbilical system diagram](umbilical.drawio.png)
 
