@@ -44,7 +44,7 @@ env \
 PI_API_KEY=$PI_API_KEY \
 PI_API_SECRET=$PI_API_SECRET \
 UMBILICAL_KEYS=$UMBILICAL_KEY,DANGEROUSLY_ALLOW_ALL \
-ENABLED_FEATURES=proxy,search,podcastindex,podping_websocket,podroll,oauth2,remoteItem,podping_webpush \
+ENABLED_FEATURES=proxy,podcastindex,podping_websocket,podping_webpush,oauth2 \
 DEBUG=true \
 WEBPUSH_TEMPLATE=angular \
 WEBPUSH_JWK_BASE64=$WEBPUSH_JWK_BASE64 \
