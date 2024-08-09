@@ -1,6 +1,6 @@
 # Umbilical
 
-Umbilical is server side companion for podcast PWAs, supporting stuff that can't
+Umbilical is server side companion for podcast PWAs, supporting things that can't
 be done client side.
 
 By design it aims to be ephemeral, minimal, and cheap to run.
@@ -15,10 +15,10 @@ in supporting those features is highlighted in orange text.
 ![Umbilical system diagram](umbilical.drawio.png)
 
 Umbilical is not designed for managing user accounts or durably storing
-subscription lists. It is intended to be mostly stateless, with the exception of
-podping notifications which require ephemerally stored subscription lists.
-Client applications should regularly republish their subscriptions to Umbilical,
-and should not rely on Umbilical as a storage system.
+subscription lists. It is mostly stateless, with the exception of ephemerally
+stored subscription lists needed for podping notifications. Client applications
+should regularly republish their subscriptions to Umbilical, and should not rely
+on Umbilical as a storage system.
 
 ## Environment variables
 
