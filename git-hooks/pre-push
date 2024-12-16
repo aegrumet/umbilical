@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# Updates version-info.json file and commits it when pushing a tag
+# To invoke:
+# 1. Commit code changes
+# 2. Create a tag
+# 3. git push --atomic origin main vSemantic.Version.Tag
+
 while read local_ref local_sha remote_ref remote_sha
 do
   # Check if the push is a tag
