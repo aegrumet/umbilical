@@ -2,7 +2,7 @@
 # Debug image
 # ------------------------------------------------------------------------------
 
-FROM denoland/deno:alpine-2.1.4 as debug
+FROM denoland/deno:alpine-2.1.4 AS debug
 
 # 1. Source code will be copied to here.
 WORKDIR /app
@@ -12,7 +12,7 @@ USER deno
 
 # 3. To improve build time, copy deps.ts, and cache the app dependencies.
 COPY --chown=root:root ./deps.ts ./deps.ts
-RUN deno cache --unstable ./deps.ts
+RUN deno cache --allow-import ./deps.ts
 
 # 4. Copy the app and cache it. Also cache all *.test.ts files if such are found.
 COPY --chown=root:root . .
@@ -21,7 +21,7 @@ USER root
 RUN chown deno deno.lock
 USER deno
 
-RUN find . -name '*.ts' | xargs --no-run-if-empty deno cache --unstable
+RUN find . -name '*.ts' | xargs --no-run-if-empty deno cache --allow-import
 
 CMD ["task", "start:debug"]
 
