@@ -1,4 +1,4 @@
-FROM prom/prometheus:v2.53.0
+FROM prom/prometheus:v3.0.1
 
 COPY docker/prometheus/prometheus.yaml /etc/prometheus/prometheus.yml
 
