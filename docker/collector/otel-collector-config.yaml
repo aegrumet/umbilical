@@ -7,7 +7,7 @@ exporters:
   prometheus:
     endpoint: "0.0.0.0:8889"
 
-  logging:
+  debug:
     loglevel: debug
 
 processors:
@@ -18,5 +18,4 @@ service:
     metrics:
       receivers: [otlp]
       processors: [batch]
-      exporters: [logging, prometheus]
-
+      exporters: [debug, prometheus]
