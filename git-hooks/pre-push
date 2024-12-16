@@ -1,0 +1,23 @@
+#!/bin/bash
+
+while read local_ref local_sha remote_ref remote_sha
+do
+  # Check if the push is a tag
+  if [[ "$local_ref" == "refs/tags/"* ]]; then
+    tag="${local_ref#refs/tags/}"
+    echo "Pushing tag: $tag"
+    echo "Generating version-info.json..."
+    deno task version
+    echo "Committing new version file..."
+    git add version-info.json
+    git commit -m "Bumped version to $tag"
+    echo "Updating tag to include the version file..."
+    git tag -f $tag
+    echo "Pushing the new version-info.json file..."
+    git push
+    echo "Finished hook and proceeding normally"
+  fi
+done
+
+# Allow the push to proceed
+exit 0
