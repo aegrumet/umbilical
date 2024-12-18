@@ -1,7 +1,7 @@
 {
   "dirty": false,
-  "raw": "v0.6.2-0-gd264fdd",
-  "hash": "gd264fdd",
+  "raw": "v0.6.2-0-gdc32861",
+  "hash": "gdc32861",
   "distance": 0,
   "tag": "v0.6.2",
   "semver": {
@@ -18,6 +18,6 @@
     "build": [],
     "version": "0.6.2"
   },
-  "suffix": "0-gd264fdd",
+  "suffix": "0-gdc32861",
   "semverString": "0.6.2"
 }
