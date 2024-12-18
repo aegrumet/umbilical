@@ -4,7 +4,7 @@ export type { GitInfo } from "npm:git-describe@4.1.1";
 
 // Deps that don't play well with cloudflare
 export { Eta } from "https://deno.land/x/eta@v3.4.0/src/index.ts";
-export { existsSync } from "https://deno.land/std@0.224.0/fs/mod.ts";
+export { existsSync } from "jsr:@std/fs@^1.0.6";
 export {
   CookieStore,
   MemoryStore,

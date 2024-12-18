@@ -1,4 +1,4 @@
-import { assertEquals } from "https://deno.land/std@0.224.0/assert/mod.ts";
+import { assertEquals } from "jsr:@std/assert@^1.0.9";
 export { assertEquals };
 
 import {
@@ -8,10 +8,11 @@ import {
   beforeEach,
   describe,
   it,
-} from "https://deno.land/std@0.224.0/testing/bdd.ts";
+} from "jsr:@std/testing@^1.0.6/bdd";
 export { afterAll, afterEach, beforeAll, beforeEach, describe, it };
 
-export { FakeTime } from "https://deno.land/std@0.224.0/testing/time.ts";
+// Upgrade to 1.0.x needs work
+export { FakeTime } from "jsr:@std/testing@^0.225.3/time";
 
 import {
   assertSpyCall,
@@ -20,7 +21,7 @@ import {
   spy,
   type Stub,
   stub,
-} from "https://deno.land/std@0.224.0/testing/mock.ts";
+} from "jsr:@std/testing@^1.0.6/mock";
 export { assertSpyCall, assertSpyCalls, returnsNext, spy, type Stub, stub };
 
 export { EventEmitter } from "https://deno.land/x/event@2.0.1/mod.ts";

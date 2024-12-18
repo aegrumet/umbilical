@@ -15,14 +15,13 @@ export { xml2js };
 
 export { js2xml } from "https://deno.land/x/js2xml@1.0.4/mod.ts";
 
-export { encodeHex } from "https://deno.land/std@0.224.0/encoding/hex.ts";
-
 export { Ctx, Evt } from "https://deno.land/x/evt@v2.5.7/mod.ts";
 
 export {
   decodeBase64Url,
   encodeBase64Url,
-} from "https://deno.land/std@0.224.0/encoding/base64url.ts";
+  encodeHex,
+} from "jsr:@std/encoding@^1.0.5";
 
 export { z } from "https://deno.land/x/zod@v3.23.8/mod.ts";
 
