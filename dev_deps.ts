@@ -25,7 +25,7 @@ import {
 export { assertSpyCall, assertSpyCalls, returnsNext, spy, type Stub, stub };
 
 export { EventEmitter } from "https://deno.land/x/event@2.0.1/mod.ts";
-export { expect } from "https://deno.land/x/expect@v0.4.0/mod.ts";
+export { expect } from "jsr:@std/expect@^1.0.10";
 
 import * as mf from "https://deno.land/x/mock_fetch@0.3.0/mod.ts";
 export { mf };
