@@ -1,23 +1,23 @@
 {
   "dirty": false,
-  "raw": "v0.6.1-0-gf41e167",
-  "hash": "gf41e167",
+  "raw": "v0.6.2-0-gd264fdd",
+  "hash": "gd264fdd",
   "distance": 0,
-  "tag": "v0.6.1",
+  "tag": "v0.6.2",
   "semver": {
     "options": {
       "loose": false,
       "includePrerelease": false
     },
     "loose": false,
-    "raw": "v0.6.1",
+    "raw": "v0.6.2",
     "major": 0,
     "minor": 6,
-    "patch": 1,
+    "patch": 2,
     "prerelease": [],
     "build": [],
-    "version": "0.6.1"
+    "version": "0.6.2"
   },
-  "suffix": "0-gf41e167",
-  "semverString": "0.6.1"
+  "suffix": "0-gd264fdd",
+  "semverString": "0.6.2"
 }
