@@ -7,7 +7,7 @@
 import { encodeBase64Url } from "../deps.ts";
 import { existsSync } from "../server_deps.ts";
 
-import { OauthConfigSchema, OauthConfig } from "../src/interfaces/oauth2.ts";
+import { OauthConfig, OauthConfigSchema } from "../src/interfaces/oauth2.ts";
 
 const file = Deno.args[0];
 
@@ -26,7 +26,8 @@ let config: any;
 
 try {
   config = JSON.parse(decoder.decode(json));
-} catch (err) {
+  // deno-lint-ignore no-explicit-any
+} catch (err: any) {
   console.error(`Invalid JSON: ${err.message}`);
   Deno.exit(1);
 }
@@ -34,7 +35,8 @@ try {
 let oauthConfig: OauthConfig;
 try {
   oauthConfig = OauthConfigSchema.parse(config);
-} catch (err) {
+  // deno-lint-ignore no-explicit-any
+} catch (err: any) {
   console.error(`Invalid server config: ${err.message}`);
   Deno.exit(1);
 }
